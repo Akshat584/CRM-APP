@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(docker-compose up:*)",
+      "Bash(psql:*)",
+      "Bash(\"/c/Program Files/PostgreSQL/18/bin/createdb.exe\" -U postgres crm_db)",
+      "Bash(export PGPASSWORD=postgres)",
+      "Bash(\"/c/Program Files/PostgreSQL/18/bin/psql.exe\" -U postgres -l)",
+      "Bash(netstat -ano)",
+      "Bash(PGPASSWORD= node src/index.js)",
+      "Bash(PGPASSWORD=\"\" DATABASE_URL=\"postgresql://postgres@localhost:5432/crm_db\" npm run migrate)",
+      "Bash(export PGHOST=localhost)",
+      "Bash(export PGPORT=5432)",
+      "Bash(export PGUSER=postgres)",
+      "Bash(export PGDATABASE=postgres)",
+      "Bash(\"/c/Program Files/PostgreSQL/18/bin/psql.exe\" -c \"\\\\l\")",
+      "Bash(grep -v \"^$\")",
+      "mcp__stitch__list_projects",
+      "mcp__stitch__create_project",
+      "mcp__stitch__list_design_systems",
+      "Bash(env)",
+      "WebSearch",
+      "Bash(\"/c/Program Files/PostgreSQL/18/bin/psql.exe\" -U postgres -d crm_db -c \"SELECT COUNT\\(*\\) FROM users;\" 2>&1)"
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: crm-postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${DB_NAME:-crm_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: crm-server
+    environment:
+      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@postgres:5432/crm_db}
+      - JWT_SECRET=${JWT_SECRET:-dev-secret}
+      - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET:-dev-refresh}
+      - PORT=5000
+      - NODE_ENV=production
+      - CLIENT_URL=${CLIENT_URL:-http://localhost}
+    ports:
+      - "5000:5000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./server/src:/app/src
+      - ./server/package.json:/app/package.json
+      - ./server/package-lock.json:/app/package-lock.json
+    command: sh -c "npm run migrate && npm run start"
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: crm-client
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+
+volumes:
+  postgres_data:

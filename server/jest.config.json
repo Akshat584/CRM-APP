@@ -1,0 +1,9 @@
+{
+  "testEnvironment": "node",
+  "clearMocks": true,
+  "coverageDirectory": "coverage",
+  "collectCoverageFrom": [
+    "src/services/**/*.js",
+    "src/controllers/**/*.js"
+  ]
+}
