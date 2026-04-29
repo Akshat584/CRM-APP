@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-fixed-variant": "#005048",
+                    "surface-dim": "#dadadc",
+                    "on-primary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-surface": "#1a1c1e",
+                    "background": "#f9f9fc",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#eeeef0",
+                    "on-primary-container": "#8cd6ca",
+                    "on-tertiary-container": "#c5c9c9",
+                    "error": "#ba1a1a",
+                    "on-background": "#1a1c1e",
+                    "surface-tint": "#176a60",
+                    "on-tertiary-fixed-variant": "#434848",
+                    "error-container": "#ffdad6",
+                    "primary-container": "#005f56",
+                    "surface-variant": "#e2e2e5",
+                    "primary": "#00453e",
+                    "outline-variant": "#bec9c6",
+                    "secondary-container": "#e0e2eb",
+                    "inverse-surface": "#2f3133",
+                    "outline": "#6f7977",
+                    "surface-container-highest": "#e2e2e5",
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed-variant": "#44474e",
+                    "on-tertiary-fixed": "#181c1d",
+                    "surface-container-high": "#e8e8ea",
+                    "on-secondary": "#ffffff",
+                    "tertiary-container": "#505555",
+                    "inverse-primary": "#8ad4c8",
+                    "inverse-on-surface": "#f0f0f3",
+                    "secondary": "#5b5e66",
+                    "primary-fixed": "#a6f1e4",
+                    "on-secondary-fixed": "#181c22",
+                    "surface-bright": "#f9f9fc",
+                    "secondary-fixed": "#e0e2eb",
+                    "on-secondary-container": "#61646c",
+                    "surface": "#f9f9fc",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary": "#393e3e",
+                    "on-primary-fixed": "#00201c",
+                    "secondary-fixed-dim": "#c4c6cf",
+                    "tertiary-fixed-dim": "#c3c7c7",
+                    "tertiary-fixed": "#dfe3e3",
+                    "surface-container-low": "#f3f3f6",
+                    "on-surface-variant": "#3f4947",
+                    "primary-fixed-dim": "#8ad4c8"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar suppression for mobile-feel */
+        ::-webkit-scrollbar { display: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-emerald-50/80 dark:bg-emerald-950/80 backdrop-blur-xl flex justify-between items-center px-6 h-16 w-full shadow-none transition-opacity duration-200">
+<div class="flex items-center gap-4">
+<button class="text-emerald-900 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">arrow_back_ios</span>
+</button>
+</div>
+<h1 class="font-['Manrope'] text-xl font-extrabold tracking-tighter text-emerald-900 dark:text-emerald-50">Aurelius</h1>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-emerald-900" data-icon="search">search</span>
+</div>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-2xl mx-auto overflow-y-auto">
+<!-- Contact Header: Asymmetrical Ledger Style -->
+<section class="flex flex-col gap-8 mb-12">
+<div class="flex items-start gap-8">
+<!-- Large Initial Avatar (Asymmetrical) -->
+<div class="relative">
+<div class="w-24 h-32 bg-primary-container flex items-end p-4 rounded-xl">
+<span class="text-on-primary-container text-5xl font-extrabold tracking-tighter">JM</span>
+</div>
+<div class="absolute -bottom-2 -right-2 w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white border-4 border-background">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="flex flex-col pt-2">
+<h2 class="text-4xl font-extrabold tracking-tight text-on-surface leading-none mb-2">Julianne Moore</h2>
+<p class="text-on-surface-variant font-medium text-lg leading-tight tracking-tight">Chief Strategy Officer</p>
+<p class="text-primary font-bold tracking-wide text-sm mt-1">Aurelian Tech Group</p>
+<div class="flex gap-4 mt-6">
+<button class="p-3 bg-surface-container-low rounded-full text-primary hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">call</span>
+</button>
+<button class="p-3 bg-surface-container-low rounded-full text-primary hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">mail</span>
+</button>
+<button class="p-3 bg-surface-container-low rounded-full text-primary hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Deals: Bento Grid Style -->
+<section class="mb-12">
+<div class="flex justify-between items-end mb-6">
+<h3 class="font-headline text-xs font-bold tracking-[0.2em] uppercase text-on-surface-variant">Active Deals</h3>
+<span class="text-primary text-xs font-bold">View Pipeline</span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="col-span-2 bg-surface-container-lowest p-6 rounded-xl shadow-[0_-8px_30px_rgb(0,0,0,0.02)]">
+<div class="flex justify-between items-start mb-4">
+<span class="text-xs font-bold tracking-widest text-primary uppercase">High Value</span>
+<div class="bg-primary-fixed px-2 py-1 rounded text-[10px] font-bold text-on-primary-fixed-variant uppercase">Discovery</div>
+</div>
+<h4 class="text-xl font-bold tracking-tight mb-1">Global Expansion Q4</h4>
+<p class="text-3xl font-extrabold text-on-surface tracking-tighter">$420,000</p>
+</div>
+<div class="bg-surface-container-low p-5 rounded-xl">
+<h4 class="text-sm font-bold text-on-surface mb-1">Cloud Migration</h4>
+<p class="text-lg font-extrabold text-primary tracking-tight">$24k</p>
+</div>
+<div class="bg-surface-container-low p-5 rounded-xl">
+<h4 class="text-sm font-bold text-on-surface mb-1">Consulting Retainer</h4>
+<p class="text-lg font-extrabold text-primary tracking-tight">$12k</p>
+</div>
+</div>
+</section>
+<!-- Notes -->
+<section class="mb-12">
+<h3 class="font-headline text-xs font-bold tracking-[0.2em] uppercase text-on-surface-variant mb-6">Internal Notes</h3>
+<div class="bg-surface-container-low p-6 rounded-xl relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-6xl">sticky_note_2</span>
+</div>
+<p class="text-on-surface text-base leading-relaxed italic pr-8">
+                    "Preferred communication via LinkedIn. Interested in European expansion. Focus on scalability during the next pitch."
+                </p>
+<div class="mt-4 flex items-center gap-2">
+<div class="w-6 h-6 rounded-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="close-up portrait of a professional woman with a soft background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkmCsxKPjTZGlSYKKqO87-8KDnjYDOTvEvT4B66xy-BJpvRwOmiYiHLZ3CX8AVI-nawX-iKuebnPpxjm-OOFITRIOcd5JBS4GSIcg81-tH7LZu80dZmnNGsZeQbjlufEOgVwFtCSrXeINDK49AF_9MznQU8f3I9do0dIDP9oMLSPkJMN5Ow9XktWAGpVZ67L2pIjkFQp9D20T0_jplSfyzs9PR_QC_wTdAMrGFMnATsHacblKTyE3e_WkAxNIXytfxAh7SxUNHWYI"/>
+</div>
+<span class="text-[10px] font-bold tracking-widest uppercase text-on-surface-variant">Added by Marcus • 2d ago</span>
+</div>
+</div>
+</section>
+<!-- Timeline -->
+<section class="mb-8">
+<h3 class="font-headline text-xs font-bold tracking-[0.2em] uppercase text-on-surface-variant mb-8">Interaction History</h3>
+<div class="flex flex-col gap-10 border-l-[1.5px] border-outline-variant/30 ml-3 pl-8">
+<!-- Timeline Item 1 -->
+<div class="relative">
+<div class="absolute -left-[41px] top-1 w-6 h-6 bg-primary rounded-full flex items-center justify-center ring-4 ring-background">
+<span class="material-symbols-outlined text-white text-[14px]">phone_in_talk</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase">Today, 10:45 AM</span>
+<h4 class="text-lg font-bold tracking-tight">Strategy Briefing Call</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">Discussed Q4 roadmap and budget constraints. Julianne requested a follow-up email by Friday.</p>
+</div>
+</div>
+<!-- Timeline Item 2 -->
+<div class="relative">
+<div class="absolute -left-[41px] top-1 w-6 h-6 bg-surface-container-highest rounded-full flex items-center justify-center ring-4 ring-background">
+<span class="material-symbols-outlined text-on-surface text-[14px]">mail</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase">Oct 24, 2023</span>
+<h4 class="text-lg font-bold tracking-tight">Proposal Sent: Global Expansion</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">Document shared via secure portal. Engagement track: High.</p>
+</div>
+</div>
+<!-- Timeline Item 3 -->
+<div class="relative">
+<div class="absolute -left-[41px] top-1 w-6 h-6 bg-surface-container-highest rounded-full flex items-center justify-center ring-4 ring-background">
+<span class="material-symbols-outlined text-on-surface text-[14px]">handshake</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase">Oct 18, 2023</span>
+<h4 class="text-lg font-bold tracking-tight">On-site Workshop</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">Initial stakeholder meeting at London HQ.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pt-3 pb-8 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-2xl shadow-[0_-8px_30px_rgb(0,0,0,0.04)] rounded-t-3xl tonal-shift bg-zinc-100 dark:bg-zinc-900">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 hover:text-emerald-700 dark:hover:text-emerald-200 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wider uppercase mt-1">Home</span>
+</a>
+<!-- Contacts (ACTIVE) -->
+<a class="flex flex-col items-center justify-center text-emerald-900 dark:text-emerald-50 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl px-4 py-1 translate-y-[-2px] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="contacts" style="font-variation-settings: 'FILL' 1;">contacts</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wider uppercase mt-1">Contacts</span>
+</a>
+<!-- Deals -->
+<a class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 hover:text-emerald-700 dark:hover:text-emerald-200 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="handshake">handshake</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wider uppercase mt-1">Deals</span>
+</a>
+<!-- Activity -->
+<a class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 hover:text-emerald-700 dark:hover:text-emerald-200 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wider uppercase mt-1">Activity</span>
+</a>
+</nav>
+</body></html>

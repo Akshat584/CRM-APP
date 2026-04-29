@@ -8,116 +8,72 @@ const Sidebar = () => {
   const { user } = useAuth();
 
   const menuItems = [
-    { path: '/', icon: '📊', label: 'Dashboard' },
-    { path: '/contacts', icon: '👥', label: 'Contacts' },
-    { path: '/pipeline', icon: '📈', label: 'Sales Pipeline' },
-    { path: '/activities', icon: '📝', label: 'Activity Log' },
-    { path: '/tasks', icon: '✅', label: 'Tasks' },
-    { path: '/reports', icon: '📊', label: 'Reports' }
+    { path: '/', icon: 'dashboard', label: 'Overview' },
+    { path: '/contacts', icon: 'group', label: 'Contacts' },
+    { path: '/pipeline', icon: 'payments', label: 'Pipeline' },
+    { path: '/activities', icon: 'event_note', label: 'Activities' },
+    { path: '/tasks', icon: 'checklist', label: 'Tasks' },
+    { path: '/reports', icon: 'monitoring', label: 'Analytics' }
   ];
 
   return (
-    <div style={{
-      width: '220px',
-      background: 'var(--bg-surface)',
-      borderRight: '1px solid var(--border-default)',
-      display: 'flex',
-      flexDirection: 'column',
-      position: 'fixed',
-      height: '100vh',
-      left: 0,
-      top: 0,
-      zIndex: 100
-    }}>
-      <div style={{ padding: '24px', borderBottom: '1px solid var(--border-default)' }}>
-        <div style={{
-          fontFamily: 'Syne, sans-serif',
-          fontWeight: '800',
-          fontSize: '24px',
-          background: 'linear-gradient(135deg, var(--accent-blue), var(--accent-purple))',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text'
-        }}>
-          CRM Pro
+    <aside className="h-screen w-72 fixed left-0 top-0 z-50 bg-slate-50 flex flex-col py-10 px-6 gap-y-8 font-label tracking-tight border-none">
+      <div className="flex items-center gap-3 px-2">
+        <div className="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center">
+          <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1" }}>
+            account_balance
+          </span>
         </div>
-        <div style={{
-          fontSize: '11px',
-          color: 'var(--text-muted)',
-          marginTop: '4px'
-        }}>
-          Customer Management
+        <div>
+          <h1 className="text-2xl font-extrabold text-primary tracking-tighter">Aurelius</h1>
+          <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold opacity-60">Executive CRM</p>
         </div>
       </div>
 
-      <nav style={{ flex: 1, padding: '16px 8px' }}>
+      <nav className="flex-1 flex flex-col gap-y-1 mt-4">
         {menuItems.map((item) => {
           const isActive = location.pathname === item.path;
           return (
-            <div
+            <button
               key={item.path}
               onClick={() => navigate(item.path)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                padding: '12px 16px',
-                color: isActive ? 'var(--accent-blue)' : 'var(--text-secondary)',
-                cursor: 'pointer',
-                borderRadius: '8px',
-                margin: '4px 8px',
-                transition: 'all 0.15s ease',
-                background: isActive ? 'var(--bg-surface2)' : 'transparent'
-              }}
-              onMouseEnter={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.background = 'var(--bg-surface2)';
-                  e.currentTarget.style.color = 'var(--text-primary)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.background = 'transparent';
-                  e.currentTarget.style.color = 'var(--text-secondary)';
-                }
-              }}
+              className={`flex items-center gap-4 px-4 py-3 transition-all duration-300 group ${
+                isActive 
+                  ? 'text-primary font-bold bg-emerald-50 rounded-r-full scale-95 opacity-90' 
+                  : 'text-slate-500 font-medium hover:text-emerald-800 hover:bg-emerald-50'
+              }`}
             >
-              <span style={{ marginRight: '12px', fontSize: '18px' }}>
+              <span className="material-symbols-outlined" style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}>
                 {item.icon}
               </span>
-              <span style={{ fontSize: '14px', fontWeight: '500' }}>
-                {item.label}
-              </span>
-            </div>
+              <span className="text-sm tracking-tight">{item.label}</span>
+            </button>
           );
         })}
       </nav>
 
-      <div style={{ padding: '16px', borderTop: '1px solid var(--border-default)' }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <div style={{
-            width: '36px',
-            height: '36px',
-            borderRadius: '50%',
-            background: 'var(--accent-blue)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontWeight: '700',
-            marginRight: '12px'
-          }}>
-            {user?.name?.split(' ').map(n => n[0]).join('').substring(0, 2)}
+      <div className="mt-auto px-2">
+        <button 
+          onClick={() => navigate('/pipeline')}
+          className="w-full bg-primary text-white py-4 px-6 rounded-xl font-bold text-sm tracking-wide flex items-center justify-center gap-2 hover:opacity-90 transition-all shadow-lg shadow-primary/20 active:scale-95"
+        >
+          <span className="material-symbols-outlined text-sm">add</span>
+          Create Deal
+        </button>
+
+        <div className="mt-8 flex items-center gap-3 px-2">
+          <div className="w-10 h-10 rounded-full overflow-hidden bg-surface-container-high shrink-0">
+            <div className="w-full h-full bg-primary flex items-center justify-center text-white font-bold text-sm">
+              {user?.name?.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
+            </div>
           </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '13px', fontWeight: '500', color: 'var(--text-primary)' }}>
-              {user?.name}
-            </div>
-            <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-              {user?.role}
-            </div>
+          <div className="flex flex-col min-w-0">
+            <span className="text-sm font-bold text-primary truncate">{user?.name}</span>
+            <span className="text-xs text-slate-400 truncate">{user?.role || 'Executive'}</span>
           </div>
         </div>
       </div>
-    </div>
+    </aside>
   );
 };
 

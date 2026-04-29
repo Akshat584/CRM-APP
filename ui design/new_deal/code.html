@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aurelius CRM - New Deal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#005048",
+                        "surface-dim": "#dadadc",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-surface": "#1a1c1e",
+                        "background": "#f9f9fc",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#eeeef0",
+                        "on-primary-container": "#8cd6ca",
+                        "on-tertiary-container": "#c5c9c9",
+                        "error": "#ba1a1a",
+                        "on-background": "#1a1c1e",
+                        "surface-tint": "#176a60",
+                        "on-tertiary-fixed-variant": "#434848",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#005f56",
+                        "surface-variant": "#e2e2e5",
+                        "primary": "#00453e",
+                        "outline-variant": "#bec9c6",
+                        "secondary-container": "#e0e2eb",
+                        "inverse-surface": "#2f3133",
+                        "outline": "#6f7977",
+                        "surface-container-highest": "#e2e2e5",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#44474e",
+                        "on-tertiary-fixed": "#181c1d",
+                        "surface-container-high": "#e8e8ea",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#505555",
+                        "inverse-primary": "#8ad4c8",
+                        "inverse-on-surface": "#f0f0f3",
+                        "secondary": "#5b5e66",
+                        "primary-fixed": "#a6f1e4",
+                        "on-secondary-fixed": "#181c22",
+                        "surface-bright": "#f9f9fc",
+                        "secondary-fixed": "#e0e2eb",
+                        "on-secondary-container": "#61646c",
+                        "surface": "#f9f9fc",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#393e3e",
+                        "on-primary-fixed": "#00201c",
+                        "secondary-fixed-dim": "#c4c6cf",
+                        "tertiary-fixed-dim": "#c3c7c7",
+                        "tertiary-fixed": "#dfe3e3",
+                        "surface-container-low": "#f3f3f6",
+                        "on-surface-variant": "#3f4947",
+                        "primary-fixed-dim": "#8ad4c8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Manrope', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-emerald-50/80 dark:bg-emerald-950/80 backdrop-blur-xl transition-opacity hover:opacity-80">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Professional portrait of a business executive in a high-end office setting with soft natural lighting and a minimalist background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGii4j1TF_xihQs_BeqLlYbkamhy0_6q7EyJUidJT6n1Jpx3mzpACvJ82zDTLbX8RQwiCICvnt-tjdvgH_WzS96_2wld4uItQqwVY2tbATkc7chjZPhIdQhzJxlyRizEyfB9-0qzA1-w6SwpLnwVwfJ5M_a13_Gi15UfxwxI_XjkHrdbbQfENPU8YY3mDJwedG_asRozZa2Fd7uSwDjFblHBBtwbThRWdHVdV-yBqFeI-cJabnEyc6J2-Z-p8eLcyG3n0-22wDu8A"/>
+</div>
+</div>
+<h1 class="font-['Manrope'] text-xl font-extrabold tracking-tighter text-emerald-900 dark:text-emerald-50">Aurelius</h1>
+<div class="flex items-center active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined text-emerald-900 dark:text-emerald-50">search</span>
+</div>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-lg mx-auto">
+<!-- Header Section -->
+<header class="mb-12">
+<span class="text-on-surface-variant font-label text-[10px] font-semibold tracking-[0.2em] uppercase mb-2 block">Opportunity</span>
+<h2 class="text-4xl font-headline font-extrabold tracking-tight text-on-surface leading-tight">Create New Deal</h2>
+</header>
+<!-- Form Canvas -->
+<div class="space-y-12">
+<!-- Deal Name & High-Impact Value -->
+<section class="space-y-8">
+<div class="relative group">
+<label class="block text-on-surface-variant font-label text-[11px] font-bold tracking-wider uppercase mb-1">Deal Name</label>
+<input class="w-full bg-transparent border-0 border-b border-outline-variant py-3 px-0 text-xl font-headline focus:ring-0 focus:border-primary transition-colors placeholder:text-surface-variant" placeholder="Q4 Enterprise Expansion" type="text"/>
+</div>
+<div class="relative bg-surface-container-low p-8 rounded-2xl overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-8xl">payments</span>
+</div>
+<label class="block text-on-surface-variant font-label text-[11px] font-bold tracking-wider uppercase mb-2">Projected Value</label>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-light text-primary">$</span>
+<input class="w-full bg-transparent border-0 text-5xl font-extrabold font-headline focus:ring-0 text-on-surface placeholder:text-surface-variant p-0 m-0" placeholder="0.00" type="number"/>
+</div>
+</div>
+</section>
+<!-- Metadata Grid (Asymmetrical Layout) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-8">
+<!-- Close Date -->
+<div class="relative">
+<label class="block text-on-surface-variant font-label text-[11px] font-bold tracking-wider uppercase mb-1">Expected Close</label>
+<div class="flex items-center gap-3 border-b border-outline-variant py-3">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">calendar_today</span>
+<input class="bg-transparent border-0 focus:ring-0 p-0 text-sm font-medium w-full text-on-surface" type="date"/>
+</div>
+</div>
+<!-- Stage -->
+<div class="relative">
+<label class="block text-on-surface-variant font-label text-[11px] font-bold tracking-wider uppercase mb-1">Current Stage</label>
+<div class="relative border-b border-outline-variant py-3">
+<select class="w-full bg-transparent border-0 focus:ring-0 p-0 text-sm font-medium appearance-none text-on-surface pr-8">
+<option>Discovery</option>
+<option>Qualified</option>
+<option>Proposal</option>
+<option>Negotiation</option>
+<option>Closing</option>
+</select>
+<span class="material-symbols-outlined absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Contact Association Card -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/10">
+<label class="block text-on-surface-variant font-label text-[11px] font-bold tracking-wider uppercase mb-4">Primary Contact</label>
+<div class="flex items-center gap-4 group cursor-pointer">
+<div class="w-14 h-14 bg-primary-fixed rounded-full flex items-center justify-center text-on-primary-fixed font-headline text-xl font-bold">
+                            MK
+                        </div>
+<div class="flex-1">
+<h4 class="text-sm font-bold text-on-surface">Marcus K.</h4>
+<p class="text-[11px] text-on-surface-variant">Global Logistics Director</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">add_circle</span>
+</div>
+<div class="mt-6 pt-6 border-t border-surface-container-high">
+<button class="w-full text-left text-[11px] font-bold text-primary tracking-widest uppercase flex items-center justify-between">
+                            Switch Contact
+                            <span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Action Area -->
+<div class="pt-8 space-y-4">
+<button class="w-full bg-primary text-on-primary py-5 rounded-xl font-bold tracking-widest uppercase text-xs transition-all active:scale-[0.98] shadow-xl shadow-primary/10">
+                    Initialize Opportunity
+                </button>
+<button class="w-full bg-surface-container-high text-on-surface py-5 rounded-xl font-bold tracking-widest uppercase text-xs transition-all active:scale-[0.98]">
+                    Save to Drafts
+                </button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pt-3 pb-8 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-2xl shadow-[0_-8px_30px_rgb(0,0,0,0.04)] rounded-t-3xl">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 hover:text-emerald-700 dark:hover:text-emerald-200 transition-all" href="#">
+<span class="material-symbols-outlined mb-1">dashboard</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wider uppercase">Home</span>
+</a>
+<!-- Contacts -->
+<a class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 hover:text-emerald-700 dark:hover:text-emerald-200 transition-all" href="#">
+<span class="material-symbols-outlined mb-1">contacts</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wider uppercase">Contacts</span>
+</a>
+<!-- Deals (ACTIVE) -->
+<a class="flex flex-col items-center justify-center text-emerald-900 dark:text-emerald-50 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl px-4 py-1 translate-y-[-2px] transition-all" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">handshake</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wider uppercase">Deals</span>
+</a>
+<!-- Activity -->
+<a class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 hover:text-emerald-700 dark:hover:text-emerald-200 transition-all" href="#">
+<span class="material-symbols-outlined mb-1">analytics</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wider uppercase">Activity</span>
+</a>
+</nav>
+</body></html>

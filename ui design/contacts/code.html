@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aurelius CRM - Contacts</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#005048",
+                        "surface-dim": "#dadadc",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-surface": "#1a1c1e",
+                        "background": "#f9f9fc",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#eeeef0",
+                        "on-primary-container": "#8cd6ca",
+                        "on-tertiary-container": "#c5c9c9",
+                        "error": "#ba1a1a",
+                        "on-background": "#1a1c1e",
+                        "surface-tint": "#176a60",
+                        "on-tertiary-fixed-variant": "#434848",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#005f56",
+                        "surface-variant": "#e2e2e5",
+                        "primary": "#00453e",
+                        "outline-variant": "#bec9c6",
+                        "secondary-container": "#e0e2eb",
+                        "inverse-surface": "#2f3133",
+                        "outline": "#6f7977",
+                        "surface-container-highest": "#e2e2e5",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#44474e",
+                        "on-tertiary-fixed": "#181c1d",
+                        "surface-container-high": "#e8e8ea",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#505555",
+                        "inverse-primary": "#8ad4c8",
+                        "inverse-on-surface": "#f0f0f3",
+                        "secondary": "#5b5e66",
+                        "primary-fixed": "#a6f1e4",
+                        "on-secondary-fixed": "#181c22",
+                        "surface-bright": "#f9f9fc",
+                        "secondary-fixed": "#e0e2eb",
+                        "on-secondary-container": "#61646c",
+                        "surface": "#f9f9fc",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#393e3e",
+                        "on-primary-fixed": "#00201c",
+                        "secondary-fixed-dim": "#c4c6cf",
+                        "tertiary-fixed-dim": "#c3c7c7",
+                        "tertiary-fixed": "#dfe3e3",
+                        "surface-container-low": "#f3f3f6",
+                        "on-surface-variant": "#3f4947",
+                        "primary-fixed-dim": "#8ad4c8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* No-Line Rule styling */
+        .tonal-card {
+            background-color: #ffffff;
+        }
+        .page-base {
+            background-color: #f3f3f6;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-emerald-50/80 backdrop-blur-xl flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-3">
+<img alt="Profile" class="w-8 h-8 rounded-full bg-emerald-100" data-alt="professional headshot of a smiling executive with clean lighting and soft neutral background for user profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACU7g5QbX5ShmPCD2Tc2D7Wni7shMEmU447tF-Zs4PgYn6W9j_6OpUV3jEQ7SikAdPo9ZBS-ZiZ9Tr4KZagg577jbT5dQa3jlVBY_RLpTjO-eJFq24wsYJKNZCeoRZKWynDBm72ydUpoKvsHBcTXCTwN_ORV9OKbsb2QX2SEOfky-o9sRuznTkuY5AMBV_yn9ku1tELZyT7gq_q1COoiV4LKO3_RZ83ih2x9tt5MKWvZ9BUQEKWP0WwhaydqLzbFzDfZbNFW7sFR0"/>
+</div>
+<h1 class="font-['Manrope'] text-xl font-extrabold tracking-tighter text-emerald-900">Aurelius</h1>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-emerald-900 cursor-pointer hover:opacity-80 transition-opacity">search</span>
+</div>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-md mx-auto space-y-8">
+<!-- Page Header -->
+<section class="space-y-2">
+<h2 class="text-on-surface font-headline font-bold text-3xl tracking-tight">Contacts</h2>
+<p class="text-on-surface-variant text-sm font-medium tracking-wide">Manage your network and pipeline</p>
+</section>
+<!-- Search & Filter Bar -->
+<section class="space-y-6">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-sm">search</span>
+<input class="w-full bg-surface-container-low border-b border-outline-variant focus:border-primary focus:ring-0 px-12 py-3 text-on-surface placeholder:text-outline transition-all rounded-t-xl" placeholder="Search contacts..." type="text"/>
+</div>
+<!-- Quick Filters (Pills) -->
+<div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+<button class="bg-primary text-on-primary px-5 py-2 rounded-full text-xs font-bold tracking-widest uppercase shadow-sm">All</button>
+<button class="bg-surface-container-high text-on-surface px-5 py-2 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-surface-container-highest transition-colors">Leads</button>
+<button class="bg-surface-container-high text-on-surface px-5 py-2 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-surface-container-highest transition-colors">Clients</button>
+<button class="bg-surface-container-high text-on-surface px-5 py-2 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-surface-container-highest transition-colors">Archived</button>
+</div>
+</section>
+<!-- Contact List (Editorial Ledger Style) -->
+<section class="space-y-4">
+<!-- Contact Item 1 -->
+<div class="flex items-center gap-5 p-4 bg-surface-container-lowest rounded-2xl group active:scale-95 transition-transform duration-200">
+<div class="w-16 h-16 flex items-center justify-center bg-emerald-50 rounded-xl">
+<span class="text-primary font-headline text-3xl font-extrabold">EM</span>
+</div>
+<div class="flex-1 space-y-0.5">
+<h3 class="text-on-surface font-bold text-lg tracking-tight">Elena Moretti</h3>
+<p class="text-on-surface-variant text-xs font-medium">Design Lead at Veridian</p>
+<div class="pt-1">
+<span class="bg-primary-fixed text-on-primary-fixed-variant px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">Lead Qualified</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-sm group-hover:text-primary transition-colors">chevron_right</span>
+</div>
+<!-- Contact Item 2 -->
+<div class="flex items-center gap-5 p-4 bg-surface-container-lowest rounded-2xl group active:scale-95 transition-transform duration-200">
+<div class="w-16 h-16 flex items-center justify-center bg-zinc-100 rounded-xl">
+<span class="text-secondary font-headline text-3xl font-extrabold">JH</span>
+</div>
+<div class="flex-1 space-y-0.5">
+<h3 class="text-on-surface font-bold text-lg tracking-tight">Julian Thorne</h3>
+<p class="text-on-surface-variant text-xs font-medium">CFO, Helios Tech</p>
+<div class="pt-1">
+<span class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">Client</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-sm group-hover:text-primary transition-colors">chevron_right</span>
+</div>
+<!-- Contact Item 3 -->
+<div class="flex items-center gap-5 p-4 bg-surface-container-lowest rounded-2xl group active:scale-95 transition-transform duration-200">
+<div class="w-16 h-16 flex items-center justify-center bg-emerald-50 rounded-xl">
+<span class="text-primary font-headline text-3xl font-extrabold">SA</span>
+</div>
+<div class="flex-1 space-y-0.5">
+<h3 class="text-on-surface font-bold text-lg tracking-tight">Sana Al-Farsi</h3>
+<p class="text-on-surface-variant text-xs font-medium">VP Global Strategy</p>
+<div class="pt-1">
+<span class="bg-primary-fixed text-on-primary-fixed-variant px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">Lead Qualified</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-sm group-hover:text-primary transition-colors">chevron_right</span>
+</div>
+<!-- Contact Item 4 -->
+<div class="flex items-center gap-5 p-4 bg-surface-container-lowest rounded-2xl group active:scale-95 transition-transform duration-200">
+<div class="w-16 h-16 flex items-center justify-center bg-rose-50 rounded-xl">
+<span class="text-error font-headline text-3xl font-extrabold">MB</span>
+</div>
+<div class="flex-1 space-y-0.5">
+<h3 class="text-on-surface font-bold text-lg tracking-tight">Marcus Bishop</h3>
+<p class="text-on-surface-variant text-xs font-medium">Operations at Nexus</p>
+<div class="pt-1">
+<span class="bg-error-container text-on-error-container px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">High Risk</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-sm group-hover:text-primary transition-colors">chevron_right</span>
+</div>
+<!-- Contact Item 5 -->
+<div class="flex items-center gap-5 p-4 bg-surface-container-lowest rounded-2xl group active:scale-95 transition-transform duration-200">
+<div class="w-16 h-16 flex items-center justify-center bg-zinc-100 rounded-xl">
+<span class="text-secondary font-headline text-3xl font-extrabold">LD</span>
+</div>
+<div class="flex-1 space-y-0.5">
+<h3 class="text-on-surface font-bold text-lg tracking-tight">Lara Dupont</h3>
+<p class="text-on-surface-variant text-xs font-medium">Independent Consultant</p>
+<div class="pt-1">
+<span class="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">Archived</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-sm group-hover:text-primary transition-colors">chevron_right</span>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pt-3 pb-8 bg-white/80 backdrop-blur-2xl shadow-[0_-8px_30px_rgb(0,0,0,0.04)] rounded-t-3xl">
+<div class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 hover:text-emerald-700 transition-all cursor-pointer">
+<span class="material-symbols-outlined mb-1">dashboard</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wider uppercase">Home</span>
+</div>
+<!-- Active Tab: Contacts -->
+<div class="flex flex-col items-center justify-center text-emerald-900 bg-emerald-50 rounded-xl px-4 py-1 translate-y-[-2px] transition-all cursor-default">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">contacts</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wider uppercase">Contacts</span>
+</div>
+<div class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 hover:text-emerald-700 transition-all cursor-pointer">
+<span class="material-symbols-outlined mb-1">handshake</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wider uppercase">Deals</span>
+</div>
+<div class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 hover:text-emerald-700 transition-all cursor-pointer">
+<span class="material-symbols-outlined mb-1">analytics</span>
+<span class="font-['Manrope'] text-[10px] font-semibold tracking-wider uppercase">Activity</span>
+</div>
+</nav>
+<!-- Contextual FAB (Hidden on this screen as per suppression rules, but provided if specific CRM action is required) -->
+<button class="fixed bottom-28 right-6 w-14 h-14 bg-primary text-on-primary rounded-2xl flex items-center justify-center shadow-xl hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined">person_add</span>
+</button>
+</body></html>

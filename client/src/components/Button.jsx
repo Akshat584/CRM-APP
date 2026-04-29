@@ -9,64 +9,21 @@ const Button = ({
   onClick,
   type = 'button',
   className = '',
+  fullWidth = false,
   ...props
 }) => {
-  const baseStyles = {
-    padding: '10px 20px',
-    border: 'none',
-    borderRadius: '8px',
-    fontSize: '14px',
-    fontWeight: '500',
-    cursor: disabled || loading ? 'not-allowed' : 'pointer',
-    transition: 'all 0.15s ease',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '8px',
-    fontFamily: "'DM Sans', sans-serif"
+  const variants = {
+    primary: 'bg-primary text-white hover:opacity-90 shadow-lg shadow-primary/20',
+    secondary: 'bg-surface-container-high text-on-surface hover:bg-surface-container-highest',
+    tertiary: 'bg-transparent text-primary hover:bg-primary/5',
+    danger: 'bg-error text-white hover:opacity-90 shadow-lg shadow-error/20',
+    outline: 'border border-outline-variant text-on-surface hover:bg-surface-container-low'
   };
 
-  const sizeStyles = {
-    sm: { padding: '6px 12px', fontSize: '13px' },
-    md: { padding: '10px 20px', fontSize: '14px' },
-    lg: { padding: '14px 28px', fontSize: '15px' }
-  };
-
-  const variantStyles = {
-    primary: {
-      background: 'var(--accent-blue)',
-      color: 'white',
-      opacity: disabled || loading ? 0.6 : 1
-    },
-    secondary: {
-      background: 'transparent',
-      color: 'var(--text-primary)',
-      border: '1px solid var(--border-default)',
-      opacity: disabled || loading ? 0.6 : 1
-    },
-    ghost: {
-      background: 'transparent',
-      color: 'var(--text-secondary)',
-      opacity: disabled || loading ? 0.6 : 1
-    },
-    danger: {
-      background: 'var(--color-danger)',
-      color: 'white',
-      opacity: disabled || loading ? 0.6 : 1
-    }
-  };
-
-  const hoverStyles = {
-    primary: { background: '#3a7ae0' },
-    secondary: { background: 'var(--bg-surface2)' },
-    ghost: { color: 'var(--text-primary)' },
-    danger: { background: '#ef4444' }
-  };
-
-  const style = {
-    ...baseStyles,
-    ...sizeStyles[size],
-    ...variantStyles[variant]
+  const sizes = {
+    sm: 'px-4 py-2 text-[10px]',
+    md: 'px-6 py-3 text-xs',
+    lg: 'px-10 py-4 text-sm'
   };
 
   return (
@@ -74,35 +31,18 @@ const Button = ({
       type={type}
       onClick={onClick}
       disabled={disabled || loading}
-      style={style}
-      className={className}
-      onMouseEnter={(e) => {
-        if (!disabled && !loading) {
-          e.currentTarget.style.transform = 'translateY(-2px)';
-          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-          if (variantStyles[variant]) {
-            Object.assign(e.currentTarget.style, hoverStyles[variant]);
-          }
-        }
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = 'none';
-        if (!disabled && !loading) {
-          Object.assign(e.currentTarget.style, variantStyles[variant]);
-        }
-      }}
+      className={`
+        inline-flex items-center justify-center gap-2 rounded-xl font-bold uppercase tracking-widest transition-all active:scale-95
+        ${variants[variant]}
+        ${sizes[size]}
+        ${fullWidth ? 'w-full' : ''}
+        ${disabled || loading ? 'opacity-50 cursor-not-allowed grayscale' : 'cursor-pointer'}
+        ${className}
+      `}
       {...props}
     >
       {loading && (
-        <div style={{
-          width: '16px',
-          height: '16px',
-          border: '2px solid currentColor',
-          borderTopColor: 'transparent',
-          borderRadius: '50%',
-          animation: 'spin 0.6s linear infinite'
-        }} />
+        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
       )}
       {children}
     </button>

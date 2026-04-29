@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import apiClient from '../api/apiClient';
-import { useLocation } from 'react-router-dom';
 import Button from './Button';
 
 const Topbar = ({ actionLabel, onActionClick }) => {
@@ -19,122 +18,80 @@ const Topbar = ({ actionLabel, onActionClick }) => {
     const timer = setTimeout(async () => {
       try {
         const res = await apiClient.get('/search', { params: { q: search } });
-        setResults(res.data.data);
+        setResults(Array.isArray(res.data.data) ? res.data.data : []);
         setShowResults(true);
       } catch (err) {
         console.error(err);
+        setResults([]);
       }
     }, 300);
     return () => clearTimeout(timer);
   }, [search]);
 
-  const getPageTitle = () => {
-    const path = location.pathname;
-    const titles = {
-      '/': 'Dashboard',
-      '/contacts': 'Contacts',
-      '/pipeline': 'Sales Pipeline',
-      '/activities': 'Activity Log',
-      '/tasks': 'Tasks',
-      '/reports': 'Reports & Analytics'
-    };
-    return titles[path] || 'CRM';
-  };
-
   return (
-    <div style={{
-      height: '56px',
-      background: 'var(--bg-surface)',
-      borderBottom: '1px solid var(--border-default)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '0 24px',
-      position: 'fixed',
-      left: '220px',
-      right: 0,
-      top: 0,
-      zIndex: 99
-    }}>
-      <h1 style={{
-        fontFamily: 'Syne, sans-serif',
-        fontWeight: '700',
-        fontSize: '16px',
-        color: 'var(--text-primary)',
-        margin: 0
-      }}>
-        {getPageTitle()}
-      </h1>
+    <header className="fixed top-0 right-0 w-[calc(100%-18rem)] h-20 glass-effect flex items-center justify-between px-12 z-40 shadow-sm shadow-emerald-900/5 font-label text-sm uppercase tracking-widest">
+      <div className="flex-1 flex items-center max-w-xl">
+        <div className="w-full relative group">
+          <span className="material-symbols-outlined absolute left-0 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+          <input 
+            className="w-full bg-transparent border-none focus:ring-0 pl-8 text-sm font-label uppercase tracking-widest text-on-surface placeholder:text-slate-300"
+            placeholder="SEARCH THE LEDGER..." 
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onFocus={() => setShowResults(true)}
+          />
+          <div className="absolute bottom-0 left-0 w-0 h-[2px] bg-primary group-focus-within:w-full transition-all duration-500"></div>
 
-      <div style={{ position: 'relative', flex: 1, maxWidth: '400px', margin: '0 24px' }}>
-        <input 
-          type="text" 
-          placeholder="Global search contacts, deals..." 
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          onFocus={() => setShowResults(true)}
-          style={{
-            width: '100%',
-            padding: '8px 12px 8px 36px',
-            background: 'var(--bg-surface2)',
-            border: '1px solid var(--border-default)',
-            borderRadius: '6px',
-            color: 'var(--text-primary)',
-            fontSize: '13px'
-          }}
-        />
-        <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }}>🔍</span>
-        
-        {showResults && results.length > 0 && (
-          <div style={{
-            position: 'absolute',
-            top: '42px',
-            left: 0,
-            right: 0,
-            background: 'var(--bg-surface)',
-            border: '1px solid var(--border-default)',
-            borderRadius: '8px',
-            boxShadow: '0 10px 25px rgba(0,0,0,0.3)',
-            maxHeight: '300px',
-            overflowY: 'auto',
-            padding: '8px'
-          }}>
-            {results.map(r => (
-              <div 
-                key={r.id} 
-                onClick={() => {
-                  setSearch('');
-                  setShowResults(false);
-                  navigate(r.type === 'contact' ? '/contacts' : '/pipeline');
-                }}
-                style={{
-                  padding: '8px 12px',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'var(--bg-surface2)'}
-                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-              >
-                <div>
-                  <div style={{ fontSize: '13px', fontWeight: '500' }}>{r.name}</div>
-                  <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{r.sub}</div>
+          {showResults && results.length > 0 && (
+            <div className="absolute top-12 left-0 right-0 bg-white rounded-xl shadow-2xl p-4 normal-case tracking-normal z-50">
+              {results.map(r => (
+                <div 
+                  key={r.id} 
+                  onClick={() => {
+                    setSearch('');
+                    setShowResults(false);
+                    navigate(r.type === 'contact' ? '/contacts' : '/pipeline');
+                  }}
+                  className="flex items-center justify-between p-3 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors"
+                >
+                  <div>
+                    <div className="text-sm font-bold text-on-surface">{r.name}</div>
+                    <div className="text-[10px] text-slate-400">{r.sub}</div>
+                  </div>
+                  <span className="text-[9px] font-bold bg-slate-100 px-2 py-0.5 rounded uppercase">{r.type}</span>
                 </div>
-                <span style={{ fontSize: '10px', padding: '2px 6px', background: 'var(--bg-surface3)', borderRadius: '4px', textTransform: 'uppercase' }}>{r.type}</span>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
-      {actionLabel && (
-        <Button onClick={onActionClick}>
-          {actionLabel}
-        </Button>
-      )}
-    </div>
+      <div className="flex items-center gap-8">
+        <div className="flex items-center gap-6 text-slate-400">
+          <button className="hover:text-primary transition-all">
+            <span className="material-symbols-outlined">notifications</span>
+          </button>
+          <button className="hover:text-primary transition-all">
+            <span className="material-symbols-outlined">calendar_today</span>
+          </button>
+          <button className="hover:text-primary transition-all">
+            <span className="material-symbols-outlined">chat_bubble_outline</span>
+          </button>
+        </div>
+        
+        <div className="h-8 w-[1px] bg-slate-100"></div>
+        
+        <div className="flex items-center gap-4">
+          {actionLabel && (
+            <Button variant="primary" size="sm" onClick={onActionClick}>
+              {actionLabel}
+            </Button>
+          )}
+          <span className="text-sm font-label uppercase tracking-widest text-primary font-extrabold hidden lg:block">The Ledger</span>
+        </div>
+      </div>
+    </header>
   );
 };
 

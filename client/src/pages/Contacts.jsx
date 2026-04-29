@@ -1,441 +1,286 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useContacts } from '../hooks/useContacts';
-import { useContact } from '../hooks/useContacts';
-import { useCreateContact, useUpdateContact, useDeleteContact } from '../hooks/useContacts';
+import { useContacts, useContact, useCreateContact, useUpdateContact, useDeleteContact } from '../hooks/useContacts';
 import { useCRM } from '../context/CRMContext';
-import { formatCurrency, getStatusColor } from '../utils/format';
-import Table from '../components/Table';
+import { formatCurrency, getRelativeTime } from '../utils/format';
 import Modal from '../components/Modal';
 import Button from '../components/Button';
-import Avatar from '../components/Avatar';
+
+const ContactDetails = ({ contactId, onBack }) => {
+  const { data: contact, loading } = useContact(contactId);
+  const { updateContact } = useUpdateContact();
+  const { deleteContact } = useDeleteContact();
+  const { refreshData } = useCRM();
+
+  if (loading) return <div className="animate-pulse space-y-8"><div className="h-64 bg-slate-100 rounded-2xl" /><div className="h-96 bg-slate-100 rounded-2xl" /></div>;
+  if (!contact) return null;
+
+  return (
+    <div className="animate-slideIn">
+      {/* Back Button */}
+      <button onClick={onBack} className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest mb-8 hover:translate-x-[-4px] transition-transform">
+        <span className="material-symbols-outlined text-sm">arrow_back</span>
+        Back to Directory
+      </button>
+
+      {/* HERO PROFILE SECTION */}
+      <section className="flex flex-col md:flex-row gap-12 items-start mb-16">
+        <div className="relative">
+          <div className="w-48 h-64 bg-primary-container rounded-2xl shadow-2xl shadow-primary/10 flex items-end p-6">
+             <span className="text-8xl font-black text-on-primary-container opacity-20 select-none">
+               {contact.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
+             </span>
+          </div>
+          <div className="absolute -bottom-4 -right-4 bg-primary-fixed text-on-primary-fixed-variant px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest shadow-xl">
+            {contact.status === 'Customer' ? 'VIP Client' : contact.status}
+          </div>
+        </div>
+        <div className="flex-1 pt-4">
+          <div className="flex justify-between items-start mb-6">
+            <div>
+              <h2 className="text-5xl font-extrabold tracking-tighter text-on-surface mb-2">{contact.name}</h2>
+              <p className="text-on-surface-variant font-medium tracking-wide flex items-center gap-2">
+                {contact.role || 'Partner'} <span className="w-1.5 h-1.5 rounded-full bg-outline-variant"></span> {contact.company || 'Private Entity'}
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <Button variant="primary" className="px-6 py-3">
+                <span className="material-symbols-outlined text-lg mr-2">call</span>
+                Call
+              </Button>
+              <Button variant="secondary" className="px-6 py-3">
+                <span className="material-symbols-outlined text-lg mr-2">mail</span>
+                Email
+              </Button>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-8 mt-12">
+            <div className="border-l-2 border-primary-fixed pl-6">
+              <p className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Lifetime Value</p>
+              <p className="text-2xl font-bold text-primary">{formatCurrency(contact.lifetime_value || 0)}</p>
+            </div>
+            <div className="border-l-2 border-primary-fixed pl-6">
+              <p className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Email</p>
+              <p className="text-lg font-bold text-primary truncate">{contact.email}</p>
+            </div>
+            <div className="border-l-2 border-primary-fixed pl-6">
+              <p className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Risk Score</p>
+              <p className="text-2xl font-bold text-primary">Low</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CONTENT GRID */}
+      <div className="grid grid-cols-12 gap-8 items-start">
+        {/* LEFT COLUMN */}
+        <div className="col-span-12 lg:col-span-8 flex flex-col gap-8">
+          {/* ACTIVE DEALS BENTO */}
+          <div className="bg-surface-container-low rounded-3xl p-8">
+            <div className="flex justify-between items-center mb-8">
+              <h3 className="text-lg font-extrabold uppercase tracking-widest">Active Deals</h3>
+              <button className="text-xs font-bold text-primary tracking-widest uppercase flex items-center gap-1">
+                View Pipeline <span className="material-symbols-outlined text-sm">arrow_forward</span>
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {contact.deals?.map(deal => (
+                <div key={deal.id} className="bg-surface-container-lowest p-6 rounded-2xl group cursor-pointer hover:ring-2 ring-primary/10 transition-all">
+                  <div className="flex justify-between items-start mb-4">
+                    <span className="text-[10px] font-extrabold px-2 py-1 bg-primary-fixed text-on-primary-fixed-variant rounded uppercase">{deal.stage}</span>
+                    <span className="text-on-surface-variant text-xs">{getRelativeTime(deal.created_at)}</span>
+                  </div>
+                  <h4 className="text-xl font-bold mb-4">{deal.title}</h4>
+                  <p className="text-3xl font-black text-primary tracking-tighter">{formatCurrency(deal.value)}</p>
+                </div>
+              ))}
+              {(!contact.deals || contact.deals.length === 0) && (
+                <div className="col-span-2 py-12 text-center text-slate-400 font-medium italic">No active deals found in ledger.</div>
+              )}
+            </div>
+          </div>
+
+          {/* INTERNAL NOTES */}
+          <div className="relative bg-white p-10 rounded-3xl overflow-hidden shadow-sm">
+            <div className="absolute top-0 right-0 p-8 opacity-10">
+              <span className="material-symbols-outlined text-8xl">format_quote</span>
+            </div>
+            <h3 className="text-xs font-extrabold uppercase tracking-widest text-on-surface-variant mb-6 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary"></span> Internal Strategy Notes
+            </h3>
+            <blockquote className="text-xl font-light leading-relaxed text-on-surface italic">
+              "Relationship established. Focus on high-yield opportunities and direct communication. Values data-backed projections."
+            </blockquote>
+          </div>
+        </div>
+
+        {/* RIGHT COLUMN: INTERACTION HISTORY */}
+        <div className="col-span-12 lg:col-span-4">
+          <div className="bg-surface-container-low rounded-3xl p-8 sticky top-24">
+            <h3 className="text-lg font-extrabold uppercase tracking-widest mb-10">Interaction History</h3>
+            <div className="relative pl-8 border-l border-outline-variant flex flex-col gap-12">
+               {contact.activities?.slice(0, 4).map((activity, idx) => (
+                 <div key={activity.id} className="relative">
+                    <div className={`absolute -left-[41px] top-0 w-4 h-4 rounded-full ring-4 ring-surface-container-low ${idx === 0 ? 'bg-primary' : 'bg-outline-variant'}`}></div>
+                    <p className="text-[10px] font-extrabold text-on-surface-variant uppercase tracking-widest mb-2">{getRelativeTime(activity.activity_date)}</p>
+                    <h5 className="text-sm font-bold text-on-surface">{activity.subject}</h5>
+                    <p className="text-xs text-on-surface-variant mt-1 line-clamp-2">{activity.body}</p>
+                 </div>
+               ))}
+               {(!contact.activities || contact.activities.length === 0) && (
+                 <div className="text-slate-400 text-xs italic">No history recorded yet.</div>
+               )}
+            </div>
+            <Button variant="secondary" fullWidth className="mt-12 uppercase tracking-widest text-[10px]">Load Older History</Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Contacts = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
-  const [selectedContact, setSelectedContact] = useState(null);
+  const [statusFilter, setStatusFilter] = useState('All');
+  const [selectedContactId, setSelectedContactId] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [formData, setFormData] = useState({ name: '', email: '', phone: '', company: '', status: 'Lead', lifetime_value: 0, tags: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '', company: '', status: 'Lead' });
   
   const { setGlobalAction, refreshTrigger, refreshData } = useCRM();
-  const { createContact, loading: creating } = useCreateContact();
-  const { updateContact, loading: updating } = useUpdateContact();
-  const { deleteContact, loading: deleting } = useDeleteContact();
+  const { createContact } = useCreateContact();
 
   useEffect(() => {
     setGlobalAction(() => () => {
-      setFormData({ name: '', email: '', phone: '', company: '', status: 'Lead', lifetime_value: 0, tags: '' });
+      setFormData({ name: '', email: '', phone: '', company: '', status: 'Lead' });
       setShowCreateModal(true);
     });
     return () => setGlobalAction(null);
   }, [setGlobalAction]);
-  const [debouncedSearch, setDebouncedSearch] = useState('');
-  const navigate = useNavigate();
 
   const { data: contacts, loading } = useContacts({
-    search: debouncedSearch,
-    status: statusFilter,
-    limit: 20,
+    search: searchTerm,
+    status: statusFilter === 'All' ? undefined : statusFilter,
+    limit: 50,
     trigger: refreshTrigger
   });
 
-  const { data: contactDetails } = useContact(selectedContact?.id);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearch(searchTerm);
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [searchTerm]);
-
-  const columns = [
-    {
-      header: 'Contact',
-      key: 'name',
-      render: (row) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <Avatar name={row.name} />
-          <div>
-            <div style={{ fontSize: '14px', color: 'var(--text-primary)', marginBottom: '2px' }}>
-              {row.name}
-            </div>
-            <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-              {row.email}
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      header: 'Company',
-      key: 'company',
-      render: (row) => row.company || '-'
-    },
-    {
-      header: 'Status',
-      key: 'status',
-      render: (row) => (
-        <span style={{
-          padding: '4px 8px',
-          backgroundColor: `${getStatusColor(row.status)}20`,
-          color: getStatusColor(row.status),
-          borderRadius: '6px',
-          fontSize: '11px',
-          fontWeight: '500'
-        }}>
-          {row.status}
-        </span>
-      )
-    },
-    {
-      header: 'Lifetime Value',
-      key: 'lifetime_value',
-      render: (row) => formatCurrency(row.lifetime_value || 0)
-    },
-    {
-      header: 'Tags',
-      key: 'tags',
-      render: (row) => (
-        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-          {row.tags?.map((tag, i) => (
-            <span key={i} style={{
-              padding: '2px 6px',
-              background: 'var(--bg-surface2)',
-              border: '1px solid var(--border-emphasis)',
-              borderRadius: '4px',
-              fontSize: '10px',
-              color: 'var(--text-secondary)'
-            }}>
-              {tag}
-            </span>
-          ))}
-        </div>
-      )
-    },
-    {
-      header: 'Phone',
-      key: 'phone',
-      render: (row) => row.phone || '-'
-    }
-  ];
-
-  const handleRowClick = (contact) => {
-    setSelectedContact(contact);
-  };
-
-  const getActionButtonLabel = () => '+ Add Contact';
+  if (selectedContactId) {
+    return <ContactDetails contactId={selectedContactId} onBack={() => setSelectedContactId(null)} />;
+  }
 
   return (
-    <>
-      <div className="view-content">
-        <div style={{ marginBottom: '24px' }}>
-          <input
-            type="text"
-            placeholder="Search contacts by name, company, or email..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '12px 16px',
-              background: 'var(--bg-surface)',
-              border: '1px solid var(--border-default)',
-              borderRadius: '8px',
-              color: 'var(--text-primary)',
-              fontSize: '14px',
-              marginBottom: '16px'
-            }}
-          />
-
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              style={{
-                padding: '10px 12px',
-                background: 'var(--bg-surface)',
-                border: '1px solid var(--border-default)',
-                borderRadius: '6px',
-                color: 'var(--text-primary)',
-                fontSize: '14px'
-              }}
-            >
-              <option value="">All Statuses</option>
-              <option value="Lead">Lead</option>
-              <option value="Prospect">Prospect</option>
-              <option value="Customer">Customer</option>
-              <option value="Churned">Churned</option>
-            </select>
+    <div className="view-content animate-slideIn">
+      {/* Page Header Section */}
+      <div className="flex flex-col gap-8 mb-16">
+        <div className="flex justify-between items-end">
+          <div className="space-y-2">
+            <h2 className="text-5xl font-extrabold text-on-surface tracking-tight">Contacts</h2>
+            <p className="text-on-surface-variant text-lg font-light">Managing {contacts?.length || 0} professional connections</p>
+          </div>
+          <div className="flex gap-4">
+            <Button variant="secondary" className="px-6">Export CSV</Button>
+            <Button variant="primary" className="px-6" onClick={() => setShowCreateModal(true)}>Add Contact</Button>
           </div>
         </div>
-
-        <Table
-          columns={columns}
-          data={contacts}
-          loading={loading}
-          onRowClick={handleRowClick}
-        />
+        {/* Filters */}
+        <div className="flex items-center gap-3">
+          {['All', 'Lead', 'Prospect', 'Customer', 'Churned'].map(status => (
+            <button
+              key={status}
+              onClick={() => setStatusFilter(status)}
+              className={`px-5 py-2 rounded-full text-xs font-bold tracking-widest uppercase transition-all ${
+                statusFilter === status ? 'bg-primary text-on-primary' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'
+              }`}
+            >
+              {status}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {selectedContact && contactDetails && (
-        <div className="detail-panel">
-          <div className="detail-header">
-            <div className="detail-close" onClick={() => setSelectedContact(null)}>✕</div>
-          </div>
-          <div className="detail-content">
-            <Avatar name={selectedContact.name} size="xl" />
-            <h2 className="detail-name">{selectedContact.name}</h2>
-            <div className="detail-info-grid">
-              <div className="detail-info-item">
-                <div className="detail-info-label">Email</div>
-                <div className="detail-info-value">{selectedContact.email || '-'}</div>
-              </div>
-              <div className="detail-info-item">
-                <div className="detail-info-label">Phone</div>
-                <div className="detail-info-value">{selectedContact.phone || '-'}</div>
-              </div>
-              <div className="detail-info-item">
-                <div className="detail-info-label">Company</div>
-                <div className="detail-info-value">{selectedContact.company || '-'}</div>
-              </div>
-              <div className="detail-info-item">
-                <div className="detail-info-label">Status</div>
-                <span style={{
-                  padding: '4px 8px',
-                  backgroundColor: `${getStatusColor(selectedContact.status)}20`,
-                  color: getStatusColor(selectedContact.status),
-                  borderRadius: '6px',
-                  fontSize: '11px',
-                  fontWeight: '500'
-                }}>
-                  {selectedContact.status}
-                </span>
-              </div>
-              <div className="detail-info-item">
-                <div className="detail-info-label">Lifetime Value</div>
-                <div className="detail-info-value">{formatCurrency(selectedContact.lifetime_value || 0)}</div>
-              </div>
-              <div className="detail-info-item">
-                <div className="detail-info-label">Tags</div>
-                <div className="detail-info-value">
-                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                    {selectedContact.tags?.map((tag, i) => (
-                      <span key={i} style={{
-                        padding: '2px 6px',
-                        background: 'var(--bg-surface2)',
-                        border: '1px solid var(--border-emphasis)',
-                        borderRadius: '4px',
-                        fontSize: '10px',
-                        color: 'var(--text-secondary)'
-                      }}>
-                        {tag}
-                      </span>
-                    ))}
+      {/* Contacts Grid (Bento Style) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        {loading ? (
+          [1,2,3,4,5,6].map(i => <div key={i} className="h-72 bg-slate-50 animate-pulse rounded-xl" />)
+        ) : (
+          contacts.map(contact => (
+            <div 
+              key={contact.id} 
+              onClick={() => setSelectedContactId(contact.id)}
+              className="group bg-surface-container-lowest p-8 rounded-xl transition-all duration-300 flex flex-col justify-between h-72 border-none cursor-pointer hover:shadow-xl hover:translate-y-[-4px]"
+            >
+              <div className="flex justify-between items-start">
+                <div className="flex gap-6">
+                  <div className="text-6xl font-black text-surface-container-highest select-none opacity-40">
+                    {contact.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="text-xl font-bold text-on-surface tracking-tight group-hover:text-primary transition-colors">{contact.name}</h3>
+                    <p className="text-sm text-on-surface-variant font-medium uppercase tracking-wider">{contact.role || 'Partner'}</p>
+                    <p className="text-xs text-slate-400">{contact.company || 'Private Entity'}</p>
                   </div>
                 </div>
+                <span className={`px-3 py-1 rounded-sm text-[10px] font-black uppercase tracking-widest ${
+                  contact.status === 'Customer' ? 'bg-primary-fixed text-on-primary-fixed-variant' : 'bg-slate-100 text-slate-500'
+                }`}>
+                  {contact.status}
+                </span>
+              </div>
+              <div className="flex items-center justify-between pt-6 border-t border-slate-50">
+                <div className="flex -space-x-2">
+                  <div className="w-8 h-8 rounded-full border-2 border-white bg-primary text-white flex items-center justify-center text-[10px] font-bold">
+                    {contact.name[0]}
+                  </div>
+                </div>
+                <button className="text-primary font-bold text-sm flex items-center gap-2 group/btn">
+                  View Profile
+                  <span className="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+                </button>
               </div>
             </div>
+          ))
+        )}
+      </div>
 
-            {contactDetails.deals && contactDetails.deals.length > 0 && (
-              <div className="detail-section">
-                <div className="detail-section-title">Related Deals</div>
-                <div className="related-list">
-                  {contactDetails.deals.map((deal) => (
-                    <div key={deal.id} className="related-item">
-                      <div className="related-item-info">
-                        <div className="related-item-title">{deal.title}</div>
-                        <div className="related-item-subtitle">{deal.company}</div>
-                      </div>
-                      <div className="related-item-right">
-                        <span style={{
-                          padding: '4px 8px',
-                          backgroundColor: '#4f8ef720',
-                          color: '#4f8ef7',
-                          borderRadius: '6px',
-                          fontSize: '11px',
-                          fontWeight: '500'
-                        }}>
-                          {deal.stage}
-                        </span>
-                        <div className="related-item-value">{formatCurrency(deal.value)}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {contactDetails.recent_activities && contactDetails.recent_activities.length > 0 && (
-              <div className="detail-section">
-                <div className="detail-section-title">Activity History</div>
-                <div className="activity-list">
-                  {contactDetails.recent_activities.map((activity) => (
-                    <div key={activity.id} className="activity-item">
-                      <div className="activity-icon">
-                        {activity.type === 'call' && '📞'}
-                        {activity.type === 'email' && '✉️'}
-                        {activity.type === 'meeting' && '🗓'}
-                        {activity.type === 'note' && '📝'}
-                        {activity.type === 'task' && '✅'}
-                      </div>
-                      <div className="activity-content">
-                        <div className="activity-note">{activity.body}</div>
-                        <div className="activity-time">
-                          {new Date(activity.activity_date).toLocaleDateString()}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
-              <Button variant="secondary" onClick={() => {
-                setFormData({
-                  name: selectedContact.name || '',
-                  email: selectedContact.email || '',
-                  phone: selectedContact.phone || '',
-                  company: selectedContact.company || '',
-                  status: selectedContact.status || 'Lead',
-                  lifetime_value: selectedContact.lifetime_value || 0,
-                  tags: (selectedContact.tags || []).join(', ')
-                });
-                setShowEditModal(true);
-              }}>Edit Contact</Button>
-              <Button variant="danger" onClick={async () => {
-                if (window.confirm('Are you sure you want to delete this contact?')) {
-                  await deleteContact(selectedContact.id);
-                  setSelectedContact(null);
-                  refreshData();
-                }
-              }} disabled={deleting}>
-                {deleting ? 'Deleting...' : 'Delete'}
-              </Button>
+      <Modal isOpen={showCreateModal} onClose={() => setShowCreateModal(false)} title="Add New Contact">
+         <div className="space-y-8">
+            <div className="group">
+              <label className="block text-[10px] uppercase tracking-widest font-bold mb-2 text-on-surface-variant">Identity</label>
+              <input 
+                type="text" 
+                value={formData.name} 
+                onChange={e => setFormData({...formData, name: e.target.value})}
+                className="w-full text-xl font-semibold py-3 placeholder:text-slate-300" 
+                placeholder="Full Name" 
+              />
             </div>
-          </div>
-        </div>
-      )}
-
-
-      {/* Create Contact Modal */}
-      <Modal 
-        isOpen={showCreateModal} 
-        onClose={() => setShowCreateModal(false)}
-        title="Add New Contact"
-        footer={
-          <>
-            <Button variant="secondary" onClick={() => setShowCreateModal(false)}>Cancel</Button>
-            <Button 
-              variant="primary" 
-              onClick={async () => {
-                const tagsArray = formData.tags ? formData.tags.split(',').map(t => t.trim()) : [];
-                await createContact({ ...formData, tags: tagsArray });
-                setShowCreateModal(false);
-                refreshData();
-              }}
-              disabled={creating || !formData.name || !formData.email}
-            >
-              {creating ? 'Saving...' : 'Save Contact'}
-            </Button>
-          </>
-        }
-      >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>Name *</label>
-            <input type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} style={{ width: '100%', padding: '10px', background: 'var(--bg-surface2)', border: '1px solid var(--border-default)', borderRadius: '6px', color: 'white' }} />
-          </div>
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>Email *</label>
-            <input type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} style={{ width: '100%', padding: '10px', background: 'var(--bg-surface2)', border: '1px solid var(--border-default)', borderRadius: '6px', color: 'white' }} />
-          </div>
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>Phone</label>
-            <input type="text" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} style={{ width: '100%', padding: '10px', background: 'var(--bg-surface2)', border: '1px solid var(--border-default)', borderRadius: '6px', color: 'white' }} />
-          </div>
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>Company</label>
-            <input type="text" value={formData.company} onChange={e => setFormData({...formData, company: e.target.value})} style={{ width: '100%', padding: '10px', background: 'var(--bg-surface2)', border: '1px solid var(--border-default)', borderRadius: '6px', color: 'white' }} />
-          </div>
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>Status</label>
-            <select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})} style={{ width: '100%', padding: '10px', background: 'var(--bg-surface2)', border: '1px solid var(--border-default)', borderRadius: '6px', color: 'white' }}>
-              <option value="Lead">Lead</option>
-              <option value="Prospect">Prospect</option>
-              <option value="Customer">Customer</option>
-              <option value="Churned">Churned</option>
-            </select>
-          </div>
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>Tags (comma separated)</label>
-            <input type="text" value={formData.tags} onChange={e => setFormData({...formData, tags: e.target.value})} placeholder="e.g. Enterprise, Tech" style={{ width: '100%', padding: '10px', background: 'var(--bg-surface2)', border: '1px solid var(--border-default)', borderRadius: '6px', color: 'white' }} />
-          </div>
-        </div>
+            <div className="group">
+              <label className="block text-[10px] uppercase tracking-widest font-bold mb-2 text-on-surface-variant">Contact Vector</label>
+              <input 
+                type="email" 
+                value={formData.email} 
+                onChange={e => setFormData({...formData, email: e.target.value})}
+                className="w-full text-xl font-semibold py-3 placeholder:text-slate-300" 
+                placeholder="email@example.com" 
+              />
+            </div>
+            <div className="group">
+              <label className="block text-[10px] uppercase tracking-widest font-bold mb-2 text-on-surface-variant">Corporate Affiliation</label>
+              <input 
+                type="text" 
+                value={formData.company} 
+                onChange={e => setFormData({...formData, company: e.target.value})}
+                className="w-full text-xl font-semibold py-3 placeholder:text-slate-300" 
+                placeholder="Company Name" 
+              />
+            </div>
+            <Button variant="primary" fullWidth size="lg" onClick={async () => {
+              await createContact(formData);
+              setShowCreateModal(false);
+              refreshData();
+            }}>Initialize Record</Button>
+         </div>
       </Modal>
-
-      {/* Edit Contact Modal */}
-      <Modal 
-        isOpen={showEditModal} 
-        onClose={() => setShowEditModal(false)}
-        title="Edit Contact"
-        footer={
-          <>
-            <Button variant="secondary" onClick={() => setShowEditModal(false)}>Cancel</Button>
-            <Button 
-              variant="primary" 
-              onClick={async () => {
-                const tagsArray = formData.tags ? formData.tags.split(',').map(t => t.trim()) : [];
-                await updateContact(selectedContact.id, { ...formData, tags: tagsArray });
-                setShowEditModal(false);
-                setSelectedContact({...selectedContact, ...formData, tags: tagsArray});
-                refreshData();
-              }}
-              disabled={updating || !formData.name || !formData.email}
-            >
-              {updating ? 'Saving...' : 'Save Changes'}
-            </Button>
-          </>
-        }
-      >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>Name *</label>
-            <input type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} style={{ width: '100%', padding: '10px', background: 'var(--bg-surface2)', border: '1px solid var(--border-default)', borderRadius: '6px', color: 'white' }} />
-          </div>
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>Email *</label>
-            <input type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} style={{ width: '100%', padding: '10px', background: 'var(--bg-surface2)', border: '1px solid var(--border-default)', borderRadius: '6px', color: 'white' }} />
-          </div>
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>Phone</label>
-            <input type="text" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} style={{ width: '100%', padding: '10px', background: 'var(--bg-surface2)', border: '1px solid var(--border-default)', borderRadius: '6px', color: 'white' }} />
-          </div>
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>Company</label>
-            <input type="text" value={formData.company} onChange={e => setFormData({...formData, company: e.target.value})} style={{ width: '100%', padding: '10px', background: 'var(--bg-surface2)', border: '1px solid var(--border-default)', borderRadius: '6px', color: 'white' }} />
-          </div>
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>Status</label>
-            <select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})} style={{ width: '100%', padding: '10px', background: 'var(--bg-surface2)', border: '1px solid var(--border-default)', borderRadius: '6px', color: 'white' }}>
-              <option value="Lead">Lead</option>
-              <option value="Prospect">Prospect</option>
-              <option value="Customer">Customer</option>
-              <option value="Churned">Churned</option>
-            </select>
-          </div>
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>Lifetime Value</label>
-            <input type="number" value={formData.lifetime_value} onChange={e => setFormData({...formData, lifetime_value: Number(e.target.value)})} style={{ width: '100%', padding: '10px', background: 'var(--bg-surface2)', border: '1px solid var(--border-default)', borderRadius: '6px', color: 'white' }} />
-          </div>
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>Tags (comma separated)</label>
-            <input type="text" value={formData.tags} onChange={e => setFormData({...formData, tags: e.target.value})} placeholder="e.g. Enterprise, Tech" style={{ width: '100%', padding: '10px', background: 'var(--bg-surface2)', border: '1px solid var(--border-default)', borderRadius: '6px', color: 'white' }} />
-          </div>
-        </div>
-      </Modal>
-    </>
+    </div>
   );
 };
 

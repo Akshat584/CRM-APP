@@ -19,16 +19,8 @@ const ProtectedRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100vh',
-        background: 'var(--bg-page)',
-        color: 'var(--text-primary)',
-        fontSize: '18px'
-      }}>
-        Loading...
+      <div className="flex items-center justify-center h-screen bg-background text-on-surface text-lg">
+        Synchronizing...
       </div>
     );
   }
@@ -41,16 +33,8 @@ const PublicRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100vh',
-        background: 'var(--bg-page)',
-        color: 'var(--text-primary)',
-        fontSize: '18px'
-      }}>
-        Loading...
+      <div className="flex items-center justify-center h-screen bg-background text-on-surface text-lg">
+        Synchronizing...
       </div>
     );
   }
@@ -59,7 +43,6 @@ const PublicRoute = ({ children }) => {
 };
 
 const MainLayout = ({ children, actionLabel, onActionClick }) => {
-  const { logout } = useAuth();
   const { executeGlobalAction } = useCRM();
 
   const handleActionClick = () => {
@@ -71,17 +54,14 @@ const MainLayout = ({ children, actionLabel, onActionClick }) => {
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-page)' }}>
+    <div className="flex min-h-screen bg-background">
       <Sidebar />
-      <div style={{ marginLeft: '220px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div className="ml-72 flex-1 flex flex-col min-h-screen relative">
         <Topbar actionLabel={actionLabel} onActionClick={handleActionClick} />
-        <div style={{
-          marginTop: '56px',
-          padding: '24px',
-          height: 'calc(100vh - 56px)',
-          overflowY: 'auto'
-        }}>
-          {children}
+        <div className="pt-20 flex-1 overflow-y-auto">
+          <div className="p-12 max-w-7xl mx-auto">
+            {children}
+          </div>
         </div>
       </div>
     </div>
@@ -110,28 +90,28 @@ const AppRoutes = () => {
       } />
       <Route path="/contacts" element={
         <ProtectedRoute>
-          <MainLayout actionLabel="+ Add Contact">
+          <MainLayout actionLabel="Add Contact">
             <Contacts />
           </MainLayout>
         </ProtectedRoute>
       } />
       <Route path="/pipeline" element={
         <ProtectedRoute>
-          <MainLayout actionLabel="+ Add Deal">
+          <MainLayout actionLabel="Create Deal">
             <Pipeline />
           </MainLayout>
         </ProtectedRoute>
       } />
       <Route path="/activities" element={
         <ProtectedRoute>
-          <MainLayout actionLabel="+ Log Activity">
+          <MainLayout actionLabel="Log Activity">
             <ActivityLog />
           </MainLayout>
         </ProtectedRoute>
       } />
       <Route path="/tasks" element={
         <ProtectedRoute>
-          <MainLayout actionLabel="+ Add Task">
+          <MainLayout actionLabel="Add Task">
             <Tasks />
           </MainLayout>
         </ProtectedRoute>
@@ -150,31 +130,13 @@ const AppRoutes = () => {
 const App = () => {
   return (
     <Router>
-      <div style={{
-        '--bg-page': '#0a0b0f',
-        '--bg-surface': '#111318',
-        '--bg-surface2': '#181b22',
-        '--bg-surface3': '#1e2330',
-        '--border-default': '#232736',
-        '--border-emphasis': '#2d3347',
-        '--accent-blue': '#4f8ef7',
-        '--accent-purple': '#a78bfa',
-        '--text-primary': '#e8eaf0',
-        '--text-secondary': '#8b90a7',
-        '--text-muted': '#545872',
-        '--color-success': '#10b981',
-        '--color-warning': '#f59e0b',
-        '--color-danger': '#f87171',
-        '--color-orange': '#f97316'
-      }}>
-        <AuthProvider>
-          <ToastProvider>
-            <CRMProvider>
-              <AppRoutes />
-            </CRMProvider>
-          </ToastProvider>
-        </AuthProvider>
-      </div>
+      <AuthProvider>
+        <ToastProvider>
+          <CRMProvider>
+            <AppRoutes />
+          </CRMProvider>
+        </ToastProvider>
+      </AuthProvider>
     </Router>
   );
 };

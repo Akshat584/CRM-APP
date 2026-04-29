@@ -1,91 +1,52 @@
 import React from 'react';
 
-const Modal = ({ isOpen, onClose, title, children, footer }) => {
+const Modal = ({ isOpen, onClose, title, children, footer, size = 'md' }) => {
   if (!isOpen) return null;
+
+  const sizes = {
+    sm: 'max-w-md',
+    md: 'max-w-2xl',
+    lg: 'max-w-5xl'
+  };
 
   return (
     <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: 'rgba(0, 0, 0, 0.7)',
-        backdropFilter: 'blur(4px)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 1000
-      }}
+      className="fixed inset-0 z-[1000] flex items-center justify-center p-6"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onClose();
         }
       }}
     >
-      <div
-        style={{
-          background: 'var(--bg-surface)',
-          border: '1px solid var(--border-default)',
-          borderRadius: '14px',
-          width: '90%',
-          maxWidth: '460px',
-          maxHeight: '90vh',
-          overflow: 'auto'
-        }}
+      <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm animate-fadeIn" />
+      
+      <div 
+        className={`
+          relative w-full ${sizes[size]} bg-white rounded-3xl overflow-hidden shadow-2xl animate-slideIn
+          flex flex-col max-h-[90vh]
+        `}
       >
-        <div
-          style={{
-            padding: '20px 24px',
-            borderBottom: '1px solid var(--border-default)',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center'
-          }}
-        >
-          <h3
-            style={{
-              fontFamily: 'Syne, sans-serif',
-              fontWeight: '700',
-              fontSize: '18px',
-              color: 'var(--text-primary)',
-              margin: 0
-            }}
-          >
-            {title}
-          </h3>
+        <div className="p-8 pb-4 flex justify-between items-start">
+          <div>
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary opacity-60 block mb-2">Overlay Context</span>
+            <h3 className="text-3xl font-extrabold tracking-tight text-on-surface">
+              {title}
+            </h3>
+          </div>
           <button
             onClick={onClose}
-            style={{
-              width: '32px',
-              height: '32px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: 'var(--bg-surface2)',
-              border: 'none',
-              borderRadius: '6px',
-              color: 'var(--text-secondary)',
-              cursor: 'pointer'
-            }}
+            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-50 transition-colors"
           >
-            ✕
+            <span className="material-symbols-outlined text-slate-400">close</span>
           </button>
         </div>
-        <div style={{ padding: '24px' }}>
+
+        <div className="p-8 pt-4 overflow-y-auto flex-1">
           {children}
         </div>
+
         {footer && (
-          <div
-            style={{
-              padding: '20px 24px',
-              borderTop: '1px solid var(--border-default)',
-              display: 'flex',
-              justifyContent: 'flex-end',
-              gap: '12px'
-            }}
-          >
+          <div className="p-8 pt-0 bg-slate-50 flex justify-end gap-4">
             {footer}
           </div>
         )}

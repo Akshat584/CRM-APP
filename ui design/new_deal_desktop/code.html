@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aurelius - Create New Deal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#5b5e66",
+                        "primary-container": "#005f56",
+                        "background": "#f9f9fc",
+                        "on-surface": "#1a1c1e",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#434848",
+                        "on-tertiary-fixed": "#181c1d",
+                        "inverse-on-surface": "#f0f0f3",
+                        "secondary-container": "#e0e2eb",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#176a60",
+                        "on-background": "#1a1c1e",
+                        "primary-fixed": "#a6f1e4",
+                        "on-primary-fixed-variant": "#005048",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#505555",
+                        "outline-variant": "#bec9c6",
+                        "on-primary-fixed": "#00201c",
+                        "surface-container-highest": "#e2e2e5",
+                        "primary": "#00453e",
+                        "on-secondary-fixed-variant": "#44474e",
+                        "surface-dim": "#dadadc",
+                        "secondary-fixed": "#e0e2eb",
+                        "tertiary-fixed-dim": "#c3c7c7",
+                        "surface-container-high": "#e8e8ea",
+                        "on-tertiary-container": "#c5c9c9",
+                        "on-surface-variant": "#3f4947",
+                        "surface-container": "#eeeef0",
+                        "primary-fixed-dim": "#8ad4c8",
+                        "tertiary-fixed": "#dfe3e3",
+                        "surface-container-low": "#f3f3f6",
+                        "on-error-container": "#93000a",
+                        "on-secondary": "#ffffff",
+                        "surface": "#f9f9fc",
+                        "surface-variant": "#e2e2e5",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#8cd6ca",
+                        "surface-bright": "#f9f9fc",
+                        "secondary-fixed-dim": "#c4c6cf",
+                        "inverse-surface": "#2f3133",
+                        "inverse-primary": "#8ad4c8",
+                        "error": "#ba1a1a",
+                        "outline": "#6f7977",
+                        "on-secondary-fixed": "#181c22",
+                        "tertiary": "#393e3e",
+                        "on-secondary-container": "#61646c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-background text-on-surface antialiased">
+<!-- Persistent SideNavBar -->
+<aside class="h-screen w-72 fixed left-0 top-0 z-50 bg-slate-50 dark:bg-slate-950 flex flex-col py-10 px-6 gap-y-8 font-['Manrope'] tracking-tight">
+<div class="flex items-center gap-3 px-2">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+</div>
+<div>
+<h1 class="text-2xl font-bold text-emerald-900 dark:text-emerald-500 tracking-tighter">Aurelius</h1>
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold opacity-60">Executive CRM</p>
+</div>
+</div>
+<nav class="flex flex-col gap-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 font-medium hover:text-emerald-800 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors duration-300" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Overview</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 font-medium hover:text-emerald-800 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors duration-300" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>Contacts</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-emerald-900 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/30 rounded-r-full transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span>Pipeline</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 font-medium hover:text-emerald-800 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors duration-300" href="#">
+<span class="material-symbols-outlined">event_note</span>
+<span>Activities</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 font-medium hover:text-emerald-800 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors duration-300" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-2">
+<button class="w-full py-4 bg-primary text-on-primary rounded-xl font-bold text-sm tracking-wide active:scale-95 transition-all shadow-xl shadow-primary/20">
+                Create Deal
+            </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-72 min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-18rem)] h-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex items-center justify-between px-12 z-40 shadow-sm shadow-emerald-900/5">
+<div class="flex items-center gap-8 w-1/2">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full py-2.5 pl-12 pr-4 text-sm focus:ring-2 focus:ring-primary/20 transition-all outline-none" placeholder="Search the ledger..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined">calendar_today</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined">chat_bubble_outline</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant/30"></div>
+<div class="flex items-center gap-3">
+<img alt="Administrator Portrait" class="w-10 h-10 rounded-full object-cover border-2 border-primary/10" data-alt="Close-up portrait of a professional male executive with a confident expression in a brightly lit modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHInTdevRCGO0sioXmHEvspbumdmcudpvbsEFecr7zsH2ndees_-ELuP1ilHZo3cSw1kLXXkeCrYPQsGDS5xZFGHshyT65kvy0Riu4rWQKg2Q11eB7R9sTbVY0gYELAQSus8f_VHMyyIFqnz6w70JejmPXcWSQutlgoUnjeEo22kTHsU5egdf4e0VnnpE4nnq88Hvdm2XHNewZAfAonegX9T8DQl8_aAQdMPSLW2TcbI9OjM4g2wtfPLPxB9xiGpK2o0d0eC4M0Fk"/>
+<div class="hidden lg:block text-right">
+<p class="text-xs font-bold text-primary uppercase tracking-widest">Marcus Aurelius</p>
+<p class="text-[10px] text-on-surface-variant">Administrator</p>
+</div>
+</div>
+</div>
+</header>
+<!-- Form Container -->
+<div class="pt-32 pb-20 px-12 max-w-6xl mx-auto">
+<header class="mb-16">
+<div class="flex items-center gap-2 text-primary-container font-bold text-xs uppercase tracking-[0.2em] mb-4">
+<span class="material-symbols-outlined text-sm">rocket_launch</span>
+                    New Opportunity
+                </div>
+<h2 class="text-5xl font-extrabold tracking-tight text-on-surface leading-tight">Initialize New Deal</h2>
+<p class="text-on-surface-variant mt-4 text-lg max-w-2xl font-medium opacity-80">Define the architectural parameters for this upcoming fiscal commitment. Every ledger entry begins with intentionality.</p>
+</header>
+<form class="grid grid-cols-12 gap-x-12 gap-y-12">
+<!-- Left Column: Core Data -->
+<div class="col-span-12 lg:col-span-7 space-y-12">
+<!-- Deal Name -->
+<div class="group">
+<label class="block text-[10px] uppercase tracking-[0.15em] text-on-surface-variant font-bold mb-2 group-focus-within:text-primary transition-colors">Deal Name</label>
+<input class="w-full text-2xl font-semibold bg-transparent border-none border-b border-outline-variant/40 focus:border-primary focus:ring-0 px-0 pb-4 transition-all placeholder:text-surface-variant" placeholder="e.g. Q4 Infrastructure Renewal" type="text"/>
+</div>
+<!-- Projected Value -->
+<div class="group">
+<label class="block text-[10px] uppercase tracking-[0.15em] text-on-surface-variant font-bold mb-2 group-focus-within:text-primary transition-colors">Projected Value</label>
+<div class="flex items-end gap-3 border-b border-outline-variant/40 focus-within:border-primary transition-all pb-4">
+<span class="text-4xl font-light text-on-surface-variant opacity-40 select-none">$</span>
+<input class="w-full text-6xl font-extrabold bg-transparent border-none focus:ring-0 px-0 transition-all placeholder:text-surface-variant tracking-tighter" placeholder="0.00" type="number"/>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<!-- Date Picker -->
+<div class="group">
+<label class="block text-[10px] uppercase tracking-[0.15em] text-on-surface-variant font-bold mb-2 group-focus-within:text-primary transition-colors">Expected Close</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-none rounded-xl py-4 px-5 text-on-surface font-semibold focus:ring-2 focus:ring-primary/10 transition-all cursor-pointer" type="date"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">calendar_month</span>
+</div>
+</div>
+<!-- Stage Dropdown -->
+<div class="group">
+<label class="block text-[10px] uppercase tracking-[0.15em] text-on-surface-variant font-bold mb-2 group-focus-within:text-primary transition-colors">Current Stage</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-container-low border-none rounded-xl py-4 px-5 pr-10 text-on-surface font-semibold focus:ring-2 focus:ring-primary/10 transition-all cursor-pointer">
+<option>Discovery</option>
+<option>Proposal</option>
+<option>Negotiation</option>
+<option>Closing</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Contextual Details -->
+<div class="col-span-12 lg:col-span-5 space-y-8">
+<!-- Contact Selection Card -->
+<div class="bg-surface-container-low rounded-2xl p-8 border border-transparent hover:border-outline-variant/20 transition-all">
+<div class="flex justify-between items-center mb-8">
+<h3 class="text-[10px] uppercase tracking-[0.15em] text-on-surface-variant font-bold">Primary Contact</h3>
+<button class="text-primary text-[10px] font-bold uppercase tracking-widest hover:underline" type="button">Change</button>
+</div>
+<div class="flex gap-6 items-start">
+<div class="w-20 h-24 bg-surface-container-highest rounded-lg flex items-center justify-center overflow-hidden shrink-0">
+<span class="text-4xl font-extrabold text-on-surface opacity-10 select-none tracking-tighter">JS</span>
+</div>
+<div>
+<h4 class="text-2xl font-bold text-on-surface tracking-tight mb-1">Julian Sterling</h4>
+<p class="text-sm font-medium text-on-surface-variant mb-4">CTO, Sterling Dynamics</p>
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm opacity-60">mail</span>
+                                        j.sterling@dynamics.com
+                                    </div>
+<div class="flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm opacity-60">call</span>
+                                        +1 (555) 012-9938
+                                    </div>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-outline-variant/20">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<p class="text-[11px] font-semibold text-on-surface-variant leading-relaxed">
+                                    Relationship status: <span class="text-on-surface">Highly Engaged</span>. Last touchpoint 4 hours ago.
+                                </p>
+</div>
+</div>
+</div>
+<!-- Additional Metadata -->
+<div class="bg-surface-container-low rounded-2xl p-8">
+<h3 class="text-[10px] uppercase tracking-[0.15em] text-on-surface-variant font-bold mb-6">Internal Tags</h3>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 bg-primary-fixed/40 text-on-primary-fixed-variant rounded-md text-[10px] font-bold uppercase tracking-wider">Enterprise</span>
+<span class="px-3 py-1.5 bg-surface-container-highest text-on-surface-variant rounded-md text-[10px] font-bold uppercase tracking-wider">High Priority</span>
+<span class="px-3 py-1.5 bg-surface-container-highest text-on-surface-variant rounded-md text-[10px] font-bold uppercase tracking-wider">Recurring Revenue</span>
+<button class="w-8 h-8 rounded-md border border-dashed border-outline-variant flex items-center justify-center text-on-surface-variant hover:border-primary transition-all" type="button">
+<span class="material-symbols-outlined text-lg">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="col-span-12 pt-12 border-t border-outline-variant/10 flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-surface-variant text-xs font-medium">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Auto-saving deal parameters...
+                    </div>
+<div class="flex items-center gap-6">
+<button class="px-8 py-4 text-on-surface-variant font-bold text-sm tracking-widest uppercase hover:text-primary transition-all" type="button">
+                            Save to Drafts
+                        </button>
+<button class="px-10 py-5 bg-primary text-on-primary rounded-xl font-bold text-sm tracking-[0.15em] uppercase active:scale-95 transition-all shadow-2xl shadow-primary/30 flex items-center gap-3" type="submit">
+                            Initialize Opportunity
+                            <span class="material-symbols-outlined text-lg">arrow_forward_ios</span>
+</button>
+</div>
+</div>
+</form>
+</div>
+</main>
+<!-- Visual Accents / Glass Textures -->
+<div class="fixed bottom-0 right-0 w-1/3 h-1/3 bg-primary-container/5 blur-[120px] -z-10 rounded-full"></div>
+<div class="fixed top-0 left-72 w-64 h-64 bg-primary-fixed/5 blur-[100px] -z-10 rounded-full"></div>
+</body></html>

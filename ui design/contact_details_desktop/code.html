@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#5b5e66",
+                        "primary-container": "#005f56",
+                        "background": "#f9f9fc",
+                        "on-surface": "#1a1c1e",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#434848",
+                        "on-tertiary-fixed": "#181c1d",
+                        "inverse-on-surface": "#f0f0f3",
+                        "secondary-container": "#e0e2eb",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#176a60",
+                        "on-background": "#1a1c1e",
+                        "primary-fixed": "#a6f1e4",
+                        "on-primary-fixed-variant": "#005048",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#505555",
+                        "outline-variant": "#bec9c6",
+                        "on-primary-fixed": "#00201c",
+                        "surface-container-highest": "#e2e2e5",
+                        "primary": "#00453e",
+                        "on-secondary-fixed-variant": "#44474e",
+                        "surface-dim": "#dadadc",
+                        "secondary-fixed": "#e0e2eb",
+                        "tertiary-fixed-dim": "#c3c7c7",
+                        "surface-container-high": "#e8e8ea",
+                        "on-tertiary-container": "#c5c9c9",
+                        "on-surface-variant": "#3f4947",
+                        "surface-container": "#eeeef0",
+                        "primary-fixed-dim": "#8ad4c8",
+                        "tertiary-fixed": "#dfe3e3",
+                        "surface-container-low": "#f3f3f6",
+                        "on-error-container": "#93000a",
+                        "on-secondary": "#ffffff",
+                        "surface": "#f9f9fc",
+                        "surface-variant": "#e2e2e5",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#8cd6ca",
+                        "surface-bright": "#f9f9fc",
+                        "secondary-fixed-dim": "#c4c6cf",
+                        "inverse-surface": "#2f3133",
+                        "inverse-primary": "#8ad4c8",
+                        "error": "#ba1a1a",
+                        "outline": "#6f7977",
+                        "on-secondary-fixed": "#181c22",
+                        "tertiary": "#393e3e",
+                        "on-secondary-container": "#61646c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-effect { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #bec9c6; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased overflow-hidden">
+<!-- SIDEBAR ANCHOR -->
+<aside class="h-screen w-72 fixed left-0 top-0 z-50 bg-slate-50 flex flex-col py-10 px-6 gap-y-8 font-['Manrope'] tracking-tight border-none">
+<div class="flex items-center gap-3 px-2">
+<div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+</div>
+<div>
+<h1 class="text-2xl font-bold text-emerald-900 tracking-tighter">Aurelius</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-semibold">Executive CRM</p>
+</div>
+</div>
+<nav class="flex flex-col gap-y-2 mt-4">
+<a class="flex items-center gap-4 py-3 px-4 text-slate-500 dark:text-slate-400 font-medium hover:text-emerald-800 hover:bg-emerald-50 transition-colors duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Overview</span>
+</a>
+<a class="flex items-center gap-4 py-3 px-4 text-emerald-900 font-bold bg-emerald-50 rounded-r-full transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="group" style="font-variation-settings: 'FILL' 1;">group</span>
+<span>Contacts</span>
+</a>
+<a class="flex items-center gap-4 py-3 px-4 text-slate-500 dark:text-slate-400 font-medium hover:text-emerald-800 hover:bg-emerald-50 transition-colors duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span>Pipeline</span>
+</a>
+<a class="flex items-center gap-4 py-3 px-4 text-slate-500 dark:text-slate-400 font-medium hover:text-emerald-800 hover:bg-emerald-50 transition-colors duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="event_note">event_note</span>
+<span>Activities</span>
+</a>
+<a class="flex items-center gap-4 py-3 px-4 text-slate-500 dark:text-slate-400 font-medium hover:text-emerald-800 hover:bg-emerald-50 transition-colors duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto">
+<button class="w-full py-4 bg-primary text-white rounded-xl font-bold tracking-tight shadow-lg shadow-primary/20 flex items-center justify-center gap-2 hover:opacity-90 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                Create Deal
+            </button>
+</div>
+</aside>
+<!-- MAIN CANVAS -->
+<main class="ml-72 min-h-screen overflow-y-auto bg-surface">
+<!-- TOP APP BAR -->
+<header class="fixed top-0 right-0 w-[calc(100%-18rem)] h-20 glass-effect flex items-center justify-between px-12 z-40 shadow-sm shadow-emerald-900/5 font-['Manrope'] text-sm uppercase tracking-widest">
+<div class="flex items-center gap-6">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full w-80 text-xs tracking-widest focus:ring-1 focus:ring-primary" placeholder="Search clients, deals..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-6 text-on-surface-variant">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-all" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-all" data-icon="calendar_today">calendar_today</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-all" data-icon="chat_bubble_outline">chat_bubble_outline</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<p class="text-[10px] font-extrabold text-primary">Administrator</p>
+<p class="text-[10px] text-on-surface-variant leading-none">Marcus Aurelius</p>
+</div>
+<img class="w-10 h-10 rounded-full object-cover" data-alt="Professional portrait of a middle-aged male executive with graying hair and a sharp tailored suit against a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJwQQOlS8oqxXDpuHPjoVwNTYvc2blHkKi9IfU1JoZBhRAzVo98lUSss1ROMRoxAKvsm-kyT3DImWJvFC4hVtWzoIijiT-7fCdJ435DvgKRjWGksU0JURwCyNwqu3kKcjdcFetA_v8kndEOafXZef6vje-8ngVxa39Vu2vTALuCQad-RXzf7alfWhEZR8vXjdUbXzfdOdlv1v1nPjJ7fS_yziTLcedoQnuzkKBBdy5hczMFlyAqMlPhNaYoXz2P9crbrx0NDmfgzM"/>
+</div>
+</div>
+</header>
+<!-- PAGE CONTENT -->
+<div class="pt-32 pb-20 px-12 max-w-7xl mx-auto">
+<!-- HERO PROFILE SECTION -->
+<section class="flex flex-col md:flex-row gap-12 items-start mb-16">
+<div class="relative">
+<div class="w-48 h-64 overflow-hidden rounded-2xl shadow-2xl shadow-primary/10">
+<img class="w-full h-full object-cover" data-alt="Sophisticated portrait of Julianne Moore in a high-fashion editorial style with warm studio lighting and neutral tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBm70Ec7aXKecpevO5x6NhH72kh1ULdJW9SD9qBSUGWbk3DZ0l5HEoXGhxhyVoJ3G67hCWkSHzl3djgnwjq4OhgVzHH43shLneqYk4k0k4qDIdRz3WOUxep5XwgkWtc2L7iVDwQjB35s_vH6wL87foXIeXkClqGmNhrpsM8NioGRErt4avG8oP5HdgyE-QYOQF7kEk-XOhqpo9DgpBPNmVU70JuytaPVWY_YZJ1hPXchi22BmvqDsYjlQF1aQek0u_AmGENglCTHvg"/>
+</div>
+<div class="absolute -bottom-4 -right-4 bg-primary-fixed text-on-primary-fixed-variant px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest shadow-xl">
+                        VIP Client
+                    </div>
+</div>
+<div class="flex-1 pt-4">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h2 class="text-5xl font-extrabold tracking-tighter text-on-surface mb-2">Julianne Moore</h2>
+<p class="text-on-surface-variant font-medium tracking-wide flex items-center gap-2">
+                                Managing Director <span class="w-1.5 h-1.5 rounded-full bg-outline-variant"></span> Moore Strategic Holdings
+                            </p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-bold hover:opacity-90 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="call">call</span>
+                                Call
+                            </button>
+<button class="flex items-center gap-2 px-6 py-3 bg-surface-container-high text-on-surface rounded-xl font-bold hover:bg-surface-container-highest transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="mail">mail</span>
+                                Email
+                            </button>
+<button class="p-3 bg-surface-container-high text-on-surface rounded-xl hover:bg-surface-container-highest transition-all">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-8 mt-12">
+<div class="border-l-2 border-primary-fixed pl-6">
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Lifetime Value</p>
+<p class="text-2xl font-bold text-primary">$2.4M</p>
+</div>
+<div class="border-l-2 border-primary-fixed pl-6">
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Relationship</p>
+<p class="text-2xl font-bold text-primary">8.4 Years</p>
+</div>
+<div class="border-l-2 border-primary-fixed pl-6">
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Risk Score</p>
+<p class="text-2xl font-bold text-primary">Low</p>
+</div>
+</div>
+</div>
+</section>
+<!-- CONTENT GRID -->
+<div class="grid grid-cols-12 gap-8 items-start">
+<!-- LEFT COLUMN: DEALS & NOTES -->
+<div class="col-span-12 lg:col-span-8 flex flex-col gap-8">
+<!-- ACTIVE DEALS BENTO -->
+<div class="bg-surface-container-low rounded-3xl p-8">
+<div class="flex justify-between items-center mb-8">
+<h3 class="text-lg font-extrabold uppercase tracking-widest">Active Deals</h3>
+<button class="text-xs font-bold text-primary tracking-widest uppercase flex items-center gap-1">
+                                View Pipeline <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Deal Card 1 -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl group cursor-pointer hover:ring-2 ring-primary/10 transition-all">
+<div class="flex justify-between items-start mb-4">
+<span class="text-[10px] font-extrabold px-2 py-1 bg-primary-fixed text-on-primary-fixed-variant rounded">NEGOTIATION</span>
+<span class="text-on-surface-variant text-xs">Due in 12 days</span>
+</div>
+<h4 class="text-xl font-bold mb-4">Manhattan Sky Tower Portfolio</h4>
+<div class="flex items-end justify-between">
+<p class="text-3xl font-black text-primary tracking-tighter">$420,000</p>
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center text-[10px] font-bold">JD</div>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-emerald-100 flex items-center justify-center text-[10px] font-bold text-emerald-800">MA</div>
+</div>
+</div>
+</div>
+<!-- Deal Card 2 -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl group cursor-pointer hover:ring-2 ring-primary/10 transition-all border border-transparent hover:border-primary-fixed">
+<div class="flex justify-between items-start mb-4">
+<span class="text-[10px] font-extrabold px-2 py-1 bg-secondary-container text-on-secondary-container rounded">DISCOVERY</span>
+<span class="text-on-surface-variant text-xs">Just started</span>
+</div>
+<h4 class="text-xl font-bold mb-4">European Expansion Strategy</h4>
+<div class="flex items-end justify-between">
+<p class="text-3xl font-black text-primary tracking-tighter">$185,000</p>
+<span class="material-symbols-outlined text-outline" data-icon="more_horiz">more_horiz</span>
+</div>
+</div>
+</div>
+</div>
+<!-- INTERNAL NOTES -->
+<div class="relative bg-white p-10 rounded-3xl overflow-hidden">
+<div class="absolute top-0 right-0 p-8 opacity-10">
+<span class="material-symbols-outlined text-8xl" data-icon="format_quote">format_quote</span>
+</div>
+<h3 class="text-xs font-extrabold uppercase tracking-widest text-on-surface-variant mb-6 flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Internal Strategy Notes
+                        </h3>
+<blockquote class="text-xl font-light leading-relaxed text-on-surface italic">
+                            "Julianne is looking for high-yield commercial assets with established tenants. She values direct communication and data-backed projections. Focus our next presentation on the 5-year growth trajectory of the Tri-State area portfolios."
+                        </blockquote>
+<div class="mt-8 flex items-center gap-3">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="Portrait of Marcus Aurelius" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZz-JuPGP-CL6eirlbmrqTg1uNOCRSfFxRCd62uBjIAJSOBMa_uSFuBwL5kp-yy-8U6gpPSfQ-_melrGsQj3FaBTrRxtlCgPetT-ZTKouRO0-IWO1Alf-S3ERsOq05iV159NBmuH_WxWY9_3xHm9ZTiKnHFQbXl9FJwNGtEtz1wOp2kFJlqVitCYLrV-1m4tNj5ufHJp3DEnouPADaV2iCZyYY7_3Ed1cGJzIMlIHf-4QdqVJmLm-a5nC9F8IhvKdZqmWLq2blkzA"/>
+<div>
+<p class="text-xs font-bold">Marcus Aurelius</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-tighter">Updated 2 days ago</p>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: INTERACTION HISTORY -->
+<div class="col-span-12 lg:col-span-4">
+<div class="bg-surface-container-low rounded-3xl p-8 sticky top-24">
+<h3 class="text-lg font-extrabold uppercase tracking-widest mb-10">Interaction History</h3>
+<div class="relative pl-8 border-l border-outline-variant flex flex-col gap-12">
+<!-- Timeline Item 1 -->
+<div class="relative">
+<div class="absolute -left-[41px] top-0 w-4 h-4 rounded-full bg-primary ring-4 ring-surface-container-low"></div>
+<p class="text-[10px] font-extrabold text-on-surface-variant uppercase tracking-widest mb-2">Today, 2:45 PM</p>
+<h5 class="text-sm font-bold text-on-surface">Client Call: Q3 Strategy Review</h5>
+<p class="text-xs text-on-surface-variant mt-1">Discussed Manhattan Sky Tower Portfolio pricing. Julianne requested a breakdown of maintenance costs.</p>
+<div class="mt-3 flex gap-2">
+<span class="text-[10px] font-bold text-primary bg-primary-fixed px-2 py-0.5 rounded">Call Log</span>
+<span class="text-[10px] font-bold text-primary bg-primary-fixed px-2 py-0.5 rounded">Pending Action</span>
+</div>
+</div>
+<!-- Timeline Item 2 -->
+<div class="relative">
+<div class="absolute -left-[41px] top-0 w-4 h-4 rounded-full bg-outline-variant ring-4 ring-surface-container-low"></div>
+<p class="text-[10px] font-extrabold text-on-surface-variant uppercase tracking-widest mb-2">Nov 14, 2023</p>
+<h5 class="text-sm font-bold text-on-surface">Email Sent: Portfolio Analysis</h5>
+<p class="text-xs text-on-surface-variant mt-1">Sent comprehensive PDF report on Tri-State area assets. Opened 3 times.</p>
+<div class="mt-3 flex items-center gap-2 text-xs font-bold text-primary cursor-pointer">
+<span class="material-symbols-outlined text-sm" data-icon="description">description</span>
+                                    View Attachment
+                                </div>
+</div>
+<!-- Timeline Item 3 -->
+<div class="relative">
+<div class="absolute -left-[41px] top-0 w-4 h-4 rounded-full bg-outline-variant ring-4 ring-surface-container-low"></div>
+<p class="text-[10px] font-extrabold text-on-surface-variant uppercase tracking-widest mb-2">Oct 28, 2023</p>
+<h5 class="text-sm font-bold text-on-surface">In-Person Meeting: NY Office</h5>
+<p class="text-xs text-on-surface-variant mt-1">Introduced the new European Expansion lead. High enthusiasm for Berlin assets.</p>
+</div>
+<!-- Timeline Item 4 -->
+<div class="relative">
+<div class="absolute -left-[41px] top-0 w-4 h-4 rounded-full bg-outline-variant ring-4 ring-surface-container-low"></div>
+<p class="text-[10px] font-extrabold text-on-surface-variant uppercase tracking-widest mb-2">Oct 12, 2023</p>
+<h5 class="text-sm font-bold text-on-surface">Relationship Milestone: 8 Years</h5>
+<p class="text-xs text-on-surface-variant mt-1">Automatic anniversary notification. Sent premium gift basket to Moore Strategic Holdings.</p>
+</div>
+</div>
+<button class="w-full mt-12 py-3 bg-surface-container-high text-on-surface font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-surface-container-highest transition-all">
+                            Load Older History
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

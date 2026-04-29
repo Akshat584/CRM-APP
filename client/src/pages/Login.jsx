@@ -18,7 +18,6 @@ const Login = () => {
 
     const newErrors = {};
     if (!email) newErrors.email = 'Email is required';
-    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) newErrors.email = 'Invalid email format';
     if (!password) newErrors.password = 'Password is required';
 
     if (Object.keys(newErrors).length > 0) {
@@ -40,138 +39,97 @@ const Login = () => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'var(--bg-page)'
+      background: 'var(--bg-page)',
+      padding: '24px'
     }}>
-      <div style={{
-        background: 'var(--bg-surface)',
-        border: '1px solid var(--border-default)',
-        borderRadius: '12px',
-        padding: '40px',
+      <div className="tonal-card" style={{
         width: '100%',
-        maxWidth: '400px'
+        maxWidth: '440px',
+        padding: '48px',
+        boxShadow: '0 24px 60px rgba(0,0,0,0.04)'
       }}>
-        <h1 style={{
-          fontFamily: 'Syne, sans-serif',
-          fontWeight: '800',
-          fontSize: '32px',
-          background: 'linear-gradient(135deg, var(--accent-blue), var(--accent-purple))',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          marginBottom: '8px'
-        }}>
-          CRM Pro
-        </h1>
-        <p style={{ color: 'var(--text-muted)', marginBottom: '32px' }}>
-          Sign in to your account
-        </p>
+        <header style={{ marginBottom: '40px', textAlign: 'center' }}>
+          <div style={{
+            fontFamily: "'Manrope', sans-serif",
+            fontWeight: '800',
+            fontSize: '24px',
+            color: 'var(--accent-primary)',
+            letterSpacing: '-0.05em',
+            marginBottom: '8px'
+          }}>
+            Aurelius
+          </div>
+          <p className="label-md" style={{ fontSize: '10px' }}>Executive CRM Access</p>
+        </header>
 
         {loginError && (
           <div style={{
-            padding: '12px',
-            background: 'rgba(248, 113, 113, 0.1)',
-            border: '1px solid var(--color-danger)',
-            borderRadius: '8px',
+            padding: '16px',
+            background: 'var(--color-error-container)',
+            borderRadius: '12px',
             color: 'var(--color-danger)',
-            marginBottom: '20px',
-            fontSize: '14px'
+            marginBottom: '32px',
+            fontSize: '13px',
+            fontWeight: '600',
+            textAlign: 'center'
           }}>
             {loginError}
           </div>
         )}
 
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{
-              display: 'block',
-              fontSize: '13px',
-              color: 'var(--text-secondary)',
-              marginBottom: '8px',
-              fontWeight: '500'
-            }}>
-              Email
-            </label>
+          <div style={{ marginBottom: '24px' }}>
+            <label className="label-md" style={{ fontSize: '9px', display: 'block', marginBottom: '4px' }}>Identity</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '10px 12px',
-                background: 'var(--bg-surface2)',
-                border: '1px solid var(--border-default)',
-                borderRadius: '6px',
-                color: 'var(--text-primary)',
-                fontSize: '14px'
-              }}
-              placeholder="you@example.com"
+              placeholder="Email Address"
+              style={{ padding: '12px 0' }}
             />
             {errors.email && (
-              <div style={{ color: 'var(--color-danger)', fontSize: '12px', marginTop: '4px' }}>
+              <div style={{ color: 'var(--color-danger)', fontSize: '11px', marginTop: '8px', fontWeight: '600' }}>
                 {errors.email}
               </div>
             )}
           </div>
 
-          <div style={{ marginBottom: '24px' }}>
-            <label style={{
-              display: 'block',
-              fontSize: '13px',
-              color: 'var(--text-secondary)',
-              marginBottom: '8px',
-              fontWeight: '500'
-            }}>
-              Password
-            </label>
+          <div style={{ marginBottom: '40px' }}>
+            <label className="label-md" style={{ fontSize: '9px', display: 'block', marginBottom: '4px' }}>Secret</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '10px 12px',
-                background: 'var(--bg-surface2)',
-                border: '1px solid var(--border-default)',
-                borderRadius: '6px',
-                color: 'var(--text-primary)',
-                fontSize: '14px'
-              }}
-              placeholder="••••••••"
+              placeholder="Password"
+              style={{ padding: '12px 0' }}
             />
             {errors.password && (
-              <div style={{ color: 'var(--color-danger)', fontSize: '12px', marginTop: '4px' }}>
+              <div style={{ color: 'var(--color-danger)', fontSize: '11px', marginTop: '8px', fontWeight: '600' }}>
                 {errors.password}
               </div>
             )}
           </div>
 
-          <Button type="submit" fullWidth>
-            Sign In
+          <Button type="submit" fullWidth variant="primary" size="lg">
+            Initialize Session
           </Button>
         </form>
 
-        <p style={{
-          textAlign: 'center',
-          marginTop: '24px',
-          fontSize: '14px',
-          color: 'var(--text-muted)'
-        }}>
-          Don't have an account?{' '}
-          <Link to="/register" style={{ color: 'var(--accent-blue)', textDecoration: 'none' }}>
-            Sign up
-          </Link>
-        </p>
+        <div style={{ marginTop: '32px', textAlign: 'center' }}>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
+            New associate?{' '}
+            <Link to="/register" style={{ color: 'var(--accent-primary)', fontWeight: '700', textDecoration: 'none' }}>
+              Create Account
+            </Link>
+          </p>
+        </div>
 
-        <div style={{
-          marginTop: '24px',
-          padding: '12px',
-          background: 'var(--bg-surface2)',
-          borderRadius: '8px',
-          fontSize: '12px',
-          color: 'var(--text-muted)'
-        }}>
-          <strong>Demo Account:</strong><br />
-          Email: admin@demo.com<br />
-          Password: demo1234
+        <div className="tonal-card-low" style={{ marginTop: '40px', padding: '16px' }}>
+          <span className="label-md" style={{ fontSize: '8px', display: 'block', marginBottom: '8px' }}>Demo Credentials</span>
+          <div style={{ fontSize: '11px', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+            <strong>Email:</strong> admin@demo.com<br />
+            <strong>Pass:</strong> demo1234
+          </div>
         </div>
       </div>
     </div>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aurelius Executive CRM - Contacts</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#5b5e66",
+                        "primary-container": "#005f56",
+                        "background": "#f9f9fc",
+                        "on-surface": "#1a1c1e",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#434848",
+                        "on-tertiary-fixed": "#181c1d",
+                        "inverse-on-surface": "#f0f0f3",
+                        "secondary-container": "#e0e2eb",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#176a60",
+                        "on-background": "#1a1c1e",
+                        "primary-fixed": "#a6f1e4",
+                        "on-primary-fixed-variant": "#005048",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#505555",
+                        "outline-variant": "#bec9c6",
+                        "on-primary-fixed": "#00201c",
+                        "surface-container-highest": "#e2e2e5",
+                        "primary": "#00453e",
+                        "on-secondary-fixed-variant": "#44474e",
+                        "surface-dim": "#dadadc",
+                        "secondary-fixed": "#e0e2eb",
+                        "tertiary-fixed-dim": "#c3c7c7",
+                        "surface-container-high": "#e8e8ea",
+                        "on-tertiary-container": "#c5c9c9",
+                        "on-surface-variant": "#3f4947",
+                        "surface-container": "#eeeef0",
+                        "primary-fixed-dim": "#8ad4c8",
+                        "tertiary-fixed": "#dfe3e3",
+                        "surface-container-low": "#f3f3f6",
+                        "on-error-container": "#93000a",
+                        "on-secondary": "#ffffff",
+                        "surface": "#f9f9fc",
+                        "surface-variant": "#e2e2e5",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#8cd6ca",
+                        "surface-bright": "#f9f9fc",
+                        "secondary-fixed-dim": "#c4c6cf",
+                        "inverse-surface": "#2f3133",
+                        "inverse-primary": "#8ad4c8",
+                        "error": "#ba1a1a",
+                        "outline": "#6f7977",
+                        "on-secondary-fixed": "#181c22",
+                        "tertiary": "#393e3e",
+                        "on-secondary-container": "#61646c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-72 fixed left-0 top-0 z-50 bg-slate-50 flex flex-col py-10 px-6 gap-y-8 border-none font-['Manrope'] tracking-tight">
+<div class="flex flex-col gap-1 px-2">
+<h1 class="text-2xl font-bold text-emerald-900 tracking-tighter">Aurelius</h1>
+<p class="text-xs uppercase tracking-[0.2em] text-slate-400 font-semibold">Executive CRM</p>
+</div>
+<nav class="flex-1 flex flex-col gap-y-2">
+<!-- Nav Item: Overview -->
+<a class="flex items-center gap-4 px-4 py-3 text-slate-500 font-medium hover:text-emerald-800 hover:bg-emerald-50 transition-colors duration-300 group" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Overview</span>
+</a>
+<!-- Nav Item: Contacts (ACTIVE) -->
+<a class="flex items-center gap-4 px-4 py-3 text-emerald-900 font-bold bg-emerald-50 rounded-r-full transition-all scale-95 opacity-90" href="#">
+<span class="material-symbols-outlined" data-icon="group" style="font-variation-settings: 'FILL' 1;">group</span>
+<span>Contacts</span>
+</a>
+<!-- Nav Item: Pipeline -->
+<a class="flex items-center gap-4 px-4 py-3 text-slate-500 font-medium hover:text-emerald-800 hover:bg-emerald-50 transition-colors duration-300 group" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span>Pipeline</span>
+</a>
+<!-- Nav Item: Activities -->
+<a class="flex items-center gap-4 px-4 py-3 text-slate-500 font-medium hover:text-emerald-800 hover:bg-emerald-50 transition-colors duration-300 group" href="#">
+<span class="material-symbols-outlined" data-icon="event_note">event_note</span>
+<span>Activities</span>
+</a>
+<!-- Nav Item: Settings -->
+<a class="flex items-center gap-4 px-4 py-3 text-slate-500 font-medium hover:text-emerald-800 hover:bg-emerald-50 transition-colors duration-300 group" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-2">
+<button class="w-full bg-primary text-on-primary py-4 px-6 rounded-lg font-bold text-sm tracking-wide flex items-center justify-center gap-2 hover:opacity-90 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                Create Deal
+            </button>
+<div class="mt-8 flex items-center gap-3 px-2">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-high">
+<img alt="Executive User Profile" class="w-full h-full object-cover" data-alt="Professional headshot of a senior executive male in a tailored suit with soft cinematic studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsvgneNjSt6BXIDwguafm5ONZ6FMRO30eOcMkPh21dtTG_ZTdJFShqzq-WZ0X1bfK9PH5U9_FW8J559vmAFpH9quyqjBDZ9EMzrYab-obwnZNr7p_EIKD2DtvwLNDIuVsDSk7klROfAQsyIatx7oqXqjzJdqAubtPE8O9_98LwtIzf4QvfUHB7kkTJoZZZNJGSfDlm53X1jFjpvWCe2HId86Ps8H5qab-xfiKbDdydjS7gmZ5_MDvcuC4zdgGR_izf9fcbwZkUaF8"/>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-bold text-emerald-900">Marcus Aurelius</span>
+<span class="text-xs text-slate-400">Administrator</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 right-0 w-[calc(100%-18rem)] h-20 bg-white/80 backdrop-blur-xl flex items-center justify-between px-12 z-40 shadow-sm shadow-emerald-900/5">
+<div class="flex-1 flex items-center max-w-xl">
+<div class="w-full relative group">
+<span class="material-symbols-outlined absolute left-0 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="w-full bg-transparent border-none focus:ring-0 pl-8 text-sm font-['Manrope'] uppercase tracking-widest text-on-surface placeholder:text-slate-300" placeholder="SEARCH DIRECTORY..." type="text"/>
+<div class="absolute bottom-0 left-0 w-0 h-[2px] bg-primary group-focus-within:w-full transition-all duration-500"></div>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-6 text-slate-400">
+<button class="hover:text-emerald-700 transition-all focus:ring-2 focus:ring-emerald-500/20 outline-none">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="hover:text-emerald-700 transition-all focus:ring-2 focus:ring-emerald-500/20 outline-none">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+</button>
+<button class="hover:text-emerald-700 transition-all focus:ring-2 focus:ring-emerald-500/20 outline-none">
+<span class="material-symbols-outlined" data-icon="chat_bubble_outline">chat_bubble_outline</span>
+</button>
+</div>
+<div class="h-8 w-[1px] bg-slate-100"></div>
+<span class="text-sm font-['Manrope'] uppercase tracking-widest text-emerald-900 font-extrabold">The Ledger</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-72 pt-32 px-12 pb-20">
+<div class="max-w-7xl mx-auto">
+<!-- Page Header Section -->
+<div class="flex flex-col gap-8 mb-16">
+<div class="flex justify-between items-end">
+<div class="space-y-2">
+<h2 class="text-5xl font-extrabold text-on-surface tracking-tight">Contacts</h2>
+<p class="text-on-surface-variant text-lg font-light">Managing 1,284 professional connections</p>
+</div>
+<div class="flex gap-4">
+<button class="bg-surface-container-high text-on-surface px-6 py-3 rounded-lg font-bold text-sm tracking-wide hover:bg-surface-container-highest transition-colors">
+                            Export CSV
+                        </button>
+<button class="bg-primary text-on-primary px-6 py-3 rounded-lg font-bold text-sm tracking-wide hover:opacity-90 transition-all">
+                            Add Contact
+                        </button>
+</div>
+</div>
+<!-- Filters -->
+<div class="flex items-center gap-3">
+<button class="bg-primary text-on-primary px-5 py-2 rounded-full text-xs font-bold tracking-widest uppercase">All</button>
+<button class="bg-surface-container-low text-on-surface-variant px-5 py-2 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-surface-container-high transition-colors">Leads</button>
+<button class="bg-surface-container-low text-on-surface-variant px-5 py-2 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-surface-container-high transition-colors">Clients</button>
+<button class="bg-surface-container-low text-on-surface-variant px-5 py-2 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-surface-container-high transition-colors">Archived</button>
+</div>
+</div>
+<!-- Contacts Grid (Bento Style) -->
+<div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+<!-- Contact Card 1 -->
+<div class="group bg-surface-container-lowest p-8 rounded-xl transition-all duration-300 flex flex-col justify-between h-72 border-none">
+<div class="flex justify-between items-start">
+<div class="flex gap-6">
+<div class="text-6xl font-black text-surface-container-highest select-none">EM</div>
+<div class="space-y-1">
+<h3 class="text-xl font-bold text-on-surface tracking-tight group-hover:text-primary transition-colors">Elena Moretti</h3>
+<p class="text-sm text-on-surface-variant font-medium uppercase tracking-wider">Design Director</p>
+<p class="text-xs text-slate-400">Lumina Collective</p>
+</div>
+</div>
+<span class="bg-primary-fixed text-on-primary-fixed-variant px-3 py-1 rounded-sm text-[10px] font-black uppercase tracking-widest">LEAD QUALIFIED</span>
+</div>
+<div class="flex items-center justify-between pt-6 border-t border-slate-50">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-white bg-slate-200"></div>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-slate-300"></div>
+</div>
+<button class="text-primary font-bold text-sm flex items-center gap-2 group/btn">
+                            View Profile
+                            <span class="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Contact Card 2 -->
+<div class="group bg-surface-container-lowest p-8 rounded-xl transition-all duration-300 flex flex-col justify-between h-72 border-none">
+<div class="flex justify-between items-start">
+<div class="flex gap-6">
+<div class="text-6xl font-black text-surface-container-highest select-none">JT</div>
+<div class="space-y-1">
+<h3 class="text-xl font-bold text-on-surface tracking-tight group-hover:text-primary transition-colors">Julian Thorne</h3>
+<p class="text-sm text-on-surface-variant font-medium uppercase tracking-wider">CTO &amp; Founder</p>
+<p class="text-xs text-slate-400">Aether Systems</p>
+</div>
+</div>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-sm text-[10px] font-black uppercase tracking-widest">CLIENT</span>
+</div>
+<div class="flex items-center justify-between pt-6 border-t border-slate-50">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg" data-icon="schedule">schedule</span>
+<span class="text-xs font-bold uppercase tracking-wider">Follow up in 2d</span>
+</div>
+<button class="text-primary font-bold text-sm flex items-center gap-2 group/btn">
+                            View Profile
+                            <span class="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Contact Card 3 -->
+<div class="group bg-surface-container-lowest p-8 rounded-xl transition-all duration-300 flex flex-col justify-between h-72 border-none">
+<div class="flex justify-between items-start">
+<div class="flex gap-6">
+<div class="text-6xl font-black text-surface-container-highest select-none">SC</div>
+<div class="space-y-1">
+<h3 class="text-xl font-bold text-on-surface tracking-tight group-hover:text-primary transition-colors">Sofia Chen</h3>
+<p class="text-sm text-on-surface-variant font-medium uppercase tracking-wider">Operations Lead</p>
+<p class="text-xs text-slate-400">Veridian Logistics</p>
+</div>
+</div>
+<span class="bg-primary-fixed text-on-primary-fixed-variant px-3 py-1 rounded-sm text-[10px] font-black uppercase tracking-widest">LEAD QUALIFIED</span>
+</div>
+<div class="flex items-center justify-between pt-6 border-t border-slate-50">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-white bg-emerald-100 flex items-center justify-center text-[10px] font-bold text-emerald-800">SC</div>
+</div>
+<button class="text-primary font-bold text-sm flex items-center gap-2 group/btn">
+                            View Profile
+                            <span class="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Contact Card 4 -->
+<div class="group bg-surface-container-lowest p-8 rounded-xl transition-all duration-300 flex flex-col justify-between h-72 border-none">
+<div class="flex justify-between items-start">
+<div class="flex gap-6">
+<div class="text-6xl font-black text-surface-container-highest select-none">RH</div>
+<div class="space-y-1">
+<h3 class="text-xl font-bold text-on-surface tracking-tight group-hover:text-primary transition-colors">Robert Halloway</h3>
+<p class="text-sm text-on-surface-variant font-medium uppercase tracking-wider">VP of Sales</p>
+<p class="text-xs text-slate-400">Apex Global</p>
+</div>
+</div>
+<span class="bg-error-container text-on-error-container px-3 py-1 rounded-sm text-[10px] font-black uppercase tracking-widest">NEGOTIATION</span>
+</div>
+<div class="flex items-center justify-between pt-6 border-t border-slate-50">
+<div class="flex items-center gap-2 text-error">
+<span class="material-symbols-outlined text-lg" data-icon="warning">warning</span>
+<span class="text-xs font-bold uppercase tracking-wider">High Risk</span>
+</div>
+<button class="text-primary font-bold text-sm flex items-center gap-2 group/btn">
+                            View Profile
+                            <span class="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Featured Large Card (Asymmetric Layout) -->
+<div class="group bg-primary text-on-primary p-10 rounded-xl transition-all duration-300 xl:col-span-2 flex flex-row items-center justify-between overflow-hidden relative border-none">
+<div class="z-10 flex flex-col gap-4">
+<span class="text-[10px] font-black uppercase tracking-[0.3em] opacity-60">Strategic Account</span>
+<h3 class="text-4xl font-extrabold tracking-tight">Kensington Partners</h3>
+<p class="max-w-md opacity-80 leading-relaxed font-light">Last activity recorded 4 hours ago by Marcus. Next meeting scheduled for tomorrow at 09:00 AM.</p>
+<div class="mt-4 flex gap-4">
+<button class="bg-white text-primary px-8 py-3 rounded-lg font-bold text-sm tracking-wide">Enter Hub</button>
+<button class="border border-white/30 text-white px-8 py-3 rounded-lg font-bold text-sm tracking-wide hover:bg-white/10 transition-colors">Add Note</button>
+</div>
+</div>
+<div class="absolute right-0 top-0 bottom-0 w-1/3 opacity-20 pointer-events-none">
+<img alt="Office Background" class="w-full h-full object-cover" data-alt="Modern minimalist office interior with glass walls and dark wood accents in soft moody lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJaCPsvnz_7Oa_YIJEpwVosrMsPLqJWwt4hCQq0QZLlAG8r5E7FEFlPPtqrivOILxFXFZRGb9zhCHTeEczfOVg7IPKNcTb5RT2PZ9wMSRMtMDF0qJVOJ5Mmg4RKAsTFZIv46lab28o-Wgzq5gSMZlkA7nBBNtWk2x2QdbM_OiPbD0uZMibMUGKAOvp7iYSjZFItKaiSC0Gwu8WZy_vVbc5XNvTr1tJ-ALRiLL6DX4v6tn9Vrr3YLUWMY9Qn18P78xjL98tR8VjLi0"/>
+</div>
+</div>
+</div>
+<!-- List Layout for Secondary Items -->
+<div class="mt-16 space-y-4">
+<div class="flex items-center justify-between px-4">
+<h4 class="text-sm font-black uppercase tracking-[0.2em] text-on-surface-variant">Recently Archived</h4>
+<button class="text-xs font-bold text-primary underline underline-offset-4">See All</button>
+</div>
+<div class="bg-surface-container-low rounded-xl overflow-hidden divide-y divide-white/20">
+<div class="flex items-center justify-between p-6 hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="flex items-center gap-8">
+<div class="w-12 h-12 bg-white rounded-full flex items-center justify-center font-bold text-slate-400">AM</div>
+<div>
+<p class="text-sm font-bold text-on-surface">Arthur Morgan</p>
+<p class="text-[10px] text-on-surface-variant font-medium uppercase tracking-widest">Independent Consultant</p>
+</div>
+</div>
+<div class="text-xs font-bold text-on-surface-variant/40 italic">Moved to archive 12 days ago</div>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<div class="flex items-center justify-between p-6 hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="flex items-center gap-8">
+<div class="w-12 h-12 bg-white rounded-full flex items-center justify-center font-bold text-slate-400">SV</div>
+<div>
+<p class="text-sm font-bold text-on-surface">Sarah Vance</p>
+<p class="text-[10px] text-on-surface-variant font-medium uppercase tracking-widest">Lead Engineer @ TechForge</p>
+</div>
+</div>
+<div class="text-xs font-bold text-on-surface-variant/40 italic">Moved to archive 1 month ago</div>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

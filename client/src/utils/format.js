@@ -1,4 +1,7 @@
 export const formatCurrency = (value) => {
+  if (value >= 1000000) {
+    return `$${(value / 1000000).toFixed(1)}M`;
+  }
   if (value >= 1000) {
     return `$${Math.round(value / 1000)}k`;
   }
@@ -17,48 +20,52 @@ export const getInitials = (name) => {
 };
 
 export const getAvatarColor = (name) => {
-  const colors = ['#4f8ef7', '#a78bfa', '#10b981', '#f59e0b', '#f87171', '#f97316'];
-  const index = name.charCodeAt(0) % colors.length;
+  const colors = ['#00453e', '#176a60', '#5b5e66', '#393e3e', '#1a1c1e'];
+  const index = name ? name.charCodeAt(0) % colors.length : 0;
   return colors[index];
 };
 
 export const getStatusColor = (status) => {
   const colors = {
-    'Customer': '#10b981',
-    'Lead': '#4f8ef7',
-    'Prospect': '#a78bfa',
-    'Churned': '#f87171'
+    'Customer': '#00453e',
+    'Lead': '#5b5e66',
+    'Prospect': '#434848',
+    'Churned': '#ba1a1a'
   };
-  return colors[status] || '#8b90a7';
+  return colors[status] || '#6f7977';
 };
 
 export const getStageColor = (stage) => {
   const colors = {
-    'New': '#8b90a7',
-    'Qualified': '#4f8ef7',
-    'Proposal': '#a78bfa',
-    'Negotiation': '#f59e0b',
-    'Closed Won': '#10b981',
-    'Closed Lost': '#f87171'
+    'New': '#6f7977',
+    'Qualified': '#5b5e66',
+    'Proposal': '#434848',
+    'Negotiation': '#00453e',
+    'Closed Won': '#176a60',
+    'Closed Lost': '#ba1a1a'
   };
-  return colors[stage] || '#8b90a7';
+  return colors[stage] || '#6f7977';
 };
 
 export const getPriorityColor = (priority) => {
   const colors = {
-    'High': '#f87171',
+    'High': '#ba1a1a',
     'Medium': '#f59e0b',
-    'Low': '#10b981'
+    'Low': '#176a60'
   };
-  return colors[priority] || '#8b90a7';
+  return colors[priority] || '#6f7977';
 };
 
 export const getRelativeTime = (date) => {
+  if (!date) return 'Unknown';
   const diff = new Date() - new Date(date);
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  if (days === 0) return 'Today';
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const days = Math.floor(hours / 24);
+  
+  if (hours < 1) return 'Just now';
+  if (hours < 24) return `${hours}h ago`;
   if (days === 1) return 'Yesterday';
-  if (days > 0 && days < 7) return `${days} days ago`;
-  if (days >= 7 && days < 30) return `${Math.floor(days / 7)} weeks ago`;
-  return `${Math.floor(days / 30)} months ago`;
+  if (days < 7) return `${days}d ago`;
+  if (days < 30) return `${Math.floor(days / 7)}w ago`;
+  return `${Math.floor(days / 30)}mo ago`;
 };

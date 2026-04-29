@@ -4,23 +4,11 @@ import { useAuth } from '../context/AuthContext';
 import Button from '../components/Button';
 
 const Register = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  });
+  const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'Sales' });
   const [errors, setErrors] = useState({});
   const [registerError, setRegisterError] = useState('');
   const { register } = useAuth();
   const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,24 +18,15 @@ const Register = () => {
     const newErrors = {};
     if (!formData.name) newErrors.name = 'Name is required';
     if (!formData.email) newErrors.email = 'Email is required';
-    if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) newErrors.email = 'Invalid email format';
     if (!formData.password) newErrors.password = 'Password is required';
-    if (formData.password.length < 8) newErrors.password = 'Password must be at least 8 characters';
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
+    if (formData.password.length < 6) newErrors.password = 'Min 6 characters required';
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
-    const result = await register({
-      name: formData.name,
-      email: formData.email,
-      password: formData.password
-    });
-
+    const result = await register(formData);
     if (result.success) {
       navigate('/');
     } else {
@@ -61,40 +40,39 @@ const Register = () => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'var(--bg-page)'
+      background: 'var(--bg-page)',
+      padding: '24px'
     }}>
-      <div style={{
-        background: 'var(--bg-surface)',
-        border: '1px solid var(--border-default)',
-        borderRadius: '12px',
-        padding: '40px',
+      <div className="tonal-card" style={{
         width: '100%',
-        maxWidth: '400px'
+        maxWidth: '440px',
+        padding: '48px',
+        boxShadow: '0 24px 60px rgba(0,0,0,0.04)'
       }}>
-        <h1 style={{
-          fontFamily: 'Syne, sans-serif',
-          fontWeight: '800',
-          fontSize: '32px',
-          background: 'linear-gradient(135deg, var(--accent-blue), var(--accent-purple))',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          marginBottom: '8px'
-        }}>
-          CRM Pro
-        </h1>
-        <p style={{ color: 'var(--text-muted)', marginBottom: '32px' }}>
-          Create your account
-        </p>
+        <header style={{ marginBottom: '40px', textAlign: 'center' }}>
+          <div style={{
+            fontFamily: "'Manrope', sans-serif",
+            fontWeight: '800',
+            fontSize: '24px',
+            color: 'var(--accent-primary)',
+            letterSpacing: '-0.05em',
+            marginBottom: '8px'
+          }}>
+            Aurelius
+          </div>
+          <p className="label-md" style={{ fontSize: '10px' }}>Join the Network</p>
+        </header>
 
         {registerError && (
           <div style={{
-            padding: '12px',
-            background: 'rgba(248, 113, 113, 0.1)',
-            border: '1px solid var(--color-danger)',
-            borderRadius: '8px',
+            padding: '16px',
+            background: 'var(--color-error-container)',
+            borderRadius: '12px',
             color: 'var(--color-danger)',
-            marginBottom: '20px',
-            fontSize: '14px'
+            marginBottom: '32px',
+            fontSize: '13px',
+            fontWeight: '600',
+            textAlign: 'center'
           }}>
             {registerError}
           </div>
@@ -102,153 +80,60 @@ const Register = () => {
 
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '20px' }}>
-            <label style={{
-              display: 'block',
-              fontSize: '13px',
-              color: 'var(--text-secondary)',
-              marginBottom: '8px',
-              fontWeight: '500'
-            }}>
-              Name
-            </label>
+            <label className="label-md" style={{ fontSize: '9px', display: 'block', marginBottom: '4px' }}>Professional Name</label>
             <input
               type="text"
-              name="name"
               value={formData.name}
-              onChange={handleChange}
-              style={{
-                width: '100%',
-                padding: '10px 12px',
-                background: 'var(--bg-surface2)',
-                border: '1px solid var(--border-default)',
-                borderRadius: '6px',
-                color: 'var(--text-primary)',
-                fontSize: '14px'
-              }}
-              placeholder="John Doe"
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              placeholder="Full Name"
+              style={{ padding: '12px 0' }}
             />
             {errors.name && (
-              <div style={{ color: 'var(--color-danger)', fontSize: '12px', marginTop: '4px' }}>
-                {errors.name}
-              </div>
+              <div style={{ color: 'var(--color-danger)', fontSize: '11px', marginTop: '8px', fontWeight: '600' }}>{errors.name}</div>
             )}
           </div>
 
           <div style={{ marginBottom: '20px' }}>
-            <label style={{
-              display: 'block',
-              fontSize: '13px',
-              color: 'var(--text-secondary)',
-              marginBottom: '8px',
-              fontWeight: '500'
-            }}>
-              Email
-            </label>
+            <label className="label-md" style={{ fontSize: '9px', display: 'block', marginBottom: '4px' }}>Identity</label>
             <input
               type="email"
-              name="email"
               value={formData.email}
-              onChange={handleChange}
-              style={{
-                width: '100%',
-                padding: '10px 12px',
-                background: 'var(--bg-surface2)',
-                border: '1px solid var(--border-default)',
-                borderRadius: '6px',
-                color: 'var(--text-primary)',
-                fontSize: '14px'
-              }}
-              placeholder="you@example.com"
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              placeholder="Email Address"
+              style={{ padding: '12px 0' }}
             />
             {errors.email && (
-              <div style={{ color: 'var(--color-danger)', fontSize: '12px', marginTop: '4px' }}>
-                {errors.email}
-              </div>
+              <div style={{ color: 'var(--color-danger)', fontSize: '11px', marginTop: '8px', fontWeight: '600' }}>{errors.email}</div>
             )}
           </div>
 
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{
-              display: 'block',
-              fontSize: '13px',
-              color: 'var(--text-secondary)',
-              marginBottom: '8px',
-              fontWeight: '500'
-            }}>
-              Password
-            </label>
+          <div style={{ marginBottom: '40px' }}>
+            <label className="label-md" style={{ fontSize: '9px', display: 'block', marginBottom: '4px' }}>Secret</label>
             <input
               type="password"
-              name="password"
               value={formData.password}
-              onChange={handleChange}
-              style={{
-                width: '100%',
-                padding: '10px 12px',
-                background: 'var(--bg-surface2)',
-                border: '1px solid var(--border-default)',
-                borderRadius: '6px',
-                color: 'var(--text-primary)',
-                fontSize: '14px'
-              }}
-              placeholder="••••••••"
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              placeholder="Min 6 characters"
+              style={{ padding: '12px 0' }}
             />
             {errors.password && (
-              <div style={{ color: 'var(--color-danger)', fontSize: '12px', marginTop: '4px' }}>
-                {errors.password}
-              </div>
+              <div style={{ color: 'var(--color-danger)', fontSize: '11px', marginTop: '8px', fontWeight: '600' }}>{errors.password}</div>
             )}
           </div>
 
-          <div style={{ marginBottom: '24px' }}>
-            <label style={{
-              display: 'block',
-              fontSize: '13px',
-              color: 'var(--text-secondary)',
-              marginBottom: '8px',
-              fontWeight: '500'
-            }}>
-              Confirm Password
-            </label>
-            <input
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              style={{
-                width: '100%',
-                padding: '10px 12px',
-                background: 'var(--bg-surface2)',
-                border: '1px solid var(--border-default)',
-                borderRadius: '6px',
-                color: 'var(--text-primary)',
-                fontSize: '14px'
-              }}
-              placeholder="••••••••"
-            />
-            {errors.confirmPassword && (
-              <div style={{ color: 'var(--color-danger)', fontSize: '12px', marginTop: '4px' }}>
-                {errors.confirmPassword}
-              </div>
-            )}
-          </div>
-
-          <Button type="submit" fullWidth>
-            Create Account
+          <Button type="submit" fullWidth variant="primary" size="lg">
+            Create Profile
           </Button>
         </form>
 
-        <p style={{
-          textAlign: 'center',
-          marginTop: '24px',
-          fontSize: '14px',
-          color: 'var(--text-muted)'
-        }}>
-          Already have an account?{' '}
-          <Link to="/login" style={{ color: 'var(--accent-blue)', textDecoration: 'none' }}>
-            Sign in
-          </Link>
-        </p>
+        <div style={{ marginTop: '32px', textAlign: 'center' }}>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
+            Already associate?{' '}
+            <Link to="/login" style={{ color: 'var(--accent-primary)', fontWeight: '700', textDecoration: 'none' }}>
+              Access Session
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
