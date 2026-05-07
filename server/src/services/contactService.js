@@ -32,6 +32,10 @@ const getAllContacts = async (userId, options = {}) => {
     params.push(status);
   }
 
+  const countQuery = query.replace('SELECT *', 'SELECT COUNT(*)').split(' ORDER BY')[0];
+  const countResult = await pool.query(countQuery, params);
+  const totalCount = parseInt(countResult.rows[0].count);
+
   paramCount++;
   query += ` ORDER BY ${safeSort} ${safeOrder} LIMIT $${paramCount}`;
   params.push(limit);
@@ -41,7 +45,12 @@ const getAllContacts = async (userId, options = {}) => {
   params.push(offset);
 
   const result = await pool.query(query, params);
-  return result.rows;
+  
+  return {
+    contacts: result.rows,
+    count: totalCount,
+    totalPages: Math.ceil(totalCount / limit)
+  };
 };
 
 const getContactById = async (userId, id) => {
@@ -147,11 +156,41 @@ const getContactCount = async (userId) => {
   return parseInt(result.rows[0].count);
 };
 
+const bulkCreateContacts = async (userId, records) => {
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    
+    for (const record of records) {
+      const { name, company, email, phone, status, role, lifetime_value } = record;
+      if (!name) continue;
+
+      const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+
+      await client.query(
+        `INSERT INTO contacts 
+         (user_id, name, company, email, phone, status, role, lifetime_value, avatar_initials) 
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+        [userId, name, company, email, phone, status || 'Lead', role, lifetime_value || 0, initials]
+      );
+    }
+    
+    await client.query('COMMIT');
+    return records.length;
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
 module.exports = {
   getAllContacts,
   getContactById,
   createContact,
   updateContact,
   deleteContact,
-  getContactCount
+  getContactCount,
+  bulkCreateContacts
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useContacts, useContact, useCreateContact, useUpdateContact, useDeleteContact } from '../hooks/useContacts';
+import { useContacts, useContact, useCreateContact, useUpdateContact, useDeleteContact, useExportContacts, useImportContacts } from '../hooks/useContacts';
 import { useCRM } from '../context/CRMContext';
 import { formatCurrency, getRelativeTime } from '../utils/format';
 import Modal from '../components/Modal';
@@ -147,6 +147,8 @@ const Contacts = () => {
   
   const { setGlobalAction, refreshTrigger, refreshData } = useCRM();
   const { createContact } = useCreateContact();
+  const { exportContacts, loading: exporting } = useExportContacts();
+  const { importContacts, loading: importing } = useImportContacts();
 
   useEffect(() => {
     setGlobalAction(() => () => {
@@ -163,6 +165,15 @@ const Contacts = () => {
     trigger: refreshTrigger
   });
 
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      await importContacts(file);
+      e.target.value = null; // reset
+      refreshData();
+    }
+  };
+
   if (selectedContactId) {
     return <ContactDetails contactId={selectedContactId} onBack={() => setSelectedContactId(null)} />;
   }
@@ -176,8 +187,16 @@ const Contacts = () => {
             <h2 className="text-5xl font-extrabold text-on-surface tracking-tight">Contacts</h2>
             <p className="text-on-surface-variant text-lg font-light">Managing {contacts?.length || 0} professional connections</p>
           </div>
-          <div className="flex gap-4">
-            <Button variant="secondary" className="px-6">Export CSV</Button>
+          <div className="flex gap-4 items-center">
+            <input type="file" id="csv-upload" accept=".csv" className="hidden" onChange={handleFileChange} />
+            <label htmlFor="csv-upload" className="cursor-pointer">
+              <Button variant="secondary" className="px-6 pointer-events-none" disabled={importing}>
+                {importing ? 'Importing...' : 'Import CSV'}
+              </Button>
+            </label>
+            <Button variant="secondary" className="px-6" onClick={exportContacts} disabled={exporting}>
+              {exporting ? 'Exporting...' : 'Export CSV'}
+            </Button>
             <Button variant="primary" className="px-6" onClick={() => setShowCreateModal(true)}>Add Contact</Button>
           </div>
         </div>

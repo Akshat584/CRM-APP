@@ -6,6 +6,12 @@ const { requireAuth } = require('../middleware/requireAuth');
 
 router.use(requireAuth);
 
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage() });
+
+router.get('/export', contactController.exportContacts);
+router.post('/import', upload.single('file'), contactController.importContacts);
+
 router.get('/', contactController.getContacts);
 router.get('/:id', contactController.getContact);
 router.post('/', validate, contactController.createContact);

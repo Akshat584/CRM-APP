@@ -5,6 +5,9 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 
+const { sanitizeBody } = require('./middleware/xssSanitize');
+const { generateCsrfToken, verifyCsrfToken } = require('./middleware/csrf');
+
 const authRoutes = require('./routes/authRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const dealRoutes = require('./routes/dealRoutes');
@@ -15,16 +18,25 @@ const searchRoutes = require('./routes/searchRoutes');
 
 const app = express();
 
+// Security headers
 app.use(helmet());
+
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// Sanitize inputs
+app.use(sanitizeBody);
+
 app.use(cors({
   origin: process.env.CLIENT_URL,
   credentials: true
 }));
+
+// CSRF Protection
+app.use(generateCsrfToken);
+app.use('/api', verifyCsrfToken);
 
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/contacts', contactRoutes);

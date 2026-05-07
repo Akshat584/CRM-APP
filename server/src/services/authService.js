@@ -77,6 +77,34 @@ const deleteUserRefreshTokens = async (userId) => {
   await pool.query('DELETE FROM refresh_tokens WHERE user_id = $1', [userId]);
 };
 
+const storePasswordResetToken = async (userId, token) => {
+  const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
+  await pool.query(
+    'INSERT INTO password_resets (token, user_id, expires_at) VALUES ($1, $2, $3)',
+    [token, userId, expiresAt]
+  );
+};
+
+const verifyPasswordResetToken = async (token) => {
+  const result = await pool.query(
+    'SELECT user_id FROM password_resets WHERE token = $1 AND expires_at > CURRENT_TIMESTAMP',
+    [token]
+  );
+  return result.rows[0];
+};
+
+const deletePasswordResetToken = async (token) => {
+  await pool.query('DELETE FROM password_resets WHERE token = $1', [token]);
+};
+
+const updatePassword = async (userId, newPassword) => {
+  const passwordHash = await hashPassword(newPassword);
+  await pool.query(
+    'UPDATE users SET password_hash = $1 WHERE id = $2',
+    [passwordHash, userId]
+  );
+};
+
 module.exports = {
   generateTokens,
   hashPassword,
@@ -87,5 +115,9 @@ module.exports = {
   storeRefreshToken,
   verifyRefreshToken,
   deleteRefreshToken,
-  deleteUserRefreshTokens
+  deleteUserRefreshTokens,
+  storePasswordResetToken,
+  verifyPasswordResetToken,
+  deletePasswordResetToken,
+  updatePassword
 };

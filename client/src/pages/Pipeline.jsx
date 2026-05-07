@@ -59,7 +59,7 @@ const Pipeline = () => {
         </div>
       </section>
 
-      <div className="flex gap-6 overflow-x-auto pb-12 scrollbar-hide">
+      <div className="flex gap-6 overflow-x-auto pb-12">
         {stages.map((stage) => {
           const stageDeals = groupedDeals[stage] || [];
           const stageValue = stageDeals.reduce((sum, deal) => sum + (deal.value || 0), 0);

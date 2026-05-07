@@ -104,7 +104,7 @@ const Tasks = () => {
         </div>
       </section>
 
-      <div className="flex gap-6 overflow-x-auto pb-12 scrollbar-hide">
+      <div className="flex gap-6 overflow-x-auto pb-12">
         {renderTaskColumn('Pending', todoTasks)}
         {renderTaskColumn('In Progress', inProgressTasks)}
         {renderTaskColumn('Completed', doneTasks)}

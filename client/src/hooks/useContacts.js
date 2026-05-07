@@ -134,3 +134,53 @@ export const useDeleteContact = () => {
 
   return { deleteContact, loading, error };
 };
+
+export const useExportContacts = () => {
+  const { addToast } = useToast();
+  const [loading, setLoading] = useState(false);
+
+  const exportContacts = async () => {
+    try {
+      setLoading(true);
+      const response = await contactsAPI.exportContacts();
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'contacts_export.csv');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      addToast('Contacts exported successfully', 'success');
+    } catch (err) {
+      addToast('Failed to export contacts', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { exportContacts, loading };
+};
+
+export const useImportContacts = () => {
+  const { addToast } = useToast();
+  const [loading, setLoading] = useState(false);
+
+  const importContacts = async (file) => {
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append('file', file);
+      const response = await contactsAPI.importContacts(formData);
+      addToast(response.data.data.message || 'Contacts imported successfully', 'success');
+      return { success: true };
+    } catch (err) {
+      const errorMessage = err.response?.data?.error || 'Failed to import contacts';
+      addToast(errorMessage, 'error');
+      return { success: false, error: errorMessage };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { importContacts, loading };
+};

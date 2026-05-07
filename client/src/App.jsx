@@ -54,11 +54,11 @@ const MainLayout = ({ children, actionLabel, onActionClick }) => {
   };
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex h-screen bg-background overflow-hidden">
       <Sidebar />
-      <div className="ml-72 flex-1 flex flex-col min-h-screen relative">
+      <div className="ml-72 flex-1 flex flex-col h-screen relative overflow-hidden">
         <Topbar actionLabel={actionLabel} onActionClick={handleActionClick} />
-        <div className="pt-20 flex-1 overflow-y-auto">
+        <div className="pt-20 flex-1 overflow-y-auto scrollbar-thin">
           <div className="p-12 max-w-7xl mx-auto">
             {children}
           </div>

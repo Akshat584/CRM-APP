@@ -23,14 +23,32 @@ body {
   @apply bg-background text-on-surface antialiased overflow-hidden;
 }
 
-/* Scrollbar Suppression */
+/* Custom Subtle Scrollbar */
 ::-webkit-scrollbar {
-  display: none;
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #bec9c6; /* Matches outline-variant */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6f7977; /* Matches text-muted */
 }
 
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
 .glass-effect {

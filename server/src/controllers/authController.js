@@ -214,10 +214,71 @@ const me = async (req, res) => {
   }
 };
 
+const crypto = require('crypto');
+
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await authService.getUserByEmail(email);
+
+    if (user) {
+      const token = crypto.randomBytes(32).toString('hex');
+      await authService.storePasswordResetToken(user.id, token);
+      
+      // In a real app, send an email here.
+      console.log(`[STUB EMAIL] Password reset token for ${email}: ${token}`);
+    }
+
+    // Always return success to prevent email enumeration
+    res.json({
+      success: true,
+      data: { message: 'If an account exists, a password reset link has been sent.' }
+    });
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({ success: false, error: 'Request failed' });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+    
+    // Enforce password complexity
+    const hasUpperCase = /[A-Z]/.test(newPassword);
+    const hasLowerCase = /[a-z]/.test(newPassword);
+    const hasNumbers = /\d/.test(newPassword);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword);
+
+    if (newPassword.length < 12 || !hasUpperCase || !hasLowerCase || !hasNumbers || !hasSpecialChar) {
+      return res.status(400).json({
+        success: false,
+        error: 'Password does not meet complexity requirements'
+      });
+    }
+
+    const resetRecord = await authService.verifyPasswordResetToken(token);
+
+    if (!resetRecord) {
+      return res.status(400).json({ success: false, error: 'Invalid or expired token' });
+    }
+
+    await authService.updatePassword(resetRecord.user_id, newPassword);
+    await authService.deletePasswordResetToken(token);
+
+    res.json({ success: true, data: { message: 'Password has been reset' } });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({ success: false, error: 'Password reset failed' });
+  }
+};
+
 module.exports = {
   register,
   login,
   refresh,
   logout,
-  me
+  me,
+  forgotPassword,
+  resetPassword
 };

@@ -35,20 +35,8 @@ const Register = () => {
   };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: 'var(--bg-page)',
-      padding: '24px'
-    }}>
-      <div className="tonal-card" style={{
-        width: '100%',
-        maxWidth: '440px',
-        padding: '48px',
-        boxShadow: '0 24px 60px rgba(0,0,0,0.04)'
-      }}>
+    <div className="h-screen overflow-y-auto flex items-center justify-center bg-background p-6">
+      <div className="tonal-card w-full max-w-[440px] p-12 shadow-2xl shadow-primary/5 animate-slideIn">
         <header style={{ marginBottom: '40px', textAlign: 'center' }}>
           <div style={{
             fontFamily: "'Manrope', sans-serif",
