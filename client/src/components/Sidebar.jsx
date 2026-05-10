@@ -17,7 +17,9 @@ const Sidebar = () => {
     { path: '/tasks', icon: 'checklist', label: 'Tasks' },
     { path: '/whatsapp', icon: 'forum', label: 'WhatsApp' },
     { path: '/campaigns', icon: 'rocket_launch', label: 'Campaigns' },
-    { path: '/reports', icon: 'monitoring', label: 'Analytics' }
+    { path: '/automations', icon: 'precision_manufacturing', label: 'Automations' },
+    { path: '/reports', icon: 'monitoring', label: 'Analytics' },
+    { path: '/team', icon: 'settings_accessibility', label: 'Team' }
   ];
 
   return (

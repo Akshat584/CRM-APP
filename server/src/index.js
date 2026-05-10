@@ -20,6 +20,8 @@ const userRoutes = require('./routes/userRoutes');
 const campaignRoutes = require('./routes/campaignRoutes');
 const stripeController = require('./controllers/stripeController');
 const stripeRoutes = require('./routes/stripeRoutes');
+const automationRoutes = require('./routes/automationRoutes');
+const teamRoutes = require('./routes/teamRoutes');
 const { initSocket } = require('./socket');
 
 const app = express();
@@ -68,6 +70,8 @@ app.use('/api/v1/search', searchRoutes);
 app.use('/api/v1/whatsapp', whatsappRoutes);
 app.use('/api/v1/campaigns', campaignRoutes);
 app.use('/api/v1/stripe', stripeRoutes);
+app.use('/api/v1/automations', automationRoutes);
+app.use('/api/v1/team', teamRoutes);
 
 app.get('/api/v1/health', (req, res) => {
   res.json({ success: true, status: 'ok' });

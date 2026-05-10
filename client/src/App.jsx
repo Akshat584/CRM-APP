@@ -16,6 +16,8 @@ import Tasks from './pages/Tasks';
 import Reports from './pages/Reports';
 import WhatsAppInbox from './pages/WhatsAppInbox';
 import Campaigns from './pages/Campaigns';
+import Automations from './pages/Automations';
+import TeamSettings from './pages/TeamSettings';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -141,6 +143,20 @@ const AppRoutes = () => {
         <ProtectedRoute>
           <MainLayout>
             <Campaigns />
+          </MainLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/automations" element={
+        <ProtectedRoute>
+          <MainLayout>
+            <Automations />
+          </MainLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/team" element={
+        <ProtectedRoute>
+          <MainLayout>
+            <TeamSettings />
           </MainLayout>
         </ProtectedRoute>
       } />

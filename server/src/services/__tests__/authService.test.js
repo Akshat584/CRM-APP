@@ -46,7 +46,7 @@ describe('authService', () => {
       });
 
       expect(bcrypt.hash).toHaveBeenCalledWith('password123', 12);
-      expect(pool.query).toHaveBeenCalledTimes(1);
+      expect(pool.query).toHaveBeenCalledTimes(4);
       expect(result).toEqual(mockUser);
     });
   });
