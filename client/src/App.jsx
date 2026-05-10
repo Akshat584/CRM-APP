@@ -6,6 +6,7 @@ import { ToastProvider } from './context/ToastContext';
 import { SocketProvider } from './context/SocketContext';
 import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
+import CommandPalette from './components/CommandPalette';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
@@ -78,13 +79,16 @@ const MainLayout = ({ children, actionLabel, onActionClick }) => {
 };
 
 const AppRoutes = () => {
+  const { user } = useAuth();
   return (
-    <Routes>
-      <Route path="/login" element={
-        <PublicRoute>
-          <Login />
-        </PublicRoute>
-      } />
+    <>
+      {user && <CommandPalette />}
+      <Routes>
+        <Route path="/login" element={
+          <PublicRoute>
+            <Login />
+          </PublicRoute>
+        } />
       <Route path="/register" element={
         <PublicRoute>
           <Register />
@@ -161,6 +165,7 @@ const AppRoutes = () => {
         </ProtectedRoute>
       } />
     </Routes>
+  </>
   );
 };
 

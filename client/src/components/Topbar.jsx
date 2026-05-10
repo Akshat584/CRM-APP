@@ -58,39 +58,15 @@ const Topbar = ({ actionLabel, onActionClick }) => {
       }`}
     >
       <div className="flex-1 flex items-center max-w-xl">
-        <div className="w-full relative group">
+        <div className="w-full relative group cursor-pointer" onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { ctrlKey: true, key: 'k' }))}>
           <span className="material-symbols-outlined absolute left-0 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-          <input 
-            className="w-full bg-transparent border-none focus:ring-0 pl-8 text-sm font-label uppercase tracking-widest text-on-surface placeholder:text-slate-300"
-            placeholder="SEARCH THE LEDGER..." 
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            onFocus={() => setShowResults(true)}
-          />
-          <div className="absolute bottom-0 left-0 w-0 h-[2px] bg-primary group-focus-within:w-full transition-all duration-500"></div>
-
-          {showResults && results.length > 0 && (
-            <div className="absolute top-12 left-0 right-0 bg-white rounded-xl shadow-2xl p-4 normal-case tracking-normal z-50">
-              {results.map(r => (
-                <div 
-                  key={r.id} 
-                  onClick={() => {
-                    setSearch('');
-                    setShowResults(false);
-                    navigate(r.type === 'contact' ? '/contacts' : '/pipeline');
-                  }}
-                  className="flex items-center justify-between p-3 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors"
-                >
-                  <div>
-                    <div className="text-sm font-bold text-on-surface">{r.name}</div>
-                    <div className="text-[10px] text-slate-400">{r.sub}</div>
-                  </div>
-                  <span className="text-[9px] font-bold bg-slate-100 px-2 py-0.5 rounded uppercase">{r.type}</span>
-                </div>
-              ))}
-            </div>
-          )}
+          <div className="w-full bg-transparent border-none pl-8 py-3 text-sm font-label uppercase tracking-widest text-slate-300 flex justify-between items-center">
+             <span>SEARCH THE LEDGER...</span>
+             <div className="flex items-center gap-1 bg-slate-50 px-2 py-1 rounded-lg border border-slate-100">
+                <span className="text-[10px] font-black text-slate-400">CTRL K</span>
+             </div>
+          </div>
+          <div className="absolute bottom-0 left-0 w-0 h-[2px] bg-primary group-hover:w-full transition-all duration-500"></div>
         </div>
       </div>
 
