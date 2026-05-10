@@ -22,6 +22,7 @@ const stripeController = require('./controllers/stripeController');
 const stripeRoutes = require('./routes/stripeRoutes');
 const automationRoutes = require('./routes/automationRoutes');
 const teamRoutes = require('./routes/teamRoutes');
+const aiRoutes = require('./routes/aiRoutes');
 const { initSocket } = require('./socket');
 
 const app = express();
@@ -72,6 +73,7 @@ app.use('/api/v1/campaigns', campaignRoutes);
 app.use('/api/v1/stripe', stripeRoutes);
 app.use('/api/v1/automations', automationRoutes);
 app.use('/api/v1/team', teamRoutes);
+app.use('/api/v1/ai', aiRoutes);
 
 app.get('/api/v1/health', (req, res) => {
   res.json({ success: true, status: 'ok' });

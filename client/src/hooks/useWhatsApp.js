@@ -191,6 +191,16 @@ export const useWhatsApp = () => {
     }
   };
 
+  const getAISummary = async (conversationId) => {
+    try {
+      const res = await apiClient.get(`/ai/summarize/${conversationId}`);
+      return { success: true, data: res.data.data };
+    } catch (err) {
+      addToast('AI Intelligence failed to load', 'error');
+      return { success: false };
+    }
+  };
+
   return {
     conversations,
     messages,
@@ -203,6 +213,7 @@ export const useWhatsApp = () => {
     syncTemplates,
     sendMessage,
     uploadMedia,
+    getAISummary,
     refetchConversations: fetchConversations
   };
 };

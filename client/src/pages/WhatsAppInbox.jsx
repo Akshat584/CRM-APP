@@ -46,6 +46,7 @@ const WhatsAppInbox = () => {
     assignConversation,
     sendMessage,
     uploadMedia,
+    getAISummary,
     refetchConversations
   } = useWhatsApp();
 
@@ -53,6 +54,8 @@ const WhatsAppInbox = () => {
   const [showTemplates, setShowTemplates] = useState(false);
   const [filter, setFilter] = useState('all'); // all, mine, unassigned
   const [uploading, setUploading] = useState(false);
+  const [aiSummary, setAiSummary] = useState(null);
+  const [loadingAI, setLoadingAI] = useState(false);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -76,6 +79,10 @@ const WhatsAppInbox = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    setAiSummary(null);
+  }, [activeConversation]);
 
   const handleSend = async () => {
     if (!inputMessage.trim() || !activeConversation) return;
@@ -107,6 +114,16 @@ const WhatsAppInbox = () => {
         caption: `Attached ${file.name}`
       });
     }
+  };
+
+  const handleAISummarize = async () => {
+    if (!activeConversation) return;
+    setLoadingAI(true);
+    const res = await getAISummary(activeConversation.id);
+    if (res.success) {
+      setAiSummary(res.data);
+    }
+    setLoadingAI(false);
   };
 
   const windowOpen = isWindowOpen();
@@ -181,13 +198,19 @@ const WhatsAppInbox = () => {
                      <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">Online</span>
                   </div>
                </div>
-               <div className="flex gap-2">
-                  <button className="p-2 hover:bg-slate-50 rounded-lg transition-colors text-slate-400">
-                    <span className="material-symbols-outlined text-xl">call</span>
-                  </button>
-                  <button className="p-2 hover:bg-slate-50 rounded-lg transition-colors text-slate-400">
-                    <span className="material-symbols-outlined text-xl">videocam</span>
-                  </button>
+               <div className="flex gap-4 items-center">
+                  <Button variant="secondary" size="sm" onClick={handleAISummarize} disabled={loadingAI} className="gap-2">
+                    <span className="material-symbols-outlined text-sm">{loadingAI ? 'sync' : 'auto_awesome'}</span>
+                    {loadingAI ? 'Analyzing...' : 'AI Intel'}
+                  </Button>
+                  <div className="flex gap-2">
+                    <button className="p-2 hover:bg-slate-50 rounded-lg transition-colors text-slate-400">
+                      <span className="material-symbols-outlined text-xl">call</span>
+                    </button>
+                    <button className="p-2 hover:bg-slate-50 rounded-lg transition-colors text-slate-400">
+                      <span className="material-symbols-outlined text-xl">videocam</span>
+                    </button>
+                  </div>
                </div>
             </div>
 
@@ -285,13 +308,14 @@ const WhatsAppInbox = () => {
       <CRMContextPanel 
         activeConversation={activeConversation} 
         team={team} 
+        aiSummary={aiSummary}
         onAssign={(userId) => assignConversation(activeConversation.id, userId)} 
       />
     </div>
   );
 };
 
-const CRMContextPanel = ({ activeConversation, team, onAssign }) => {
+const CRMContextPanel = ({ activeConversation, team, onAssign, aiSummary }) => {
   const { data: contact, loading } = useContact(activeConversation?.contact_id);
 
   if (!activeConversation) return <div className="w-72 bg-white border-l border-slate-50 flex flex-col items-center justify-center p-8 opacity-20"><span className="material-symbols-outlined text-6xl">analytics</span></div>;
@@ -308,6 +332,34 @@ const CRMContextPanel = ({ activeConversation, team, onAssign }) => {
              <Badge variant={contact.status}>{contact.status}</Badge>
           </div>
        </div>
+
+       {/* AI Intelligence Section */}
+       {aiSummary && (
+          <div className="mb-10 bg-primary/5 rounded-[32px] p-6 border border-primary/10 animate-slideInSmall">
+             <div className="flex items-center gap-2 mb-6">
+                <span className="material-symbols-outlined text-primary text-xl">auto_awesome</span>
+                <h4 className="text-[10px] font-black uppercase tracking-widest text-primary">Aurelius Intel</h4>
+             </div>
+             
+             <div className="space-y-4">
+                <div>
+                   <p className="text-[9px] font-black text-slate-400 uppercase tracking-tighter mb-1">Property Intent</p>
+                   <p className="text-[11px] font-bold text-on-surface leading-tight">{aiSummary.property_intent}</p>
+                </div>
+                <div>
+                   <p className="text-[9px] font-black text-slate-400 uppercase tracking-tighter mb-1">Mentioned Budget</p>
+                   <p className="text-[11px] font-bold text-on-surface leading-tight">{aiSummary.budget}</p>
+                </div>
+                <div>
+                   <p className="text-[9px] font-black text-slate-400 uppercase tracking-tighter mb-1">Next Protocol</p>
+                   <p className="text-[11px] font-bold text-primary leading-tight">{aiSummary.next_steps}</p>
+                </div>
+                <div className="pt-2">
+                   <span className="px-2 py-0.5 rounded bg-white border border-primary/10 text-[8px] font-black text-primary uppercase">{aiSummary.sentiment}</span>
+                </div>
+             </div>
+          </div>
+       )}
 
        <div className="space-y-8">
           <section>
