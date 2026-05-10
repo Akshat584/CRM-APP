@@ -11,10 +11,12 @@ const Sidebar = () => {
 
   const menuItems = [
     { path: '/', icon: 'dashboard', label: 'Overview' },
+    { path: '/properties', icon: 'real_estate_agent', label: 'Properties' },
     { path: '/contacts', icon: 'group', label: 'Contacts' },
     { path: '/pipeline', icon: 'payments', label: 'Pipeline' },
     { path: '/activities', icon: 'event_note', label: 'Activities' },
     { path: '/tasks', icon: 'checklist', label: 'Tasks' },
+    { path: '/emails', icon: 'email', label: 'Emails' },
     { path: '/whatsapp', icon: 'forum', label: 'WhatsApp' },
     { path: '/campaigns', icon: 'rocket_launch', label: 'Campaigns' },
     { path: '/automations', icon: 'precision_manufacturing', label: 'Automations' },

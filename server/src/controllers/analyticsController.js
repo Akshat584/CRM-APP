@@ -34,7 +34,18 @@ const getPipelineAnalytics = async (req, res) => {
   }
 };
 
+const getAdvancedFunnelData = async (req, res) => {
+  try {
+    const data = await analyticsService.getAdvancedFunnel(req.user.organizationId);
+    res.json({ success: true, data });
+  } catch (error) {
+    console.error('Get advanced funnel error:', error);
+    res.status(500).json({ success: false, error: 'Failed to fetch advanced funnel' });
+  }
+};
+
 module.exports = {
   getDashboardAnalytics,
-  getPipelineAnalytics
+  getPipelineAnalytics,
+  getAdvancedFunnelData
 };

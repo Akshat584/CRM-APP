@@ -50,3 +50,26 @@ export const usePipelineAnalytics = () => {
 
   return { data, loading, error, refetch: fetchPipelineAnalytics };
 };
+
+export const useAdvancedFunnel = () => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchAdvancedFunnel = async () => {
+    try {
+      setLoading(true);
+      const response = await analyticsAPI.getAdvancedFunnel();
+      setData(response.data.data);
+    } catch (err) {
+      console.error('Failed to fetch advanced funnel', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAdvancedFunnel();
+  }, []);
+
+  return { data, loading, refetch: fetchAdvancedFunnel };
+};

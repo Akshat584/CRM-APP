@@ -62,17 +62,36 @@ const createDeal = async (userId, dealData) => {
     stage,
     probability,
     due_date,
-    notes
+    notes,
+    property_id
   } = dealData;
 
-  const result = await pool.query(
-    `INSERT INTO deals (user_id, contact_id, title, company, value, stage, probability, due_date, notes)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-     RETURNING *`,
-    [userId, contact_id, title, company, value, stage, probability, due_date, notes]
-  );
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    const result = await client.query(
+      `INSERT INTO deals (user_id, contact_id, title, company, value, stage, probability, due_date, notes, property_id)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+       RETURNING *`,
+      [userId, contact_id, title, company, value, stage, probability, due_date, notes, property_id]
+    );
 
-  return result.rows[0];
+    const deal = result.rows[0];
+
+    // Log initial stage history
+    await client.query(
+      `INSERT INTO deal_stage_history (deal_id, stage) VALUES ($1, $2)`,
+      [deal.id, deal.stage]
+    );
+
+    await client.query('COMMIT');
+    return deal;
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
 };
 
 const updateDeal = async (userId, id, dealData) => {
@@ -80,7 +99,7 @@ const updateDeal = async (userId, id, dealData) => {
   const values = [];
   let paramCount = 0;
 
-  const ALLOWED_FIELDS = ['contact_id', 'title', 'company', 'value', 'stage', 'probability', 'due_date', 'notes'];
+  const ALLOWED_FIELDS = ['contact_id', 'property_id', 'title', 'company', 'value', 'stage', 'probability', 'due_date', 'notes'];
 
   for (const [key, value] of Object.entries(dealData)) {
     if (value !== undefined && ALLOWED_FIELDS.includes(key)) {
@@ -107,7 +126,26 @@ const updateDeal = async (userId, id, dealData) => {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
+    
+    // Check old stage to see if it changed
+    const oldDealRes = await client.query('SELECT stage FROM deals WHERE id = $1', [id]);
+    const oldStage = oldDealRes.rows[0]?.stage;
+
     const result = await client.query(query, values);
+    const newStage = result.rows[0]?.stage;
+
+    if (newStage && oldStage && newStage !== oldStage) {
+      // Close out old stage
+      await client.query(
+        `UPDATE deal_stage_history SET exited_at = CURRENT_TIMESTAMP WHERE deal_id = $1 AND stage = $2 AND exited_at IS NULL`,
+        [id, oldStage]
+      );
+      // Insert new stage
+      await client.query(
+        `INSERT INTO deal_stage_history (deal_id, stage) VALUES ($1, $2)`,
+        [id, newStage]
+      );
+    }
 
     if (result.rows.length > 0 && dealData.stage && ['Closed Won', 'Closed Lost'].includes(dealData.stage)) {
       await client.query(

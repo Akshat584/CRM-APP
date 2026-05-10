@@ -1,11 +1,12 @@
 import React from 'react';
-import { useAnalytics } from '../hooks/useAnalytics';
+import { useAnalytics, useAdvancedFunnel } from '../hooks/useAnalytics';
 import { formatCurrency } from '../utils/format';
 
 const Reports = () => {
   const { data: analytics, loading } = useAnalytics();
+  const { data: advancedFunnel, loading: loadingFunnel } = useAdvancedFunnel();
 
-  if (loading) return <div className="animate-pulse space-y-12"><div className="h-12 bg-slate-100 rounded-xl w-1/4" /><div className="grid grid-cols-2 gap-8"><div className="h-96 bg-slate-50 rounded-3xl" /></div></div>;
+  if (loading || loadingFunnel) return <div className="animate-pulse space-y-12"><div className="h-12 bg-slate-100 rounded-xl w-1/4" /><div className="grid grid-cols-2 gap-8"><div className="h-96 bg-slate-50 rounded-3xl" /></div></div>;
   if (!analytics) return null;
 
   const monthlyRevenue = analytics.monthly_revenue || [];
@@ -26,6 +27,39 @@ const Reports = () => {
       </section>
 
       <div className="grid grid-cols-12 gap-8">
+        {/* Advanced Funnel (Conversion Velocity) */}
+        <div className="col-span-12 bg-surface-container-low p-10 rounded-3xl mb-8">
+           <h3 className="text-xs font-black tracking-widest uppercase mb-12 opacity-60">Conversion Velocity</h3>
+           <div className="flex justify-between items-end gap-2">
+              {advancedFunnel?.length > 0 ? (
+                 advancedFunnel.map((stageData, idx) => (
+                    <div key={stageData.stage} className="flex-1 flex flex-col group">
+                       <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">{stageData.stage}</div>
+                       <div className="flex-1 bg-slate-100 rounded-t-xl group-hover:bg-primary transition-all relative overflow-hidden flex flex-col justify-end" style={{ height: '200px' }}>
+                          <div 
+                             className="bg-primary/20 w-full group-hover:bg-white/20 transition-all duration-700 absolute bottom-0" 
+                             style={{ height: `${Math.min(100, Math.max(10, (stageData.total_deals / totalDeals) * 100))}%` }} 
+                          />
+                          <div className="p-4 relative z-10 flex flex-col justify-end h-full">
+                             <span className="text-2xl font-black text-on-surface group-hover:text-white transition-colors">{stageData.total_deals} <span className="text-[10px] uppercase tracking-widest">deals</span></span>
+                             <span className="text-xs font-bold text-slate-400 group-hover:text-white/60 transition-colors mt-1">Avg {stageData.avg_days || 0} days</span>
+                          </div>
+                       </div>
+                       {idx < advancedFunnel.length - 1 && (
+                          <div className="absolute right-0 top-1/2 -translate-y-1/2 -mr-3 z-10">
+                             <span className="material-symbols-outlined text-slate-300">chevron_right</span>
+                          </div>
+                       )}
+                    </div>
+                 ))
+              ) : (
+                 <div className="w-full py-12 text-center text-slate-300 text-xs font-bold uppercase tracking-widest border-2 border-dashed border-slate-100 rounded-2xl">
+                    Insufficient historical data for velocity calculation.
+                 </div>
+              )}
+           </div>
+        </div>
+
         {/* Revenue Projection */}
         <div className="col-span-12 lg:col-span-8 bg-surface-container-lowest p-10 rounded-3xl editorial-shadow">
           <div className="flex justify-between items-center mb-12">
@@ -49,6 +83,9 @@ const Reports = () => {
                 </div>
               </div>
             ))}
+            {monthlyRevenue.length === 0 && (
+               <div className="py-8 text-center text-slate-300 text-xs font-bold uppercase tracking-widest border-2 border-dashed border-slate-100 rounded-2xl">No revenue recorded yet</div>
+            )}
           </div>
         </div>
 
@@ -99,6 +136,9 @@ const Reports = () => {
                    <div className="text-[9px] font-black uppercase tracking-widest text-slate-400 mt-2 group-hover:text-white/60">{item.type}s</div>
                 </div>
               ))}
+              {!analytics.activity_counts?.length && (
+                 <div className="col-span-5 py-8 text-center text-slate-300 text-xs font-bold uppercase tracking-widest border-2 border-dashed border-slate-200 rounded-2xl">No engagement activity recorded</div>
+              )}
            </div>
         </div>
       </div>

@@ -19,6 +19,8 @@ import WhatsAppInbox from './pages/WhatsAppInbox';
 import Campaigns from './pages/Campaigns';
 import Automations from './pages/Automations';
 import TeamSettings from './pages/TeamSettings';
+import Properties from './pages/Properties';
+import EmailInbox from './pages/EmailInbox';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -98,6 +100,20 @@ const AppRoutes = () => {
         <ProtectedRoute>
           <MainLayout>
             <Dashboard />
+          </MainLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/properties" element={
+        <ProtectedRoute>
+          <MainLayout actionLabel="Add Listing">
+            <Properties />
+          </MainLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/emails" element={
+        <ProtectedRoute>
+          <MainLayout>
+            <EmailInbox />
           </MainLayout>
         </ProtectedRoute>
       } />

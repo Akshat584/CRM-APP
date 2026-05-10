@@ -7,6 +7,7 @@ router.use(requireAuth);
 
 router.get('/dashboard', analyticsController.getDashboardAnalytics);
 router.get('/pipeline', analyticsController.getPipelineAnalytics);
+router.get('/advanced-funnel', analyticsController.getAdvancedFunnelData);
 router.get('/admin/reports', requireAdmin, (req, res) => {
   res.json({ success: true, data: { message: 'Admin data' } });
 });

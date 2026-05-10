@@ -110,8 +110,34 @@ const getTopContacts = async (userId) => {
   return result.rows;
 };
 
+const getAdvancedFunnel = async (organizationId) => {
+  // Funnel Insights: Average time spent in each stage (in days)
+  const durationResult = await pool.query(
+    `SELECT stage, 
+            COUNT(id) as total_deals,
+            ROUND(AVG(EXTRACT(EPOCH FROM (COALESCE(exited_at, CURRENT_TIMESTAMP) - entered_at)) / 86400)) as avg_days
+     FROM deal_stage_history h
+     JOIN deals d ON h.deal_id = d.id
+     WHERE d.organization_id = $1
+     GROUP BY stage
+     ORDER BY 
+       CASE stage
+         WHEN 'New' THEN 1
+         WHEN 'Qualified' THEN 2
+         WHEN 'Proposal' THEN 3
+         WHEN 'Negotiation' THEN 4
+         WHEN 'Closed Won' THEN 5
+         WHEN 'Closed Lost' THEN 6
+       END`,
+    [organizationId]
+  );
+
+  return durationResult.rows;
+};
+
 module.exports = {
   getDashboardAnalytics,
   getPipelineFunnel,
-  getTopContacts
+  getTopContacts,
+  getAdvancedFunnel
 };

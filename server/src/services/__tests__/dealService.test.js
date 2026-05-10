@@ -41,12 +41,23 @@ describe('dealService', () => {
 
   describe('createDeal', () => {
     it('should create and return a deal', async () => {
-      const dealData = { title: 'New Deal', value: 1000 };
+      const dealData = { title: 'New Deal', value: 1000, stage: 'New' };
       const mockDeal = { id: '1', ...dealData };
-      pool.query.mockResolvedValue({ rows: [mockDeal] });
+
+      const client = {
+        query: jest.fn().mockResolvedValue({ rows: [mockDeal] }),
+        release: jest.fn()
+      };
+      pool.connect.mockResolvedValue(client);
 
       const result = await createDeal(mockUserId, dealData);
-      expect(pool.query).toHaveBeenCalledTimes(1);
+      
+      expect(pool.connect).toHaveBeenCalledTimes(1);
+      expect(client.query).toHaveBeenCalledWith('BEGIN');
+      expect(client.query).toHaveBeenCalledWith(expect.stringContaining('INSERT INTO deals'), expect.any(Array));
+      expect(client.query).toHaveBeenCalledWith(expect.stringContaining('INSERT INTO deal_stage_history'), expect.any(Array));
+      expect(client.query).toHaveBeenCalledWith('COMMIT');
+      expect(client.release).toHaveBeenCalledTimes(1);
       expect(result).toEqual(mockDeal);
     });
   });
