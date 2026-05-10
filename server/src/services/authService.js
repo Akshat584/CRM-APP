@@ -3,9 +3,9 @@ const jwt = require('jsonwebtoken');
 const pool = require('../db/pool');
 const crypto = require('crypto');
 
-const generateTokens = (userId, role) => {
+const generateTokens = (userId, role, organizationId) => {
   const accessToken = jwt.sign(
-    { userId, role },
+    { userId, role, organizationId },
     process.env.JWT_SECRET,
     { expiresIn: '15m' }
   );
@@ -25,7 +25,7 @@ const verifyPassword = async (password, hash) => {
 
 const getUserByEmail = async (email) => {
   const result = await pool.query(
-    'SELECT id, name, email, password_hash, role FROM users WHERE email = $1',
+    'SELECT id, name, email, password_hash, role, organization_id FROM users WHERE email = $1',
     [email]
   );
   return result.rows[0];
@@ -33,22 +33,41 @@ const getUserByEmail = async (email) => {
 
 const getUserById = async (id) => {
   const result = await pool.query(
-    'SELECT id, name, email, role, created_at FROM users WHERE id = $1',
+    'SELECT id, name, email, role, organization_id, created_at FROM users WHERE id = $1',
     [id]
   );
   return result.rows[0];
 };
 
 const createUser = async (userData) => {
-  const { name, email, password, role = 'member' } = userData;
+  const { name, email, password, role = 'admin' } = userData; // Automatically become admin of own org
   const passwordHash = await hashPassword(password);
-
-  const result = await pool.query(
-    'INSERT INTO users (name, email, password_hash, role) VALUES ($1, $2, $3, $4) RETURNING id, name, email, role, created_at',
-    [name, email, passwordHash, role]
-  );
-
-  return result.rows[0];
+  
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    
+    // Create Organization
+    const orgResult = await client.query(
+      'INSERT INTO organizations (name) VALUES ($1) RETURNING id',
+      [`${name}'s Organization`]
+    );
+    const orgId = orgResult.rows[0].id;
+    
+    // Create User
+    const result = await client.query(
+      'INSERT INTO users (name, email, password_hash, role, organization_id) VALUES ($1, $2, $3, $4, $5) RETURNING id, name, email, role, organization_id, created_at',
+      [name, email, passwordHash, role, orgId]
+    );
+    
+    await client.query('COMMIT');
+    return result.rows[0];
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
 };
 
 const storeRefreshToken = async (userId, token) => {

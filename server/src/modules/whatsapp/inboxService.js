@@ -142,6 +142,50 @@ const handleInboundMessage = async ({ phone, content, type, metaId, raw }) => {
     phone
   });
 
+  // 5. Check for Automations
+  if (type === 'text' && content) {
+    const automationRes = await pool.query(
+      `SELECT a.*, t.name as template_name, t.language as template_lang 
+       FROM whatsapp_automations a
+       LEFT JOIN whatsapp_templates t ON a.reply_template_id = t.id
+       WHERE a.organization_id = (SELECT organization_id FROM whatsapp_conversations WHERE id = $1)
+       AND LOWER($2) LIKE '%' || LOWER(a.keyword) || '%'
+       AND a.is_active = true
+       LIMIT 1`,
+      [conversationId, content]
+    );
+
+    if (automationRes.rows.length > 0) {
+      const auto = automationRes.rows[0];
+      const whatsappService = require('./whatsappService'); 
+      let meta_id;
+
+      try {
+        if (auto.reply_type === 'template' && auto.template_name) {
+          const result = await whatsappService.sendTemplate(phone, auto.template_name, auto.template_lang);
+          meta_id = result.messages?.[0]?.id;
+          
+          await pool.query(
+            `INSERT INTO whatsapp_messages (conversation_id, direction, message_type, content, meta, status)
+             VALUES ($1, 'outbound', 'template', $2, $3, 'sent')`,
+            [conversationId, `[Auto-Reply Template: ${auto.template_name}]`, JSON.stringify({ meta_id })]
+          );
+        } else if (auto.reply_text) {
+          const result = await whatsappService.sendTextMessage(phone, auto.reply_text);
+          meta_id = result.messages?.[0]?.id;
+          
+          await pool.query(
+            `INSERT INTO whatsapp_messages (conversation_id, direction, message_type, content, meta, status)
+             VALUES ($1, 'outbound', 'text', $2, $3, 'sent')`,
+            [conversationId, auto.reply_text, JSON.stringify({ meta_id })]
+          );
+        }
+      } catch (err) {
+        console.error('Automation reply failed:', err.message);
+      }
+    }
+  }
+
   return savedMessage;
 };
 

@@ -37,7 +37,7 @@ const Sidebar = () => {
           {!isSidebarCollapsed && (
             <div className="animate-fadeIn">
               <h1 className="text-xl font-extrabold text-primary tracking-tighter leading-none">Aurelius</h1>
-              <p className="text-[9px] uppercase tracking-widest text-slate-400 font-bold opacity-60">Executive CRM</p>
+              <p className="text-[9px] uppercase tracking-widest text-slate-400 font-bold opacity-60">Real Estate CRM</p>
             </div>
           )}
         </div>

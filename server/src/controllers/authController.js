@@ -21,7 +21,7 @@ const register = [
 
       const user = await authService.createUser({ name, email, password });
 
-      const { accessToken, refreshToken } = generateTokens(user.id, user.role);
+      const { accessToken, refreshToken } = generateTokens(user.id, user.role, user.organization_id);
       await storeRefreshToken(user.id, refreshToken);
 
       res.cookie('refreshToken', refreshToken, {
@@ -91,7 +91,7 @@ const login = [
 
 
 
-      const { accessToken, refreshToken } = generateTokens(user.id, user.role);
+      const { accessToken, refreshToken } = generateTokens(user.id, user.role, user.organization_id);
       await storeRefreshToken(user.id, refreshToken);
 
       res.cookie('refreshToken', refreshToken, {
@@ -142,7 +142,12 @@ const refresh = async (req, res) => {
       });
     }
 
-    const { accessToken, refreshToken: newRefreshToken } = generateTokens(tokenData.user_id, tokenData.role || 'member');
+    const user = await authService.getUserById(tokenData.user_id);
+    if (!user) {
+      return res.status(401).json({ success: false, error: 'User not found' });
+    }
+
+    const { accessToken, refreshToken: newRefreshToken } = generateTokens(user.id, user.role, user.organization_id);
 
     res.cookie('refreshToken', newRefreshToken, {
       httpOnly: true,

@@ -18,6 +18,8 @@ const searchRoutes = require('./routes/searchRoutes');
 const whatsappRoutes = require('./modules/whatsapp/routes');
 const userRoutes = require('./routes/userRoutes');
 const campaignRoutes = require('./routes/campaignRoutes');
+const stripeController = require('./controllers/stripeController');
+const stripeRoutes = require('./routes/stripeRoutes');
 const { initSocket } = require('./socket');
 
 const app = express();
@@ -30,6 +32,10 @@ initSocket(server);
 app.use(helmet());
 
 app.use(morgan('dev'));
+
+// Stripe Webhook needs raw body, mount it before express.json
+app.post('/api/v1/stripe/webhook', express.raw({ type: 'application/json' }), stripeController.webhook);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -45,7 +51,11 @@ app.use(cors({
 
 // CSRF Protection
 app.use(generateCsrfToken);
-app.use('/api', verifyCsrfToken);
+// Exclude stripe webhook from CSRF
+app.use('/api', (req, res, next) => {
+  if (req.path === '/v1/stripe/webhook') return next();
+  verifyCsrfToken(req, res, next);
+});
 
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
@@ -57,6 +67,7 @@ app.use('/api/v1/analytics', analyticsRoutes);
 app.use('/api/v1/search', searchRoutes);
 app.use('/api/v1/whatsapp', whatsappRoutes);
 app.use('/api/v1/campaigns', campaignRoutes);
+app.use('/api/v1/stripe', stripeRoutes);
 
 app.get('/api/v1/health', (req, res) => {
   res.json({ success: true, status: 'ok' });

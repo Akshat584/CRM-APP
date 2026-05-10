@@ -45,9 +45,9 @@ const Login = () => {
             letterSpacing: '-0.05em',
             marginBottom: '8px'
           }}>
-            Aurelius
+            Aurelius Estate
           </div>
-          <p className="label-md" style={{ fontSize: '10px' }}>Executive CRM Access</p>
+          <p className="label-md" style={{ fontSize: '10px' }}>The WhatsApp CRM for Real Estate</p>
         </header>
 
         {loginError && (
