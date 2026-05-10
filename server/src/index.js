@@ -16,6 +16,8 @@ const taskRoutes = require('./routes/taskRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
 const searchRoutes = require('./routes/searchRoutes');
 const whatsappRoutes = require('./modules/whatsapp/routes');
+const userRoutes = require('./routes/userRoutes');
+const campaignRoutes = require('./routes/campaignRoutes');
 const { initSocket } = require('./socket');
 
 const app = express();
@@ -46,6 +48,7 @@ app.use(generateCsrfToken);
 app.use('/api', verifyCsrfToken);
 
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/contacts', contactRoutes);
 app.use('/api/v1/deals', dealRoutes);
 app.use('/api/v1/activities', activityRoutes);
@@ -53,6 +56,7 @@ app.use('/api/v1/tasks', taskRoutes);
 app.use('/api/v1/analytics', analyticsRoutes);
 app.use('/api/v1/search', searchRoutes);
 app.use('/api/v1/whatsapp', whatsappRoutes);
+app.use('/api/v1/campaigns', campaignRoutes);
 
 app.get('/api/v1/health', (req, res) => {
   res.json({ success: true, status: 'ok' });

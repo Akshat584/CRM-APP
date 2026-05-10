@@ -12,7 +12,9 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     if (user) {
-      const newSocket = io(import.meta.env.VITE_API_URL.replace('/api/v1', ''), {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+      const socketUrl = apiUrl.replace('/api/v1', '');
+      const newSocket = io(socketUrl, {
         withCredentials: true,
       });
 

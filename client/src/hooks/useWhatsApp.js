@@ -177,6 +177,20 @@ export const useWhatsApp = () => {
     }
   };
 
+  const uploadMedia = async (file) => {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await apiClient.post('/whatsapp/media/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      return { success: true, data: res.data.data };
+    } catch (err) {
+      addToast('Failed to upload media', 'error');
+      return { success: false };
+    }
+  };
+
   return {
     conversations,
     messages,
@@ -188,6 +202,7 @@ export const useWhatsApp = () => {
     assignConversation,
     syncTemplates,
     sendMessage,
+    uploadMedia,
     refetchConversations: fetchConversations
   };
 };

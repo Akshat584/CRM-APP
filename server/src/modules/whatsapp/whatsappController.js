@@ -49,11 +49,13 @@ const getMessages = async (req, res) => {
 
 const sendMessage = async (req, res) => {
   try {
-    const { phone, content, type, templateName, languageCode, contact_id } = req.body;
+    const { phone, content, type, templateName, languageCode, contact_id, mediaIdOrUrl, caption } = req.body;
     
     let result;
     if (type === 'template') {
       result = await whatsappService.sendTemplate(phone, templateName, languageCode);
+    } else if (['image', 'video', 'audio', 'document'].includes(type)) {
+      result = await whatsappService.sendMediaMessage(phone, type, mediaIdOrUrl, caption);
     } else {
       result = await whatsappService.sendTextMessage(phone, content);
     }
@@ -61,7 +63,7 @@ const sendMessage = async (req, res) => {
     // Save outbound message to DB
     const message = await inboxService.saveOutboundMessage(req.user.userId, {
       phone,
-      content,
+      content: content || `[${type}]`,
       type,
       contact_id,
       meta_id: result.messages[0].id
@@ -71,6 +73,26 @@ const sendMessage = async (req, res) => {
   } catch (error) {
     console.error('Send message error:', error);
     res.status(500).json({ success: false, error: error.message || 'Failed to send message' });
+  }
+};
+
+const uploadMedia = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: 'No file provided' });
+    }
+    // Stub: In production, upload to Meta Media API here
+    // const mediaId = await whatsappService.uploadToMeta(req.file);
+    res.json({ 
+      success: true, 
+      data: { 
+        mediaId: 'stub_id_' + Date.now(),
+        fileName: req.file.originalname,
+        mimeType: req.file.mimetype
+      } 
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Upload failed' });
   }
 };
 
@@ -99,6 +121,7 @@ module.exports = {
   getConversations,
   getMessages,
   sendMessage,
+  uploadMedia,
   getTemplates,
   assignConversation,
   getTeam,

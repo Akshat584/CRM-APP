@@ -15,6 +15,7 @@ import ActivityLog from './pages/ActivityLog';
 import Tasks from './pages/Tasks';
 import Reports from './pages/Reports';
 import WhatsAppInbox from './pages/WhatsAppInbox';
+import Campaigns from './pages/Campaigns';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -45,7 +46,7 @@ const PublicRoute = ({ children }) => {
 };
 
 const MainLayout = ({ children, actionLabel, onActionClick }) => {
-  const { executeGlobalAction } = useCRM();
+  const { executeGlobalAction, isSidebarCollapsed } = useCRM();
 
   const handleActionClick = () => {
     if (onActionClick) {
@@ -58,7 +59,11 @@ const MainLayout = ({ children, actionLabel, onActionClick }) => {
   return (
     <div className="flex h-screen bg-background overflow-hidden">
       <Sidebar />
-      <div className="ml-72 flex-1 flex flex-col h-screen relative overflow-hidden">
+      <div 
+        className={`flex-1 flex flex-col h-screen relative overflow-hidden transition-all duration-500 ease-in-out ${
+          isSidebarCollapsed ? 'ml-24' : 'ml-72'
+        }`}
+      >
         <Topbar actionLabel={actionLabel} onActionClick={handleActionClick} />
         <div className="pt-20 flex-1 overflow-y-auto scrollbar-thin">
           <div className="p-12 max-w-7xl mx-auto">
@@ -129,6 +134,13 @@ const AppRoutes = () => {
         <ProtectedRoute>
           <MainLayout>
             <WhatsAppInbox />
+          </MainLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/campaigns" element={
+        <ProtectedRoute>
+          <MainLayout>
+            <Campaigns />
           </MainLayout>
         </ProtectedRoute>
       } />

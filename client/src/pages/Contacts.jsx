@@ -7,12 +7,46 @@ import Button from '../components/Button';
 
 const ContactDetails = ({ contactId, onBack }) => {
   const { data: contact, loading } = useContact(contactId);
-  const { updateContact } = useUpdateContact();
-  const { deleteContact } = useDeleteContact();
+  const { updateContact, loading: updating } = useUpdateContact();
+  const { deleteContact, loading: deleting } = useDeleteContact();
   const { refreshData } = useCRM();
+
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [editData, setEditData] = useState({});
 
   if (loading) return <div className="animate-pulse space-y-8"><div className="h-64 bg-slate-100 rounded-2xl" /><div className="h-96 bg-slate-100 rounded-2xl" /></div>;
   if (!contact) return null;
+
+  const handleEditOpen = () => {
+    setEditData({
+      name: contact.name,
+      email: contact.email,
+      phone: contact.phone || '',
+      company: contact.company || '',
+      status: contact.status,
+      role: contact.role || '',
+      lifetime_value: contact.lifetime_value || 0
+    });
+    setShowEditModal(true);
+  };
+
+  const handleUpdate = async () => {
+    const res = await updateContact(contact.id, editData);
+    if (res.success) {
+      setShowEditModal(false);
+      refreshData();
+    }
+  };
+
+  const handleDelete = async () => {
+    const res = await deleteContact(contact.id);
+    if (res.success) {
+      setShowDeleteModal(false);
+      refreshData();
+      onBack();
+    }
+  };
 
   return (
     <div className="animate-slideIn">
@@ -27,7 +61,7 @@ const ContactDetails = ({ contactId, onBack }) => {
         <div className="relative">
           <div className="w-48 h-64 bg-primary-container rounded-2xl shadow-2xl shadow-primary/10 flex items-end p-6">
              <span className="text-8xl font-black text-on-primary-container opacity-20 select-none">
-               {contact.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
+               {contact?.name ? contact.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : '??'}
              </span>
           </div>
           <div className="absolute -bottom-4 -right-4 bg-primary-fixed text-on-primary-fixed-variant px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest shadow-xl">
@@ -43,13 +77,13 @@ const ContactDetails = ({ contactId, onBack }) => {
               </p>
             </div>
             <div className="flex gap-3">
-              <Button variant="primary" className="px-6 py-3">
-                <span className="material-symbols-outlined text-lg mr-2">call</span>
-                Call
+              <Button variant="secondary" className="px-6 py-3" onClick={handleEditOpen}>
+                <span className="material-symbols-outlined text-lg mr-2">edit</span>
+                Edit
               </Button>
-              <Button variant="secondary" className="px-6 py-3">
-                <span className="material-symbols-outlined text-lg mr-2">mail</span>
-                Email
+              <Button variant="secondary" className="px-6 py-3 !text-red-600 !border-red-200 hover:!bg-red-50" onClick={() => setShowDeleteModal(true)}>
+                <span className="material-symbols-outlined text-lg mr-2">delete</span>
+                Delete
               </Button>
             </div>
           </div>
@@ -134,16 +168,71 @@ const ContactDetails = ({ contactId, onBack }) => {
           </div>
         </div>
       </div>
+
+      {/* Edit Modal */}
+      <Modal isOpen={showEditModal} onClose={() => setShowEditModal(false)} title="Edit Contact">
+         <div className="space-y-6">
+            <div className="group">
+              <label className="block text-[10px] uppercase tracking-widest font-bold mb-2 text-on-surface-variant">Identity *</label>
+              <input type="text" value={editData.name || ''} onChange={e => setEditData({...editData, name: e.target.value})} className="w-full text-xl font-semibold py-3 border-b border-outline placeholder:text-slate-300 focus:border-primary outline-none bg-transparent" placeholder="Full Name" />
+            </div>
+            <div className="group">
+              <label className="block text-[10px] uppercase tracking-widest font-bold mb-2 text-on-surface-variant">Email</label>
+              <input type="email" value={editData.email || ''} onChange={e => setEditData({...editData, email: e.target.value})} className="w-full text-xl font-semibold py-3 border-b border-outline placeholder:text-slate-300 focus:border-primary outline-none bg-transparent" placeholder="email@example.com" />
+            </div>
+            <div className="group">
+              <label className="block text-[10px] uppercase tracking-widest font-bold mb-2 text-on-surface-variant">Phone</label>
+              <input type="text" value={editData.phone || ''} onChange={e => setEditData({...editData, phone: e.target.value})} className="w-full text-xl font-semibold py-3 border-b border-outline placeholder:text-slate-300 focus:border-primary outline-none bg-transparent" placeholder="+1 234 567 890" />
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="group">
+                <label className="block text-[10px] uppercase tracking-widest font-bold mb-2 text-on-surface-variant">Company</label>
+                <input type="text" value={editData.company || ''} onChange={e => setEditData({...editData, company: e.target.value})} className="w-full text-xl font-semibold py-3 border-b border-outline placeholder:text-slate-300 focus:border-primary outline-none bg-transparent" placeholder="Company Name" />
+              </div>
+              <div className="group">
+                <label className="block text-[10px] uppercase tracking-widest font-bold mb-2 text-on-surface-variant">Role</label>
+                <input type="text" value={editData.role || ''} onChange={e => setEditData({...editData, role: e.target.value})} className="w-full text-xl font-semibold py-3 border-b border-outline placeholder:text-slate-300 focus:border-primary outline-none bg-transparent" placeholder="Job Title" />
+              </div>
+            </div>
+            <div className="group">
+              <label className="block text-[10px] uppercase tracking-widest font-bold mb-2 text-on-surface-variant">Status</label>
+              <select value={editData.status || 'Lead'} onChange={e => setEditData({...editData, status: e.target.value})} className="w-full text-xl font-semibold py-3 border-b border-outline focus:border-primary outline-none bg-transparent">
+                <option value="Lead">Lead</option>
+                <option value="Prospect">Prospect</option>
+                <option value="Customer">Customer</option>
+                <option value="Churned">Churned</option>
+              </select>
+            </div>
+            <div className="pt-4 flex justify-end gap-3">
+              <Button variant="secondary" onClick={() => setShowEditModal(false)}>Cancel</Button>
+              <Button variant="primary" onClick={handleUpdate} disabled={updating || !editData.name?.trim()}>{updating ? 'Saving...' : 'Save Changes'}</Button>
+            </div>
+         </div>
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)} title="Confirm Deletion">
+        <div className="space-y-6">
+          <p className="text-on-surface text-lg">Are you sure you want to delete <strong>{contact.name}</strong>? This action cannot be undone.</p>
+          <div className="flex justify-end gap-3 pt-4">
+            <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>Cancel</Button>
+            <Button variant="primary" className="!bg-red-600 hover:!bg-red-700 !text-white" onClick={handleDelete} disabled={deleting}>{deleting ? 'Deleting...' : 'Yes, Delete'}</Button>
+          </div>
+        </div>
+      </Modal>
+
     </div>
   );
 };
 
 const Contacts = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState('All');
   const [selectedContactId, setSelectedContactId] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [formData, setFormData] = useState({ name: '', email: '', phone: '', company: '', status: 'Lead' });
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '', company: '', role: '', status: 'Lead' });
+  const [creating, setCreating] = useState(false);
   
   const { setGlobalAction, refreshTrigger, refreshData } = useCRM();
   const { createContact } = useCreateContact();
@@ -152,13 +241,13 @@ const Contacts = () => {
 
   useEffect(() => {
     setGlobalAction(() => () => {
-      setFormData({ name: '', email: '', phone: '', company: '', status: 'Lead' });
+      setFormData({ name: '', email: '', phone: '', company: '', role: '', status: 'Lead' });
       setShowCreateModal(true);
     });
     return () => setGlobalAction(null);
   }, [setGlobalAction]);
 
-  const { data: contacts, loading } = useContacts({
+  const { data: contacts, loading, meta } = useContacts({
     search: searchTerm,
     status: statusFilter === 'All' ? undefined : statusFilter,
     limit: 50,
@@ -173,6 +262,19 @@ const Contacts = () => {
       refreshData();
     }
   };
+
+  const handleCreate = async () => {
+    setCreating(true);
+    const res = await createContact(formData);
+    setCreating(false);
+    if (res.success) {
+      setShowCreateModal(false);
+      setFormData({ name: '', email: '', phone: '', company: '', role: '', status: 'Lead' });
+      refreshData();
+    }
+  };
+
+  const isFormValid = formData.name.trim().length > 0;
 
   if (selectedContactId) {
     return <ContactDetails contactId={selectedContactId} onBack={() => setSelectedContactId(null)} />;
@@ -230,7 +332,7 @@ const Contacts = () => {
               <div className="flex justify-between items-start">
                 <div className="flex gap-6">
                   <div className="text-6xl font-black text-surface-container-highest select-none opacity-40">
-                    {contact.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
+                    {contact.name ? contact.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : '??'}
                   </div>
                   <div className="space-y-1">
                     <h3 className="text-xl font-bold text-on-surface tracking-tight group-hover:text-primary transition-colors">{contact.name}</h3>
@@ -261,42 +363,78 @@ const Contacts = () => {
       </div>
 
       <Modal isOpen={showCreateModal} onClose={() => setShowCreateModal(false)} title="Add New Contact">
-         <div className="space-y-8">
+         <div className="space-y-6">
             <div className="group">
-              <label className="block text-[10px] uppercase tracking-widest font-bold mb-2 text-on-surface-variant">Identity</label>
+              <label className="block text-[10px] uppercase tracking-widest font-bold mb-2 text-on-surface-variant">Identity *</label>
               <input 
                 type="text" 
                 value={formData.name} 
                 onChange={e => setFormData({...formData, name: e.target.value})}
-                className="w-full text-xl font-semibold py-3 placeholder:text-slate-300" 
+                className="w-full text-xl font-semibold py-3 border-b border-outline placeholder:text-slate-300 focus:border-primary outline-none bg-transparent" 
                 placeholder="Full Name" 
               />
             </div>
             <div className="group">
-              <label className="block text-[10px] uppercase tracking-widest font-bold mb-2 text-on-surface-variant">Contact Vector</label>
+              <label className="block text-[10px] uppercase tracking-widest font-bold mb-2 text-on-surface-variant">Email</label>
               <input 
                 type="email" 
                 value={formData.email} 
                 onChange={e => setFormData({...formData, email: e.target.value})}
-                className="w-full text-xl font-semibold py-3 placeholder:text-slate-300" 
+                className="w-full text-xl font-semibold py-3 border-b border-outline placeholder:text-slate-300 focus:border-primary outline-none bg-transparent" 
                 placeholder="email@example.com" 
               />
             </div>
             <div className="group">
-              <label className="block text-[10px] uppercase tracking-widest font-bold mb-2 text-on-surface-variant">Corporate Affiliation</label>
+              <label className="block text-[10px] uppercase tracking-widest font-bold mb-2 text-on-surface-variant">Phone</label>
               <input 
                 type="text" 
-                value={formData.company} 
-                onChange={e => setFormData({...formData, company: e.target.value})}
-                className="w-full text-xl font-semibold py-3 placeholder:text-slate-300" 
-                placeholder="Company Name" 
+                value={formData.phone} 
+                onChange={e => setFormData({...formData, phone: e.target.value})}
+                className="w-full text-xl font-semibold py-3 border-b border-outline placeholder:text-slate-300 focus:border-primary outline-none bg-transparent" 
+                placeholder="+1 234 567 890" 
               />
             </div>
-            <Button variant="primary" fullWidth size="lg" onClick={async () => {
-              await createContact(formData);
-              setShowCreateModal(false);
-              refreshData();
-            }}>Initialize Record</Button>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="group">
+                <label className="block text-[10px] uppercase tracking-widest font-bold mb-2 text-on-surface-variant">Company</label>
+                <input 
+                  type="text" 
+                  value={formData.company} 
+                  onChange={e => setFormData({...formData, company: e.target.value})}
+                  className="w-full text-xl font-semibold py-3 border-b border-outline placeholder:text-slate-300 focus:border-primary outline-none bg-transparent" 
+                  placeholder="Company Name" 
+                />
+              </div>
+              <div className="group">
+                <label className="block text-[10px] uppercase tracking-widest font-bold mb-2 text-on-surface-variant">Role</label>
+                <input 
+                  type="text" 
+                  value={formData.role} 
+                  onChange={e => setFormData({...formData, role: e.target.value})}
+                  className="w-full text-xl font-semibold py-3 border-b border-outline placeholder:text-slate-300 focus:border-primary outline-none bg-transparent" 
+                  placeholder="Job Title" 
+                />
+              </div>
+            </div>
+            <div className="group">
+              <label className="block text-[10px] uppercase tracking-widest font-bold mb-2 text-on-surface-variant">Status</label>
+              <select 
+                value={formData.status} 
+                onChange={e => setFormData({...formData, status: e.target.value})} 
+                className="w-full text-xl font-semibold py-3 border-b border-outline focus:border-primary outline-none bg-transparent"
+              >
+                <option value="Lead">Lead</option>
+                <option value="Prospect">Prospect</option>
+                <option value="Customer">Customer</option>
+                <option value="Churned">Churned</option>
+              </select>
+            </div>
+            <div className="pt-4 flex justify-end gap-3">
+              <Button variant="secondary" onClick={() => setShowCreateModal(false)}>Cancel</Button>
+              <Button variant="primary" onClick={handleCreate} disabled={creating || !isFormValid}>
+                {creating ? 'Creating...' : 'Initialize Record'}
+              </Button>
+            </div>
          </div>
       </Modal>
     </div>

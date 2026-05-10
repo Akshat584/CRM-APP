@@ -1,7 +1,7 @@
 import React from 'react';
 import { getInitials, getAvatarColor } from '../utils/format';
 
-const Avatar = ({ name, size = 'md', style = {} }) => {
+const Avatar = ({ name, initials: initialsProp, size = 'md', style = {} }) => {
   const sizeMap = {
     sm: { width: '24px', height: '24px', fontSize: '10px' },
     md: { width: '36px', height: '36px', fontSize: '13px' },
@@ -9,7 +9,7 @@ const Avatar = ({ name, size = 'md', style = {} }) => {
     xl: { width: '80px', height: '80px', fontSize: '32px' }
   };
 
-  const initials = getInitials(name);
+  const initials = initialsProp || getInitials(name);
   const backgroundColor = getAvatarColor(name);
 
   return (

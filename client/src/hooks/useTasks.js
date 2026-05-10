@@ -38,8 +38,6 @@ export const useCreateTask = () => {
       setError(null);
       const response = await tasksAPI.createTask(taskData);
       addToast('Task created successfully', 'success');
-      addToast('Task updated successfully', 'success');
-      addToast('Task deleted successfully', 'success');
       return { success: true, data: response.data.data };
     } catch (err) {
       const errorMessage = err.response?.data?.error || 'Failed to create task';
@@ -64,9 +62,7 @@ export const useUpdateTask = () => {
       setLoading(true);
       setError(null);
       const response = await tasksAPI.updateTask(id, taskData);
-      addToast('Task created successfully', 'success');
       addToast('Task updated successfully', 'success');
-      addToast('Task deleted successfully', 'success');
       return { success: true, data: response.data.data };
     } catch (err) {
       const errorMessage = err.response?.data?.error || 'Failed to update task';
@@ -91,8 +87,6 @@ export const useDeleteTask = () => {
       setLoading(true);
       setError(null);
       await tasksAPI.deleteTask(id);
-      addToast('Task created successfully', 'success');
-      addToast('Task updated successfully', 'success');
       addToast('Task deleted successfully', 'success');
       return { success: true };
     } catch (err) {

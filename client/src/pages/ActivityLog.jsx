@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useActivities, useCreateActivity } from '../hooks/useActivities';
+import { useActivities, useCreateActivity, useDeleteActivity } from '../hooks/useActivities';
 import { useContacts } from '../hooks/useContacts';
 import { useDeals } from '../hooks/useDeals';
 import { useCRM } from '../context/CRMContext';
@@ -15,10 +15,17 @@ const ActivityLog = () => {
     trigger: refreshTrigger
   });
   const { data: contacts } = useContacts({ limit: 100 });
+  const { data: deals } = useDeals({ limit: 100 });
   const { createActivity } = useCreateActivity();
+  const { deleteActivity } = useDeleteActivity();
   
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedActivity, setSelectedActivity] = useState(null);
   const [formData, setFormData] = useState({ type: 'call', subject: '', body: '', contact_id: '', deal_id: '' });
+
+  const [creating, setCreating] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     setGlobalAction(() => () => {
@@ -31,6 +38,8 @@ const ActivityLog = () => {
   useEffect(() => { refetch(); }, [refreshTrigger]);
 
   const activityTypes = ['All', 'Call', 'Email', 'Meeting', 'Note', 'Task'];
+
+  const isFormValid = formData.subject?.trim().length > 0;
 
   return (
     <div className="view-content animate-slideIn">
@@ -77,6 +86,16 @@ const ActivityLog = () => {
                     <h4 className="text-xl font-bold text-on-surface mb-2">{activity.subject}</h4>
                     <p className="text-on-surface-variant leading-relaxed text-sm italic opacity-80">"{activity.body}"</p>
                   </div>
+                  <button 
+                    onClick={() => {
+                      setSelectedActivity(activity);
+                      setShowDeleteModal(true);
+                    }}
+                    className="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-red-500 transition-colors p-2"
+                    title="Delete Entry"
+                  >
+                    <span className="material-symbols-outlined text-lg">delete</span>
+                  </button>
                 </div>
               </div>
             ))
@@ -97,7 +116,7 @@ const ActivityLog = () => {
             <select 
               value={formData.type} 
               onChange={e => setFormData({...formData, type: e.target.value})}
-              className="w-full bg-slate-50 rounded-xl py-4 px-5 text-sm font-bold shadow-sm"
+              className="w-full bg-slate-50 rounded-xl py-4 px-5 text-sm font-bold shadow-sm outline-none border-none"
             >
               <option value="call">Voice Call</option>
               <option value="email">Digital Correspondence</option>
@@ -107,7 +126,7 @@ const ActivityLog = () => {
             </select>
           </div>
           <div>
-            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Subject Header</label>
+            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Subject Header *</label>
             <input 
               type="text" 
               value={formData.subject} 
@@ -122,7 +141,7 @@ const ActivityLog = () => {
               <select 
                 value={formData.contact_id} 
                 onChange={e => setFormData({...formData, contact_id: e.target.value})}
-                className="w-full bg-slate-50 rounded-xl py-3 px-4 text-xs font-bold shadow-sm"
+                className="w-full bg-slate-50 rounded-xl py-3 px-4 text-xs font-bold shadow-sm outline-none border-none"
               >
                 <option value="">None</option>
                 {contacts?.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -133,7 +152,7 @@ const ActivityLog = () => {
               <select 
                 value={formData.deal_id} 
                 onChange={e => setFormData({...formData, deal_id: e.target.value})}
-                className="w-full bg-slate-50 rounded-xl py-3 px-4 text-xs font-bold shadow-sm"
+                className="w-full bg-slate-50 rounded-xl py-3 px-4 text-xs font-bold shadow-sm outline-none border-none"
               >
                 <option value="">None</option>
                 {deals?.map(d => <option key={d.id} value={d.id}>{d.title}</option>)}
@@ -145,17 +164,44 @@ const ActivityLog = () => {
             <textarea 
               value={formData.body} 
               onChange={e => setFormData({...formData, body: e.target.value})} 
-              className="w-full text-sm font-medium py-4 px-5 bg-slate-50 rounded-2xl min-h-[150px] outline-none focus:ring-2 focus:ring-primary/10" 
+              className="w-full text-sm font-medium py-4 px-5 bg-slate-50 rounded-2xl min-h-[150px] outline-none focus:ring-2 focus:ring-primary/10 border-none" 
               placeholder="Detailed record of interaction..." 
             />
           </div>
-          <Button variant="primary" fullWidth size="lg" onClick={async () => {
-             await createActivity(formData);
-             setShowCreateModal(false);
-             refreshData();
-          }}>Commit Record</Button>
+          <div className="flex justify-end gap-4">
+            <Button variant="secondary" onClick={() => setShowCreateModal(false)}>Cancel</Button>
+            <Button variant="primary" size="lg" disabled={creating || !isFormValid} onClick={async () => {
+               setCreating(true);
+               const res = await createActivity(formData);
+               setCreating(false);
+               if (res.success) {
+                 setShowCreateModal(false);
+                 refreshData();
+               }
+            }}>{creating ? 'Committing...' : 'Commit Record'}</Button>
+          </div>
         </div>
       </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)} title="Confirm Removal">
+        <div className="space-y-6">
+          <p className="text-on-surface text-lg">Are you sure you want to remove <strong>{selectedActivity?.subject}</strong>? This action cannot be undone.</p>
+          <div className="flex justify-end gap-3 pt-4">
+            <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>Cancel</Button>
+            <Button variant="primary" className="!bg-red-600 hover:!bg-red-700 !text-white" onClick={async () => {
+                setDeleting(true);
+                const res = await deleteActivity(selectedActivity.id);
+                setDeleting(false);
+                if(res.success) {
+                  setShowDeleteModal(false);
+                  refreshData();
+                }
+            }} disabled={deleting}>{deleting ? 'Removing...' : 'Yes, Remove'}</Button>
+          </div>
+        </div>
+      </Modal>
+
     </div>
   );
 };

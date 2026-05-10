@@ -7,6 +7,32 @@ import Button from '../components/Button';
 import Avatar from '../components/Avatar';
 import Badge from '../components/Badge';
 
+const MessageContent = ({ msg }) => {
+  if (msg.message_type === 'image') {
+    return (
+      <div className="space-y-2">
+        <img src={msg.meta?.media_url || msg.content} alt="WA Attachment" className="rounded-lg max-w-full hover:opacity-90 cursor-pointer" onClick={() => window.open(msg.meta?.media_url || msg.content, '_blank')} />
+        {msg.meta?.caption && <p className="text-xs opacity-80">{msg.meta.caption}</p>}
+      </div>
+    );
+  }
+  if (msg.message_type === 'video') {
+    return <video src={msg.meta?.media_url || msg.content} controls className="rounded-lg max-w-full" />;
+  }
+  if (msg.message_type === 'audio') {
+    return <audio src={msg.meta?.media_url || msg.content} controls className="w-full" />;
+  }
+  if (msg.message_type === 'document') {
+    return (
+      <a href={msg.meta?.media_url || msg.content} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-black/5 p-3 rounded-xl hover:bg-black/10 transition-colors">
+        <span className="material-symbols-outlined">description</span>
+        <span className="truncate max-w-[150px] font-bold text-xs">{msg.meta?.filename || 'Document.pdf'}</span>
+      </a>
+    );
+  }
+  return <span>{msg.content}</span>;
+};
+
 const WhatsAppInbox = () => {
   const { user: currentUser } = useAuth();
   const { 
@@ -19,19 +45,29 @@ const WhatsAppInbox = () => {
     team,
     assignConversation,
     sendMessage,
+    uploadMedia,
     refetchConversations
   } = useWhatsApp();
 
   const [inputMessage, setInputMessage] = useState('');
   const [showTemplates, setShowTemplates] = useState(false);
   const [filter, setFilter] = useState('all'); // all, mine, unassigned
+  const [uploading, setUploading] = useState(false);
   const messagesEndRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   const filteredConversations = conversations.filter(c => {
     if (filter === 'mine') return c.assigned_to === currentUser.id;
     if (filter === 'unassigned') return !c.assigned_to;
     return true;
   });
+
+  const isWindowOpen = () => {
+    if (!activeConversation?.last_inbound_at) return false;
+    const lastInbound = new Date(activeConversation.last_inbound_at);
+    const now = new Date();
+    return (now - lastInbound) < 24 * 60 * 60 * 1000;
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -54,6 +90,26 @@ const WhatsAppInbox = () => {
     });
     setShowTemplates(false);
   };
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !activeConversation) return;
+
+    setUploading(true);
+    const res = await uploadMedia(file);
+    setUploading(false);
+
+    if (res.success) {
+      const type = file.type.split('/')[0];
+      const msgType = ['image', 'video', 'audio'].includes(type) ? type : 'document';
+      await sendMessage(activeConversation.phone, `[${msgType}: ${file.name}]`, msgType, {
+        mediaIdOrUrl: res.data.mediaId,
+        caption: `Attached ${file.name}`
+      });
+    }
+  };
+
+  const windowOpen = isWindowOpen();
 
   return (
     <div className="flex h-[calc(100vh-120px)] bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-100">
@@ -142,7 +198,7 @@ const WhatsAppInbox = () => {
                   return (
                     <div key={msg.id || idx} className={`flex ${isOutbound ? 'justify-end' : 'justify-start'}`}>
                        <div className={`max-w-[70%] p-4 rounded-2xl text-sm font-medium shadow-sm ${isOutbound ? 'bg-primary text-white rounded-br-none' : 'bg-white text-on-surface rounded-bl-none border border-slate-50'}`}>
-                          {msg.content}
+                          <MessageContent msg={msg} />
                           <div className={`text-[9px] mt-1 font-bold uppercase tracking-tighter flex items-center gap-1 ${isOutbound ? 'text-white/60' : 'text-slate-300'}`}>
                              {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                              {isOutbound && (
@@ -160,15 +216,34 @@ const WhatsAppInbox = () => {
 
             {/* Input */}
             <div className="p-6 bg-white border-t border-slate-100">
-               <div className="flex items-center gap-4 bg-slate-50 rounded-2xl p-2 pl-4">
-                  <div className="relative">
+               {!windowOpen && (
+                 <div className="mb-4 p-3 bg-amber-50 rounded-xl flex items-center gap-3 border border-amber-100">
+                    <span className="material-symbols-outlined text-amber-500">info</span>
+                    <p className="text-[10px] font-bold text-amber-800 uppercase tracking-widest">
+                      The 24-hour window has expired. You must use a Template to re-engage this contact.
+                    </p>
+                 </div>
+               )}
+               <div className={`flex items-center gap-4 bg-slate-50 rounded-2xl p-2 pl-4 transition-opacity ${!windowOpen ? 'opacity-60' : ''}`}>
+                  <input type="file" ref={fileInputRef} onChange={handleFileUpload} className="hidden" />
+                  <div className="flex items-center gap-1">
                     <button 
                       onClick={() => setShowTemplates(!showTemplates)}
                       className="p-2 hover:bg-white rounded-lg transition-all text-slate-400 hover:text-primary"
                     >
                       <span className="material-symbols-outlined text-xl">dashboard_customize</span>
                     </button>
-                    {showTemplates && (
+                    <button 
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={!windowOpen || uploading}
+                      className="p-2 hover:bg-white rounded-lg transition-all text-slate-400 hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <span className="material-symbols-outlined text-xl">{uploading ? 'sync' : 'attach_file'}</span>
+                    </button>
+                  </div>
+                  
+                  {showTemplates && (
+                    <div className="relative">
                       <div className="absolute bottom-12 left-0 w-64 bg-white rounded-xl shadow-2xl border border-slate-100 p-2 z-50">
                          <div className="text-[10px] font-black uppercase tracking-widest p-2 text-slate-400">Select Template</div>
                          <div className="max-h-64 overflow-y-auto scrollbar-thin">
@@ -180,17 +255,19 @@ const WhatsAppInbox = () => {
                             ))}
                          </div>
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
+
                   <input 
                     type="text" 
                     value={inputMessage}
                     onChange={e => setInputMessage(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && handleSend()}
-                    placeholder="Type a message..." 
-                    className="flex-1 bg-transparent border-none focus:ring-0 text-sm font-medium"
+                    onKeyDown={e => e.key === 'Enter' && windowOpen && handleSend()}
+                    placeholder={windowOpen ? "Type a message..." : "Window expired. Use template."}
+                    disabled={!windowOpen}
+                    className="flex-1 bg-transparent border-none focus:ring-0 text-sm font-medium disabled:cursor-not-allowed"
                   />
-                  <Button variant="primary" size="sm" className="rounded-xl px-5" onClick={handleSend}>
+                  <Button variant="primary" size="sm" className="rounded-xl px-5" onClick={handleSend} disabled={!windowOpen || !inputMessage.trim()}>
                     <span className="material-symbols-outlined">send</span>
                   </Button>
                </div>

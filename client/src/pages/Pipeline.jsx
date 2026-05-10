@@ -16,8 +16,13 @@ const Pipeline = () => {
   
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState(null);
   const [formData, setFormData] = useState({ title: '', company: '', value: 0, stage: 'New', probability: 50, contact_id: '' });
+
+  const [creating, setCreating] = useState(false);
+  const [updating, setUpdating] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     setGlobalAction(() => () => {
@@ -44,6 +49,8 @@ const Pipeline = () => {
     }
     setDraggedDeal(null);
   };
+
+  const isFormValid = formData.title?.trim().length > 0 && formData.contact_id !== '';
 
   if (loading) return <div className="animate-pulse space-y-12"><div className="h-12 bg-slate-100 rounded-xl w-1/4" /><div className="grid grid-cols-5 gap-6"><div className="col-span-1 h-[600px] bg-slate-50 rounded-2xl" /></div></div>;
 
@@ -89,7 +96,7 @@ const Pipeline = () => {
                     onDragStart={() => setDraggedDeal(deal)}
                     onClick={() => { 
                       setSelectedDeal(deal); 
-                      setFormData({ title: deal.title, company: deal.company, value: deal.value, stage: deal.stage, probability: deal.probability, contact_id: deal.contact_id }); 
+                      setFormData({ title: deal.title, company: deal.company, value: deal.value, stage: deal.stage, probability: deal.probability, contact_id: deal.contact_id || '' }); 
                       setShowEditModal(true); 
                     }}
                     className="bg-white p-6 rounded-2xl shadow-sm border border-transparent hover:border-primary-fixed hover:shadow-xl transition-all cursor-grab active:cursor-grabbing group"
@@ -111,7 +118,7 @@ const Pipeline = () => {
         })}
       </div>
 
-      {/* Initialize New Deal - Matching Reference Style */}
+      {/* Initialize New Deal Modal */}
       <Modal isOpen={showCreateModal} onClose={() => setShowCreateModal(false)} title="New Opportunity" size="lg">
          <div className="space-y-12 py-4">
             <p className="text-on-surface-variant text-sm font-medium opacity-80">Define the parameters for this upcoming fiscal commitment. Every ledger entry begins with intentionality.</p>
@@ -119,7 +126,7 @@ const Pipeline = () => {
             <div className="grid grid-cols-12 gap-12">
                <div className="col-span-7 space-y-12">
                   <div className="group">
-                    <label className="block text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-2 group-focus-within:text-primary transition-colors">Opportunity Name</label>
+                    <label className="block text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-2 group-focus-within:text-primary transition-colors">Opportunity Name *</label>
                     <input 
                       type="text" 
                       value={formData.title} 
@@ -145,7 +152,7 @@ const Pipeline = () => {
 
                <div className="col-span-5 space-y-8">
                   <div className="bg-slate-50 rounded-2xl p-8">
-                    <h3 className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-6">Primary Contact</h3>
+                    <h3 className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-6">Primary Contact *</h3>
                     <select 
                       value={formData.contact_id} 
                       onChange={e => setFormData({...formData, contact_id: e.target.value})}
@@ -155,59 +162,128 @@ const Pipeline = () => {
                       {contacts?.map(c => <option key={c.id} value={c.id}>{c.name} ({c.company})</option>)}
                     </select>
                   </div>
+                  <div className="bg-slate-50 rounded-2xl p-8">
+                    <h3 className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-6">Stage</h3>
+                    <select 
+                      value={formData.stage} 
+                      onChange={e => setFormData({...formData, stage: e.target.value})}
+                      className="w-full bg-white rounded-xl py-4 px-5 text-sm font-bold shadow-sm outline-none border-none focus:ring-2 focus:ring-primary/10"
+                    >
+                      {stages.map(s => <option key={s} value={s}>{s}</option>)}
+                    </select>
+                  </div>
                </div>
             </div>
 
             <div className="pt-8 border-t border-slate-100 flex justify-end gap-6">
-               <Button variant="secondary" onClick={() => setShowCreateModal(false)}>Save to Drafts</Button>
-               <Button variant="primary" size="lg" onClick={async () => {
-                 await createDeal(formData);
-                 setShowCreateModal(false);
-                 refreshData();
-               }}>Initialize Opportunity</Button>
+               <Button variant="secondary" onClick={() => setShowCreateModal(false)}>Cancel</Button>
+               <Button variant="primary" size="lg" disabled={creating || !isFormValid} onClick={async () => {
+                 setCreating(true);
+                 const res = await createDeal(formData);
+                 setCreating(false);
+                 if(res.success) {
+                   setShowCreateModal(false);
+                   refreshData();
+                 }
+               }}>{creating ? 'Initializing...' : 'Initialize Opportunity'}</Button>
             </div>
          </div>
       </Modal>
 
-      {/* Edit Modal simplified for speed but kept consistent */}
-      <Modal isOpen={showEditModal} onClose={() => setShowEditModal(false)} title="Update Opportunity">
-         <div className="space-y-8">
-            <div>
-              <label className="label-md block mb-2">Stage</label>
-              <select 
-                value={formData.stage} 
-                onChange={e => setFormData({...formData, stage: e.target.value})}
-                className="w-full text-lg font-bold"
-              >
-                {stages.map(s => <option key={s} value={s}>{s}</option>)}
-              </select>
-            </div>
-            <div className="flex gap-6">
-               <div className="flex-1">
-                  <label className="label-md block mb-2">Value</label>
-                  <input type="number" value={formData.value} onChange={e => setFormData({...formData, value: Number(e.target.value)})} className="text-xl font-bold" />
+      {/* Edit Modal */}
+      <Modal isOpen={showEditModal} onClose={() => setShowEditModal(false)} title="Update Opportunity" size="lg">
+         <div className="space-y-12 py-4">
+            <div className="grid grid-cols-12 gap-12">
+               <div className="col-span-7 space-y-12">
+                  <div className="group">
+                    <label className="block text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-2 group-focus-within:text-primary transition-colors">Opportunity Name *</label>
+                    <input 
+                      type="text" 
+                      value={formData.title} 
+                      onChange={e => setFormData({...formData, title: e.target.value})}
+                      className="w-full text-2xl font-semibold border-b-2 border-slate-100 focus:border-primary px-0 pb-4 transition-all outline-none bg-transparent" 
+                    />
+                  </div>
+                  <div className="group">
+                    <label className="block text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-2 group-focus-within:text-primary transition-colors">Projected Value</label>
+                    <div className="flex items-end gap-3 border-b-2 border-slate-100 focus-within:border-primary transition-all pb-4">
+                      <span className="text-4xl font-light text-slate-300">$</span>
+                      <input 
+                        type="number" 
+                        value={formData.value} 
+                        onChange={e => setFormData({...formData, value: Number(e.target.value)})}
+                        className="w-full text-6xl font-black tracking-tighter outline-none bg-transparent" 
+                      />
+                    </div>
+                  </div>
                </div>
-               <div className="flex-1">
-                  <label className="label-md block mb-2">Probability %</label>
-                  <input type="number" value={formData.probability} onChange={e => setFormData({...formData, probability: Number(e.target.value)})} className="text-xl font-bold" />
+
+               <div className="col-span-5 space-y-8">
+                  <div className="bg-slate-50 rounded-2xl p-8">
+                    <h3 className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-6">Stage</h3>
+                    <select 
+                      value={formData.stage} 
+                      onChange={e => setFormData({...formData, stage: e.target.value})}
+                      className="w-full bg-white rounded-xl py-4 px-5 text-sm font-bold shadow-sm outline-none border-none focus:ring-2 focus:ring-primary/10"
+                    >
+                      {stages.map(s => <option key={s} value={s}>{s}</option>)}
+                    </select>
+                  </div>
+                  <div className="bg-slate-50 rounded-2xl p-8">
+                    <h3 className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-6">Probability %</h3>
+                    <input 
+                      type="number" 
+                      value={formData.probability} 
+                      onChange={e => setFormData({...formData, probability: Number(e.target.value)})} 
+                      className="w-full bg-white rounded-xl py-4 px-5 text-sm font-bold shadow-sm outline-none border-none focus:ring-2 focus:ring-primary/10" 
+                    />
+                  </div>
                </div>
             </div>
-            <div className="flex gap-4 pt-4">
-              <Button variant="primary" fullWidth onClick={async () => {
-                 await updateDeal(selectedDeal.id, formData);
-                 setShowEditModal(false);
-                 refreshData();
-              }}>Commit Changes</Button>
-              <Button variant="danger" onClick={async () => {
-                if (window.confirm('Abandon this opportunity?')) {
-                  await deleteDeal(selectedDeal.id);
+            
+            <div className="pt-8 border-t border-slate-100 flex justify-between">
+              <Button variant="secondary" className="!text-red-600 hover:!bg-red-50" onClick={() => {
                   setShowEditModal(false);
-                  refreshData();
-                }
-              }}>Abandon</Button>
+                  setShowDeleteModal(true);
+              }}>
+                <span className="material-symbols-outlined text-sm mr-2">delete</span>
+                Abandon Opportunity
+              </Button>
+              <div className="flex gap-4">
+                <Button variant="secondary" onClick={() => setShowEditModal(false)}>Cancel</Button>
+                <Button variant="primary" disabled={updating || !formData.title?.trim()} onClick={async () => {
+                   setUpdating(true);
+                   const res = await updateDeal(selectedDeal.id, formData);
+                   setUpdating(false);
+                   if(res.success) {
+                     setShowEditModal(false);
+                     refreshData();
+                   }
+                }}>{updating ? 'Committing...' : 'Commit Changes'}</Button>
+              </div>
             </div>
          </div>
       </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)} title="Confirm Abandonment">
+        <div className="space-y-6">
+          <p className="text-on-surface text-lg">Are you sure you want to abandon <strong>{selectedDeal?.title}</strong>? This action cannot be undone.</p>
+          <div className="flex justify-end gap-3 pt-4">
+            <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>Cancel</Button>
+            <Button variant="primary" className="!bg-red-600 hover:!bg-red-700 !text-white" onClick={async () => {
+                setDeleting(true);
+                const res = await deleteDeal(selectedDeal.id);
+                setDeleting(false);
+                if(res.success) {
+                  setShowDeleteModal(false);
+                  refreshData();
+                }
+            }} disabled={deleting}>{deleting ? 'Abandoning...' : 'Yes, Abandon'}</Button>
+          </div>
+        </div>
+      </Modal>
+
     </div>
   );
 };

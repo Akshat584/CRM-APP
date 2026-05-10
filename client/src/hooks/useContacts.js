@@ -6,6 +6,7 @@ export const useContacts = (params = {}) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [meta, setMeta] = useState({ count: 0, totalPages: 1 });
 
   const fetchContacts = async () => {
     try {
@@ -13,6 +14,7 @@ export const useContacts = (params = {}) => {
       setError(null);
       const response = await contactsAPI.getContacts(params);
       setData(response.data.data);
+      setMeta({ count: response.data.count || 0, totalPages: response.data.totalPages || 1 });
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to fetch contacts');
     } finally {
@@ -24,7 +26,7 @@ export const useContacts = (params = {}) => {
     fetchContacts();
   }, [params.search, params.status, params.page, params.limit]);
 
-  return { data, loading, error, refetch: fetchContacts };
+  return { data, loading, error, refetch: fetchContacts, meta };
 };
 
 export const useContact = (id) => {
@@ -65,8 +67,6 @@ export const useCreateContact = () => {
       setError(null);
       const response = await contactsAPI.createContact(contactData);
       addToast('Contact created successfully', 'success');
-      addToast('Contact updated successfully', 'success');
-      addToast('Contact deleted successfully', 'success');
       return { success: true, data: response.data.data };
     } catch (err) {
       const errorMessage = err.response?.data?.error || 'Failed to create contact';
@@ -91,9 +91,7 @@ export const useUpdateContact = () => {
       setLoading(true);
       setError(null);
       const response = await contactsAPI.updateContact(id, contactData);
-      addToast('Contact created successfully', 'success');
       addToast('Contact updated successfully', 'success');
-      addToast('Contact deleted successfully', 'success');
       return { success: true, data: response.data.data };
     } catch (err) {
       const errorMessage = err.response?.data?.error || 'Failed to update contact';
@@ -118,8 +116,6 @@ export const useDeleteContact = () => {
       setLoading(true);
       setError(null);
       await contactsAPI.deleteContact(id);
-      addToast('Contact created successfully', 'success');
-      addToast('Contact updated successfully', 'success');
       addToast('Contact deleted successfully', 'success');
       return { success: true };
     } catch (err) {

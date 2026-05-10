@@ -38,7 +38,6 @@ export const useCreateActivity = () => {
       setError(null);
       const response = await activitiesAPI.createActivity(activityData);
       addToast('Activity created successfully', 'success');
-      addToast('Activity deleted successfully', 'success');
       return { success: true, data: response.data.data };
     } catch (err) {
       const errorMessage = err.response?.data?.error || 'Failed to create activity';
@@ -63,7 +62,6 @@ export const useDeleteActivity = () => {
       setLoading(true);
       setError(null);
       await activitiesAPI.deleteActivity(id);
-      addToast('Activity created successfully', 'success');
       addToast('Activity deleted successfully', 'success');
       return { success: true };
     } catch (err) {

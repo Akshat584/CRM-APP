@@ -113,12 +113,12 @@ const handleInboundMessage = async ({ phone, content, type, metaId, raw }) => {
   if (convRes.rows.length > 0) {
     conversationId = convRes.rows[0].id;
     await pool.query(
-      'UPDATE whatsapp_conversations SET last_message_at = CURRENT_TIMESTAMP, contact_id = $1 WHERE id = $2',
+      'UPDATE whatsapp_conversations SET last_message_at = CURRENT_TIMESTAMP, last_inbound_at = CURRENT_TIMESTAMP, contact_id = $1 WHERE id = $2',
       [contactId, conversationId]
     );
   } else {
     const newConv = await pool.query(
-      'INSERT INTO whatsapp_conversations (contact_id, phone) VALUES ($1, $2) RETURNING id',
+      'INSERT INTO whatsapp_conversations (contact_id, phone, last_inbound_at) VALUES ($1, $2, CURRENT_TIMESTAMP) RETURNING id',
       [contactId, phone]
     );
     conversationId = newConv.rows[0].id;

@@ -14,8 +14,13 @@ const Tasks = () => {
   
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [formData, setFormData] = useState({ title: '', priority: 'Medium', status: 'Todo', due_date: '', notes: '' });
+
+  const [creating, setCreating] = useState(false);
+  const [updating, setUpdating] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     setGlobalAction(() => () => {
@@ -35,6 +40,8 @@ const Tasks = () => {
     await updateTask(taskId, { status: newStatus });
     refreshData();
   };
+
+  const isFormValid = formData.title?.trim().length > 0;
 
   const renderTaskColumn = (title, columnTasks) => (
     <div className="flex-1 min-w-[350px] bg-slate-50 rounded-3xl p-6">
@@ -92,6 +99,8 @@ const Tasks = () => {
     </div>
   );
 
+  if (loading) return <div className="animate-pulse space-y-12"><div className="h-12 bg-slate-100 rounded-xl w-1/4" /><div className="grid grid-cols-3 gap-6"><div className="h-[600px] bg-slate-50 rounded-2xl" /><div className="h-[600px] bg-slate-50 rounded-2xl" /><div className="h-[600px] bg-slate-50 rounded-2xl" /></div></div>;
+
   return (
     <div className="view-content animate-slideIn">
       <section className="mb-12">
@@ -113,7 +122,7 @@ const Tasks = () => {
       <Modal isOpen={showCreateModal} onClose={() => setShowCreateModal(false)} title="New Assignment">
         <div className="space-y-12">
            <div className="group">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2 group-focus-within:text-primary">Operational Description</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2 group-focus-within:text-primary">Operational Description *</label>
               <input 
                 type="text" 
                 value={formData.title} 
@@ -125,11 +134,11 @@ const Tasks = () => {
            <div className="grid grid-cols-2 gap-8">
               <div>
                 <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Target Date</label>
-                <input type="date" value={formData.due_date} onChange={e => setFormData({...formData, due_date: e.target.value})} className="w-full bg-slate-50 rounded-xl py-4 px-5 text-sm font-bold shadow-sm" />
+                <input type="date" value={formData.due_date} onChange={e => setFormData({...formData, due_date: e.target.value})} className="w-full bg-slate-50 rounded-xl py-4 px-5 text-sm font-bold shadow-sm outline-none" />
               </div>
               <div>
                 <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Priority Level</label>
-                <select value={formData.priority} onChange={e => setFormData({...formData, priority: e.target.value})} className="w-full bg-slate-50 rounded-xl py-4 px-5 text-sm font-bold shadow-sm">
+                <select value={formData.priority} onChange={e => setFormData({...formData, priority: e.target.value})} className="w-full bg-slate-50 rounded-xl py-4 px-5 text-sm font-bold shadow-sm outline-none border-none">
                   <option value="High">Strategic (High)</option>
                   <option value="Medium">Standard (Medium)</option>
                   <option value="Low">Auxiliary (Low)</option>
@@ -138,56 +147,100 @@ const Tasks = () => {
            </div>
            <div>
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Contextual Notes</label>
-              <textarea value={formData.notes} onChange={e => setFormData({...formData, notes: e.target.value})} className="w-full bg-slate-50 rounded-2xl py-4 px-5 min-h-[120px] text-sm outline-none" />
+              <textarea value={formData.notes} onChange={e => setFormData({...formData, notes: e.target.value})} className="w-full bg-slate-50 rounded-2xl py-4 px-5 min-h-[120px] text-sm outline-none border-none" />
            </div>
-           <Button variant="primary" fullWidth size="lg" onClick={async () => {
-              await createTask(formData);
-              setShowCreateModal(false);
-              refreshData();
-           }}>Initialize Assignment</Button>
+           <div className="flex justify-end gap-4">
+             <Button variant="secondary" onClick={() => setShowCreateModal(false)}>Cancel</Button>
+             <Button variant="primary" size="lg" disabled={creating || !isFormValid} onClick={async () => {
+                setCreating(true);
+                const res = await createTask(formData);
+                setCreating(false);
+                if (res.success) {
+                  setShowCreateModal(false);
+                  refreshData();
+                }
+             }}>{creating ? 'Initializing...' : 'Initialize Assignment'}</Button>
+           </div>
         </div>
       </Modal>
 
       <Modal isOpen={showEditModal} onClose={() => setShowEditModal(false)} title="Update Assignment">
         <div className="space-y-12">
            <div className="group">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2 group-focus-within:text-primary">Operational Description</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2 group-focus-within:text-primary">Operational Description *</label>
               <input type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full text-xl font-semibold py-3 border-b-2 border-slate-100 focus:border-primary outline-none transition-all" />
            </div>
            <div className="grid grid-cols-2 gap-8">
               <div>
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Target Date</label>
+                <input type="date" value={formData.due_date} onChange={e => setFormData({...formData, due_date: e.target.value})} className="w-full bg-slate-50 rounded-xl py-4 px-5 text-sm font-bold shadow-sm outline-none" />
+              </div>
+              <div>
                 <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Priority Level</label>
-                <select value={formData.priority} onChange={e => setFormData({...formData, priority: e.target.value})} className="w-full bg-slate-50 rounded-xl py-4 px-5 text-sm font-bold shadow-sm">
+                <select value={formData.priority} onChange={e => setFormData({...formData, priority: e.target.value})} className="w-full bg-slate-50 rounded-xl py-4 px-5 text-sm font-bold shadow-sm outline-none border-none">
                   <option value="High">Strategic (High)</option>
                   <option value="Medium">Standard (Medium)</option>
                   <option value="Low">Auxiliary (Low)</option>
                 </select>
               </div>
+           </div>
+           <div className="grid grid-cols-2 gap-8">
               <div>
                 <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Workflow Status</label>
-                <select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})} className="w-full bg-slate-50 rounded-xl py-4 px-5 text-sm font-bold shadow-sm">
+                <select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})} className="w-full bg-slate-50 rounded-xl py-4 px-5 text-sm font-bold shadow-sm outline-none border-none">
                   <option value="Todo">Pending</option>
                   <option value="In Progress">Active</option>
                   <option value="Done">Completed</option>
                 </select>
               </div>
            </div>
-           <div className="flex gap-4 pt-8 border-t border-slate-100">
-              <Button variant="primary" fullWidth size="lg" onClick={async () => {
-                 await updateTask(selectedTask.id, formData);
-                 setShowEditModal(false);
-                 refreshData();
-              }}>Commit Changes</Button>
-              <Button variant="danger" size="lg" onClick={async () => {
-                if (window.confirm('Erase this assignment record?')) {
-                  await deleteTask(selectedTask.id);
+           <div>
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Contextual Notes</label>
+              <textarea value={formData.notes} onChange={e => setFormData({...formData, notes: e.target.value})} className="w-full bg-slate-50 rounded-2xl py-4 px-5 min-h-[120px] text-sm outline-none border-none" />
+           </div>
+           <div className="flex justify-between pt-8 border-t border-slate-100">
+              <Button variant="secondary" className="!text-red-600 hover:!bg-red-50" onClick={() => {
                   setShowEditModal(false);
-                  refreshData();
-                }
-              }}>Remove</Button>
+                  setShowDeleteModal(true);
+              }}>
+                <span className="material-symbols-outlined text-sm mr-2">delete</span>
+                Remove
+              </Button>
+              <div className="flex gap-4">
+                <Button variant="secondary" onClick={() => setShowEditModal(false)}>Cancel</Button>
+                <Button variant="primary" disabled={updating || !isFormValid} onClick={async () => {
+                   setUpdating(true);
+                   const res = await updateTask(selectedTask.id, formData);
+                   setUpdating(false);
+                   if (res.success) {
+                     setShowEditModal(false);
+                     refreshData();
+                   }
+                }}>{updating ? 'Committing...' : 'Commit Changes'}</Button>
+              </div>
            </div>
         </div>
       </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)} title="Confirm Removal">
+        <div className="space-y-6">
+          <p className="text-on-surface text-lg">Are you sure you want to remove <strong>{selectedTask?.title}</strong>? This action cannot be undone.</p>
+          <div className="flex justify-end gap-3 pt-4">
+            <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>Cancel</Button>
+            <Button variant="primary" className="!bg-red-600 hover:!bg-red-700 !text-white" onClick={async () => {
+                setDeleting(true);
+                const res = await deleteTask(selectedTask.id);
+                setDeleting(false);
+                if(res.success) {
+                  setShowDeleteModal(false);
+                  refreshData();
+                }
+            }} disabled={deleting}>{deleting ? 'Removing...' : 'Yes, Remove'}</Button>
+          </div>
+        </div>
+      </Modal>
+
     </div>
   );
 };

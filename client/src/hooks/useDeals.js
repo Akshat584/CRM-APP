@@ -38,8 +38,6 @@ export const useCreateDeal = () => {
       setError(null);
       const response = await dealsAPI.createDeal(dealData);
       addToast('Deal created successfully', 'success');
-      addToast('Deal updated successfully', 'success');
-      addToast('Deal deleted successfully', 'success');
       return { success: true, data: response.data.data };
     } catch (err) {
       const errorMessage = err.response?.data?.error || 'Failed to create deal';
@@ -64,9 +62,7 @@ export const useUpdateDeal = () => {
       setLoading(true);
       setError(null);
       const response = await dealsAPI.updateDeal(id, dealData);
-      addToast('Deal created successfully', 'success');
       addToast('Deal updated successfully', 'success');
-      addToast('Deal deleted successfully', 'success');
       return { success: true, data: response.data.data };
     } catch (err) {
       const errorMessage = err.response?.data?.error || 'Failed to update deal';
@@ -91,8 +87,6 @@ export const useDeleteDeal = () => {
       setLoading(true);
       setError(null);
       await dealsAPI.deleteDeal(id);
-      addToast('Deal created successfully', 'success');
-      addToast('Deal updated successfully', 'success');
       addToast('Deal deleted successfully', 'success');
       return { success: true };
     } catch (err) {

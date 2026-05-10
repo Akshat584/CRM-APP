@@ -13,10 +13,9 @@ export const useCRM = () => {
 export const CRMProvider = ({ children }) => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [globalAction, setGlobalAction] = useState(null);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
-  const refreshData = () => {
-    setRefreshTrigger(prev => prev + 1);
-  };
+  const refreshData = () => setRefreshTrigger(prev => prev + 1);
 
   const executeGlobalAction = () => {
     if (globalAction) {
@@ -24,11 +23,15 @@ export const CRMProvider = ({ children }) => {
     }
   };
 
+  const toggleSidebar = () => setIsSidebarCollapsed(prev => !prev);
+
   const value = {
     refreshTrigger,
     refreshData,
     setGlobalAction,
-    executeGlobalAction
+    executeGlobalAction,
+    isSidebarCollapsed,
+    toggleSidebar
   };
 
   return <CRMContext.Provider value={value}>{children}</CRMContext.Provider>;

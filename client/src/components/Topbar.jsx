@@ -4,10 +4,12 @@ import apiClient from '../api/apiClient';
 import Button from './Button';
 import { useNotifications } from '../hooks/useNotifications';
 import { formatDate } from '../utils/format';
+import { useCRM } from '../context/CRMContext';
 
 const Topbar = ({ actionLabel, onActionClick }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { isSidebarCollapsed } = useCRM();
   const [search, setSearch] = useState('');
   const [results, setResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
@@ -50,7 +52,11 @@ const Topbar = ({ actionLabel, onActionClick }) => {
   }, [search]);
 
   return (
-    <header className="fixed top-0 right-0 w-[calc(100%-18rem)] h-20 glass-effect flex items-center justify-between px-12 z-40 shadow-sm shadow-emerald-900/5 font-label text-sm uppercase tracking-widest">
+    <header 
+      className={`fixed top-0 right-0 h-20 glass-effect flex items-center justify-between px-12 z-40 shadow-sm shadow-emerald-900/5 font-label text-sm uppercase tracking-widest transition-all duration-500 ease-in-out ${
+        isSidebarCollapsed ? 'w-[calc(100%-6rem)]' : 'w-[calc(100%-18rem)]'
+      }`}
+    >
       <div className="flex-1 flex items-center max-w-xl">
         <div className="w-full relative group">
           <span className="material-symbols-outlined absolute left-0 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
@@ -191,4 +197,3 @@ const Topbar = ({ actionLabel, onActionClick }) => {
 };
 
 export default Topbar;
-

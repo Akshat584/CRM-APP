@@ -27,6 +27,31 @@ const sendTextMessage = async (to, text) => {
   }
 };
 
+const sendMediaMessage = async (to, type, mediaIdOrUrl, caption = '') => {
+  const mediaObj = {};
+  if (mediaIdOrUrl.startsWith('http')) {
+    mediaObj.link = mediaIdOrUrl;
+  } else {
+    mediaObj.id = mediaIdOrUrl;
+  }
+  
+  if (caption) mediaObj.caption = caption;
+
+  try {
+    const response = await api.post('/messages', {
+      messaging_product: 'whatsapp',
+      recipient_type: 'individual',
+      to,
+      type,
+      [type]: mediaObj
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`WhatsApp API Error (${type}):`, error.response?.data || error.message);
+    throw new Error(error.response?.data?.error?.message || `Failed to send WhatsApp ${type}`);
+  }
+};
+
 const sendTemplate = async (to, templateName, languageCode = 'en_US', components = []) => {
   try {
     const response = await api.post('/messages', {
