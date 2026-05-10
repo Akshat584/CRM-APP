@@ -39,20 +39,46 @@ const getUserById = async (id) => {
   return result.rows[0];
 };
 
-const createUser = async (userData) => {
-  const { name, email, password, role = 'admin' } = userData; // Automatically become admin of own org
+const createUser = async (userData, inviteToken = null) => {
+  const { name, email, password } = userData;
   const passwordHash = await hashPassword(password);
   
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
     
-    // Create Organization
-    const orgResult = await client.query(
-      'INSERT INTO organizations (name) VALUES ($1) RETURNING id',
-      [`${name}'s Organization`]
-    );
-    const orgId = orgResult.rows[0].id;
+    let orgId;
+    let role = 'member';
+
+    if (inviteToken) {
+      // 1. Verify invitation
+      const inviteRes = await client.query(
+        'SELECT * FROM invitations WHERE token = $1 AND status = \'pending\' AND expires_at > CURRENT_TIMESTAMP',
+        [inviteToken]
+      );
+      
+      if (inviteRes.rows.length === 0) {
+        throw new Error('Invalid or expired invitation token');
+      }
+      
+      const invite = inviteRes.rows[0];
+      orgId = invite.organization_id;
+      role = invite.role;
+
+      // 2. Mark invitation as accepted
+      await client.query(
+        'UPDATE invitations SET status = \'accepted\' WHERE id = $1',
+        [invite.id]
+      );
+    } else {
+      // Create New Organization
+      const orgResult = await client.query(
+        'INSERT INTO organizations (name) VALUES ($1) RETURNING id',
+        [`${name}'s Organization`]
+      );
+      orgId = orgResult.rows[0].id;
+      role = 'admin'; // Owner is admin
+    }
     
     // Create User
     const result = await client.query(
@@ -124,6 +150,14 @@ const updatePassword = async (userId, newPassword) => {
   );
 };
 
+const getInvitationByToken = async (token) => {
+  const result = await pool.query(
+    'SELECT * FROM invitations WHERE token = $1 AND status = \'pending\' AND expires_at > CURRENT_TIMESTAMP',
+    [token]
+  );
+  return result.rows[0];
+};
+
 module.exports = {
   generateTokens,
   hashPassword,
@@ -138,5 +172,6 @@ module.exports = {
   storePasswordResetToken,
   verifyPasswordResetToken,
   deletePasswordResetToken,
-  updatePassword
+  updatePassword,
+  getInvitationByToken
 };

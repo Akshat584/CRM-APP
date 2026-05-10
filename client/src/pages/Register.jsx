@@ -1,14 +1,38 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import apiClient from '../api/apiClient';
 import Button from '../components/Button';
 
 const Register = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'Sales' });
+  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [registerError, setRegisterError] = useState('');
+  const [inviteInfo, setInviteInfo] = useState(null);
+  const [loadingInvite, setLoadingInvite] = useState(false);
+  
   const { register } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const inviteToken = searchParams.get('invite');
+
+  useEffect(() => {
+    if (inviteToken) {
+      const fetchInviteInfo = async () => {
+        setLoadingInvite(true);
+        try {
+          const res = await apiClient.get(`/auth/invite-info/${inviteToken}`);
+          setInviteInfo(res.data.data);
+          setFormData(prev => ({ ...prev, email: res.data.data.email }));
+        } catch (err) {
+          setRegisterError('This invitation is invalid or has expired.');
+        } finally {
+          setLoadingInvite(false);
+        }
+      };
+      fetchInviteInfo();
+    }
+  }, [inviteToken]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,20 +43,24 @@ const Register = () => {
     if (!formData.name) newErrors.name = 'Name is required';
     if (!formData.email) newErrors.email = 'Email is required';
     if (!formData.password) newErrors.password = 'Password is required';
-    if (formData.password.length < 6) newErrors.password = 'Min 6 characters required';
+    if (formData.password.length < 12) newErrors.password = 'Min 12 characters required';
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
-    const result = await register(formData);
+    const result = await register({ ...formData, inviteToken });
     if (result.success) {
       navigate('/');
     } else {
       setRegisterError(result.error);
     }
   };
+
+  if (loadingInvite) {
+    return <div className="h-screen flex items-center justify-center bg-background text-primary font-bold">Verifying Invitation...</div>;
+  }
 
   return (
     <div className="h-screen overflow-y-auto flex items-center justify-center bg-background p-6">
@@ -46,9 +74,11 @@ const Register = () => {
             letterSpacing: '-0.05em',
             marginBottom: '8px'
           }}>
-            Aurelius
+            Aurelius Estate
           </div>
-          <p className="label-md" style={{ fontSize: '10px' }}>Join the Network</p>
+          <p className="label-md" style={{ fontSize: '10px' }}>
+            {inviteInfo ? `Joining Team Workspace` : 'Initialize New Organization'}
+          </p>
         </header>
 
         {registerError && (
@@ -63,6 +93,13 @@ const Register = () => {
             textAlign: 'center'
           }}>
             {registerError}
+          </div>
+        )}
+
+        {inviteInfo && !registerError && (
+          <div className="bg-primary/5 p-4 rounded-xl mb-8 border border-primary/10 text-center">
+             <p className="text-[10px] font-black uppercase text-primary tracking-widest mb-1">Invitation Active</p>
+             <p className="text-xs font-bold text-on-surface-variant">You are joining as a <span className="text-primary">{inviteInfo.role}</span></p>
           </div>
         )}
 
@@ -88,7 +125,8 @@ const Register = () => {
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               placeholder="Email Address"
-              style={{ padding: '12px 0' }}
+              disabled={!!inviteInfo}
+              style={{ padding: '12px 0', opacity: inviteInfo ? 0.6 : 1 }}
             />
             {errors.email && (
               <div style={{ color: 'var(--color-danger)', fontSize: '11px', marginTop: '8px', fontWeight: '600' }}>{errors.email}</div>
@@ -101,7 +139,7 @@ const Register = () => {
               type="password"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              placeholder="Min 6 characters"
+              placeholder="Min 12 characters + Symbols"
               style={{ padding: '12px 0' }}
             />
             {errors.password && (
@@ -110,7 +148,7 @@ const Register = () => {
           </div>
 
           <Button type="submit" fullWidth variant="primary" size="lg">
-            Create Profile
+            {inviteInfo ? 'Join Workspace' : 'Initialize Organization'}
           </Button>
         </form>
 

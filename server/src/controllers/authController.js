@@ -6,10 +6,10 @@ const { storeRefreshToken, verifyRefreshToken, deleteUserRefreshTokens } = requi
 const register = [
   body('name').trim().notEmpty().withMessage('Name is required'),
   body('email').isEmail().withMessage('Valid email is required'),
-  body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters').matches(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])/).withMessage('Password must contain uppercase, lowercase, number, and special character').matches(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])/).withMessage('Password must contain uppercase, lowercase, number, and special character').matches(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])/).withMessage('Password must contain uppercase, lowercase, number, and special character'),
+  body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters').matches(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])/).withMessage('Password must contain uppercase, lowercase, number, and special character'),
   async (req, res) => {
     try {
-      const { name, email, password } = req.body;
+      const { name, email, password, inviteToken } = req.body;
 
       const existingUser = await authService.getUserByEmail(email);
       if (existingUser) {
@@ -19,7 +19,7 @@ const register = [
         });
       }
 
-      const user = await authService.createUser({ name, email, password });
+      const user = await authService.createUser({ name, email, password }, inviteToken);
 
       const { accessToken, refreshToken } = generateTokens(user.id, user.role, user.organization_id);
       await storeRefreshToken(user.id, refreshToken);
@@ -38,7 +38,8 @@ const register = [
             id: user.id,
             name: user.name,
             email: user.email,
-            role: user.role
+            role: user.role,
+            organization_id: user.organization_id
           },
           accessToken
         }
@@ -47,7 +48,7 @@ const register = [
       console.error('Registration error:', error);
       res.status(500).json({
         success: false,
-        error: 'Registration failed'
+        error: error.message || 'Registration failed'
       });
     }
   }
@@ -108,7 +109,8 @@ const login = [
             id: user.id,
             name: user.name,
             email: user.email,
-            role: user.role
+            role: user.role,
+            organization_id: user.organization_id
           },
           accessToken
         }
@@ -219,6 +221,21 @@ const me = async (req, res) => {
   }
 };
 
+const getInviteInfo = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const invite = await authService.getInvitationByToken(token);
+    
+    if (!invite) {
+      return res.status(404).json({ success: false, error: 'Invalid or expired invitation' });
+    }
+    
+    res.json({ success: true, data: invite });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+};
+
 const crypto = require('crypto');
 
 const forgotPassword = async (req, res) => {
@@ -284,6 +301,7 @@ module.exports = {
   refresh,
   logout,
   me,
+  getInviteInfo,
   forgotPassword,
   resetPassword
 };

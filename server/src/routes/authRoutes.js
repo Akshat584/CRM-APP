@@ -10,5 +10,6 @@ router.post('/login', authLimiter, authController.login);
 router.post('/refresh', authController.refresh);
 router.post('/logout', authController.logout);
 router.get('/me', requireAuth, authController.me);
+router.get('/invite-info/:token', authController.getInviteInfo);
 
 module.exports = router;
