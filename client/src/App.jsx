@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { CRMProvider, useCRM } from './context/CRMContext';
 import { ToastProvider } from './context/ToastContext';
+import { SocketProvider } from './context/SocketContext';
 import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
 import Login from './pages/Login';
@@ -13,6 +14,7 @@ import Pipeline from './pages/Pipeline';
 import ActivityLog from './pages/ActivityLog';
 import Tasks from './pages/Tasks';
 import Reports from './pages/Reports';
+import WhatsAppInbox from './pages/WhatsAppInbox';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -123,6 +125,13 @@ const AppRoutes = () => {
           </MainLayout>
         </ProtectedRoute>
       } />
+      <Route path="/whatsapp" element={
+        <ProtectedRoute>
+          <MainLayout>
+            <WhatsAppInbox />
+          </MainLayout>
+        </ProtectedRoute>
+      } />
     </Routes>
   );
 };
@@ -131,11 +140,13 @@ const App = () => {
   return (
     <Router>
       <AuthProvider>
-        <ToastProvider>
-          <CRMProvider>
-            <AppRoutes />
-          </CRMProvider>
-        </ToastProvider>
+        <SocketProvider>
+          <ToastProvider>
+            <CRMProvider>
+              <AppRoutes />
+            </CRMProvider>
+          </ToastProvider>
+        </SocketProvider>
       </AuthProvider>
     </Router>
   );

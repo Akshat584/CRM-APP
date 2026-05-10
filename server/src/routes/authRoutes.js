@@ -4,6 +4,7 @@ const authController = require('../controllers/authController');
 const authLimiter = require('../middleware/rateLimiter');
 const { requireAuth } = require('../middleware/requireAuth');
 
+router.get('/csrf', (req, res) => res.json({ success: true }));
 router.post('/register', authLimiter, authController.register);
 router.post('/login', authLimiter, authController.login);
 router.post('/refresh', authController.refresh);

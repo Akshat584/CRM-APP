@@ -23,6 +23,9 @@ export const AuthProvider = ({ children }) => {
         if (token) {
           const response = await authAPI.getMe();
           setUser(response.data.data.user);
+        } else {
+          // Initialize CSRF token even if not logged in
+          await authAPI.getCsrf();
         }
       } catch (err) {
         localStorage.removeItem('accessToken');

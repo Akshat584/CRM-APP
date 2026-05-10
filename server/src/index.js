@@ -15,8 +15,14 @@ const activityRoutes = require('./routes/activityRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
 const searchRoutes = require('./routes/searchRoutes');
+const whatsappRoutes = require('./modules/whatsapp/routes');
+const { initSocket } = require('./socket');
 
 const app = express();
+const server = require('http').createServer(app);
+
+// Initialize Socket.io
+initSocket(server);
 
 // Security headers
 app.use(helmet());
@@ -31,7 +37,8 @@ app.use(sanitizeBody);
 
 app.use(cors({
   origin: process.env.CLIENT_URL,
-  credentials: true
+  credentials: true,
+  exposedHeaders: ['X-CSRF-Token']
 }));
 
 // CSRF Protection
@@ -45,6 +52,7 @@ app.use('/api/v1/activities', activityRoutes);
 app.use('/api/v1/tasks', taskRoutes);
 app.use('/api/v1/analytics', analyticsRoutes);
 app.use('/api/v1/search', searchRoutes);
+app.use('/api/v1/whatsapp', whatsappRoutes);
 
 app.get('/api/v1/health', (req, res) => {
   res.json({ success: true, status: 'ok' });
@@ -60,7 +68,7 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 

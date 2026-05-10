@@ -116,6 +116,30 @@ const ActivityLog = () => {
               placeholder="Brief summary..." 
             />
           </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Contact</label>
+              <select 
+                value={formData.contact_id} 
+                onChange={e => setFormData({...formData, contact_id: e.target.value})}
+                className="w-full bg-slate-50 rounded-xl py-3 px-4 text-xs font-bold shadow-sm"
+              >
+                <option value="">None</option>
+                {contacts?.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Deal</label>
+              <select 
+                value={formData.deal_id} 
+                onChange={e => setFormData({...formData, deal_id: e.target.value})}
+                className="w-full bg-slate-50 rounded-xl py-3 px-4 text-xs font-bold shadow-sm"
+              >
+                <option value="">None</option>
+                {deals?.map(d => <option key={d.id} value={d.id}>{d.title}</option>)}
+              </select>
+            </div>
+          </div>
           <div>
             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Minutes / Record</label>
             <textarea 

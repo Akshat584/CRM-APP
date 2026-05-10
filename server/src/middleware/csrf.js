@@ -1,15 +1,18 @@
 const crypto = require('crypto');
 
 const generateCsrfToken = (req, res, next) => {
-  if (!req.cookies['XSRF-TOKEN']) {
-    const token = crypto.randomBytes(32).toString('hex');
+  let token = req.cookies['XSRF-TOKEN'];
+  if (!token) {
+    token = crypto.randomBytes(32).toString('hex');
     res.cookie('XSRF-TOKEN', token, {
-      httpOnly: false, // Must be readable by client
+      httpOnly: false,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/'
     });
   }
+  // Also send in a header that the client can read
+  res.setHeader('X-CSRF-Token', token);
   next();
 };
 
@@ -23,6 +26,7 @@ const verifyCsrfToken = (req, res, next) => {
   const tokenFromHeader = req.headers['x-xsrf-token'];
 
   if (!tokenFromCookie || !tokenFromHeader || tokenFromCookie !== tokenFromHeader) {
+    console.warn(`CSRF validation failed for ${req.method} ${req.originalUrl}. Cookie: ${!!tokenFromCookie}, Header: ${!!tokenFromHeader}`);
     return res.status(403).json({
       success: false,
       error: 'Invalid CSRF token'

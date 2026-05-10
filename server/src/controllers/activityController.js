@@ -3,8 +3,7 @@ const activityService = require('../services/activityService');
 
 const validateActivity = [
   body('type').isIn(['call', 'email', 'meeting', 'note', 'task']).withMessage('Invalid activity type'),
-  body('body').trim().notEmpty().withMessage('Activity body is required'),
-  body('contact_id').notEmpty().withMessage('Contact ID is required')
+  body('body').trim().notEmpty().withMessage('Activity body is required')
 ];
 
 const getActivities = async (req, res) => {

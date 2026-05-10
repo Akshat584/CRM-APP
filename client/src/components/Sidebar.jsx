@@ -13,6 +13,7 @@ const Sidebar = () => {
     { path: '/pipeline', icon: 'payments', label: 'Pipeline' },
     { path: '/activities', icon: 'event_note', label: 'Activities' },
     { path: '/tasks', icon: 'checklist', label: 'Tasks' },
+    { path: '/whatsapp', icon: 'forum', label: 'WhatsApp' },
     { path: '/reports', icon: 'monitoring', label: 'Analytics' }
   ];
 

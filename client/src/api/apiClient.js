@@ -10,6 +10,7 @@ const api = axios.create({
   }
 });
 
+let csrfToken = null;
 let isRefreshing = false;
 let failedQueue = [];
 
@@ -31,6 +32,9 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    if (csrfToken) {
+      config.headers['X-XSRF-TOKEN'] = csrfToken;
+    }
     return config;
   },
   (error) => {
@@ -39,7 +43,13 @@ api.interceptors.request.use(
 );
 
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    const headerToken = response.headers['x-csrf-token'];
+    if (headerToken) {
+      csrfToken = headerToken;
+    }
+    return response;
+  },
   async (error) => {
     const originalRequest = error.config;
 
